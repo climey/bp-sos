@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SOS Buscas Online | Consulta Veicular pela Placa</title>
+<meta name="description" content="Consulte qualquer veículo no Brasil pela placa. Descubra Renavam, proprietário, débitos, multas, leilão e muito mais."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#D43630;--red2:#B02E28;--red3:#8A2420;
+  --dark:#1a1a1a;--dark2:#111;
+  --gray50:#f6f7f7;--gray100:#f1f3f4;--gray200:#dee1e5;--gray300:#c4c8cd;
+  --muted:#808185;--text:#1a1a1a;--white:#fff;
+  --r-btn:9999px;--r-card:16px;--r-sm:8px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Figtree',sans-serif;background:var(--white);color:var(--text);overflow-x:hidden}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,.97);backdrop-filter:blur(10px);border-bottom:1px solid var(--gray200)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+.logo-icon{width:36px;height:36px;background:var(--red);border-radius:10px;display:flex;align-items:center;justify-content:center}
+.logo-icon svg{width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.logo-text{font-size:15px;font-weight:800;color:var(--text)}
+.logo-text span{color:var(--red)}
+.nav-links{display:flex;align-items:center;gap:2px}
+.nav-link{font-size:13px;font-weight:600;color:var(--muted);padding:7px 14px;border-radius:8px;text-decoration:none;white-space:nowrap;transition:color .2s,background .2s}
+.nav-link:hover{color:var(--text);background:var(--gray100)}
+.nav-cta{background:var(--red);color:#fff;border:none;border-radius:var(--r-btn);padding:10px 22px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;display:flex;align-items:center;gap:7px;transition:background .2s;text-decoration:none;flex-shrink:0}
+.nav-cta:hover{background:var(--red2)}
+.nav-cta svg{width:15px;height:15px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none}
+.hamburger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px}
+.mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:#fff;border-bottom:1px solid var(--gray200);padding:12px 24px;z-index:99}
+.mobile-menu.open{display:block}
+.mobile-menu .nav-link{display:block;padding:12px 0;border-bottom:1px solid var(--gray100);border-radius:0}
+
+/* HERO */
+.hero{background:var(--gray50);padding:100px 24px 72px;min-height:100vh;display:flex;align-items:center}
+.hero-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(212,54,48,.1);color:var(--red);font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:5px 14px;border-radius:var(--r-btn);margin-bottom:20px;border:1px solid rgba(212,54,48,.15)}
+.hero-eyebrow::before{content:'';width:6px;height:6px;background:var(--red);border-radius:50%;animation:blink 1.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero h1{font-size:clamp(28px,3.8vw,48px);font-weight:900;line-height:1.1;letter-spacing:-1.5px;color:var(--text);margin-bottom:14px}
+.hero h1 em{font-style:normal;color:var(--red)}
+.hero-sub{font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:28px;max-width:480px}
+.search-form{display:flex;gap:8px;margin-bottom:12px}
+.search-input{flex:1;height:52px;border:2px solid var(--gray200);border-radius:var(--r-card);padding:0 18px;font-size:18px;font-weight:800;font-family:'Courier New',monospace;letter-spacing:5px;text-transform:uppercase;color:var(--text);outline:none;background:#fff;transition:border-color .2s,box-shadow .2s}
+.search-input::placeholder{font-family:'Figtree',sans-serif;font-size:13px;font-weight:400;letter-spacing:0;color:var(--gray300)}
+.search-input:focus{border-color:var(--red);box-shadow:0 0 0 4px rgba(212,54,48,.1)}
+.search-btn{height:52px;padding:0 24px;background:var(--red);color:#fff;border:none;border-radius:var(--r-btn);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;display:flex;align-items:center;gap:7px;transition:background .2s,transform .1s;box-shadow:0 4px 16px rgba(212,54,48,.3)}
+.search-btn:hover{background:var(--red2);transform:translateY(-1px)}
+.search-btn:active{transform:translateY(0)}
+.search-btn:disabled{opacity:.6;pointer-events:none}
+.search-btn svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.search-note{font-size:12px;color:var(--muted);margin-bottom:22px}
+.video-link{display:inline-flex;align-items:center;gap:12px;text-decoration:none;color:var(--text)}
+.play-circle{width:44px;height:44px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .2s;box-shadow:0 4px 12px rgba(212,54,48,.3)}
+.video-link:hover .play-circle{transform:scale(1.08)}
+.play-circle svg{width:15px;height:15px;fill:#fff;margin-left:2px}
+.video-text strong{display:block;font-size:13px;font-weight:700;color:var(--text)}
+.video-text span{font-size:12px;color:var(--muted)}
+
+/* HERO ILLUSTRATION */
+.hero-visual{background:#fff;border-radius:20px;box-shadow:0 4px 32px rgba(0,0,0,.08);border:1px solid var(--gray200);padding:40px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;min-height:360px}
+.car-svg{width:220px;height:auto}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.chip{background:var(--gray100);border:1px solid var(--gray200);border-radius:var(--r-btn);padding:6px 14px;font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap}
+.chip.accent{background:rgba(212,54,48,.08);border-color:rgba(212,54,48,.2);color:var(--red)}
+
+/* STATS */
+.stats{background:#fff;border-top:1px solid var(--gray200);border-bottom:1px solid var(--gray200)}
+.stats-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr)}
+.stat{padding:32px 28px;display:flex;align-items:center;gap:16px;border-right:1px solid var(--gray200)}
+.stat:last-child{border-right:none}
+.stat-icon{width:44px;height:44px;background:rgba(212,54,48,.08);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.stat-icon svg{width:20px;height:20px;fill:none;stroke:var(--red);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.stat p{font-size:13px;color:var(--muted);line-height:1.5}
+.stat p strong{color:var(--text);font-weight:800}
+
+/* RESULT */
+#resultSection{display:none;background:#fff;padding:56px 24px;border-bottom:1px solid var(--gray200)}
+.result-inner{max-width:600px;margin:0 auto}
+.result-top{text-align:center;margin-bottom:28px}
+.result-check{width:52px;height:52px;background:rgba(212,54,48,.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
+.result-check svg{width:24px;height:24px;fill:none;stroke:var(--red);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.result-top h2{font-size:22px;font-weight:900;color:var(--text)}
+.result-top p{font-size:13px;color:var(--muted);margin-top:4px}
+.result-card{background:#fff;border:1px solid var(--gray200);border-radius:var(--r-card);overflow:hidden;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,.05)}
+.result-head{background:var(--dark);padding:16px 20px;display:flex;align-items:center;gap:12px}
+.plate{background:#FFD700;color:#111;font-family:'Courier New',monospace;font-size:15px;font-weight:900;padding:5px 14px;border-radius:6px;letter-spacing:3px;border:2px solid rgba(0,0,0,.1);flex-shrink:0}
+.result-logo-img{height:26px;width:auto;object-fit:contain;display:none;background:#fff;padding:2px 6px;border-radius:4px}
+.result-car{color:#fff;font-size:15px;font-weight:800}
+.result-car-sub{color:rgba(255,255,255,.45);font-size:11px;margin-top:1px}
+.data-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:16px}
+.data-cell{background:var(--gray50);border-radius:10px;padding:11px 13px}
+.data-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:3px}
+.data-val{font-size:13px;font-weight:700;color:var(--text)}
+.locked-area{padding:0 16px 16px}
+.locked-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.locked-title svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.locked-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;position:relative}
+.locked-box{border:1px solid var(--gray200);border-radius:10px;padding:13px}
+.locked-box-title{font-size:11px;font-weight:700;color:var(--red);margin-bottom:7px}
+.locked-content{filter:blur(5px);user-select:none;font-size:11px;color:var(--muted);line-height:1.7}
+.locked-gradient{position:absolute;bottom:0;left:0;right:0;height:60%;background:linear-gradient(to bottom,transparent,#fff);display:flex;align-items:flex-end;justify-content:center;padding-bottom:12px}
+.unlock-btn{background:var(--red);color:#fff;border:none;border-radius:var(--r-btn);padding:12px 28px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:8px;box-shadow:0 4px 14px rgba(212,54,48,.35);transition:background .2s;white-space:nowrap}
+.unlock-btn:hover{background:var(--red2)}
+.unlock-btn svg{width:15px;height:15px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
+.plan{border:1.5px solid var(--gray200);border-radius:var(--r-card);padding:15px 12px;text-align:center;cursor:pointer;transition:border-color .2s;background:#fff}
+.plan:hover{border-color:var(--red)}
+.plan.hot{border:2px solid var(--red);background:rgba(212,54,48,.02);position:relative}
+.plan-tag{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--red);color:#fff;font-size:9px;font-weight:800;padding:2px 12px;border-radius:var(--r-btn);white-space:nowrap;letter-spacing:.5px}
+.plan-name{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:4px}
+.plan-price{font-size:20px;font-weight:900;color:var(--text);letter-spacing:-.5px}
+.plan-price sub{font-size:11px;font-weight:400;color:var(--muted)}
+.plan-desc{font-size:10px;color:var(--muted);margin:4px 0 12px;line-height:1.4}
+.plan-btn{width:100%;border-radius:8px;padding:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;border:1.5px solid var(--red);background:transparent;color:var(--red);transition:all .2s}
+.plan.hot .plan-btn{background:var(--red);color:#fff}
+.plan-btn:hover{background:var(--red);color:#fff}
+.new-search{text-align:center;margin-top:16px}
+.new-search button{background:none;border:none;font-size:12px;color:var(--muted);cursor:pointer;font-family:inherit;text-decoration:underline}
+.new-search button:hover{color:var(--red)}
+
+/* PAYMENT */
+#pagSection{display:none;background:var(--gray50);padding:56px 24px;border-bottom:1px solid var(--gray200)}
+.pag-inner{max-width:480px;margin:0 auto}
+.pag-header{text-align:center;margin-bottom:22px}
+.pag-header p{font-size:14px;color:var(--muted);line-height:1.8}
+.pag-plate{display:inline-block;background:#FFD700;color:#111;font-family:'Courier New',monospace;font-size:13px;font-weight:900;padding:3px 10px;border-radius:5px;letter-spacing:2px}
+.pag-price-old{font-size:13px;color:var(--muted);text-decoration:line-through;margin-top:8px}
+.pag-price{font-size:40px;font-weight:900;color:var(--red);letter-spacing:-1.5px;line-height:1}
+.pag-price sup{font-size:18px;vertical-align:super;font-weight:700}
+.pag-plan{background:rgba(212,54,48,.08);border:1px solid rgba(212,54,48,.15);border-radius:8px;padding:8px 14px;text-align:center;font-size:12px;font-weight:700;color:var(--red);margin-bottom:16px}
+.pag-form{background:#fff;border:1px solid var(--gray200);border-radius:var(--r-card);padding:20px;margin-bottom:14px}
+.pag-form-title{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.pag-form-title svg{width:14px;height:14px;fill:none;stroke:var(--red);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.field:last-child{margin-bottom:0}
+.field label{font-size:12px;font-weight:700;color:var(--text)}
+.field input{height:46px;border:1.5px solid var(--gray200);border-radius:10px;padding:0 14px;font-size:14px;font-weight:500;color:var(--text);outline:none;font-family:inherit;background:#fff;transition:border-color .2s,box-shadow .2s}
+.field input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(212,54,48,.1)}
+.field input::placeholder{color:var(--gray300);font-weight:400}
+.pag-submit{width:100%;height:52px;background:var(--red);color:#fff;border:none;border-radius:var(--r-btn);font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:9px;box-shadow:0 4px 14px rgba(212,54,48,.35);transition:background .2s,transform .1s}
+.pag-submit:hover{background:var(--red2);transform:translateY(-1px)}
+.pag-submit:disabled{opacity:.6;pointer-events:none}
+.pag-error{color:var(--red);font-size:12px;text-align:center;display:none;margin-top:8px}
+.terms{font-size:11px;color:var(--muted);text-align:center;line-height:1.6;margin-top:12px}
+.terms a{color:var(--red);text-decoration:none}
+
+/* PIX */
+#pixSection{display:none}
+.pix-status-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(212,54,48,.08);border:1px solid rgba(212,54,48,.2);color:var(--red);font-size:11px;font-weight:600;padding:5px 14px;border-radius:var(--r-btn);margin-bottom:16px}
+.pix-status-badge svg{animation:spin .9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.pix-box{background:#fff;border:1px solid var(--gray200);border-radius:var(--r-card);padding:20px;margin-bottom:12px}
+.pix-row{display:flex;gap:20px;align-items:center}
+.pix-left{flex:1;display:flex;flex-direction:column;gap:14px}
+.timer-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)}
+.timer-val{font-size:38px;font-weight:900;color:var(--text);letter-spacing:-1px;font-variant-numeric:tabular-nums}
+.timer-val.urgent{color:var(--red)}
+.copy-btn{display:flex;align-items:center;gap:7px;background:var(--dark);color:#fff;border:none;border-radius:8px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .2s}
+.copy-btn:hover{opacity:.85}
+.copy-btn.copied{background:#16a34a}
+.copy-btn svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.qr-wrap{flex-shrink:0;background:#fff;border-radius:10px;padding:8px;border:1px solid var(--gray200)}
+.qr-wrap img{display:block;width:120px;height:120px;image-rendering:pixelated}
+.pix-code-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin:12px 0 5px}
+.pix-code{font-size:10px;font-family:'Courier New',monospace;color:var(--red);word-break:break-all;line-height:1.5;background:rgba(212,54,48,.05);border:1px solid rgba(212,54,48,.1);border-radius:8px;padding:10px 12px}
+.pix-status-msg{text-align:center;font-size:12px;color:var(--muted);margin-top:10px}
+
+/* REPORT */
+#reportSection{display:none;background:#fff;padding:56px 24px;border-bottom:1px solid var(--gray200)}
+.report-inner{max-width:600px;margin:0 auto}
+.report-success{text-align:center;margin-bottom:24px}
+.report-icon{width:56px;height:56px;background:#16a34a;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
+.report-icon svg{width:26px;height:26px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.report-plate{display:inline-block;background:#FFD700;color:#111;font-family:'Courier New',monospace;font-size:16px;font-weight:900;padding:5px 16px;border-radius:6px;letter-spacing:3px;margin-top:10px}
+.report-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0}
+.report-cell{background:var(--gray50);border-radius:10px;padding:12px}
+.report-cell-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:3px}
+.report-cell-val{font-size:13px;font-weight:700;color:var(--text)}
+.report-section{border:1px solid var(--gray200);border-radius:var(--r-card);overflow:hidden;margin-bottom:10px}
+.report-section-head{background:var(--gray50);padding:10px 16px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--red);border-bottom:1px solid var(--gray200)}
+.report-row{display:flex;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--gray100);font-size:12px}
+.report-row:last-child{border-bottom:none}
+.report-row span:first-child{color:var(--muted)}
+.report-row span:last-child{font-weight:700;color:var(--text)}
+
+/* VIDEO */
+.video-sec{background:#fff;padding:80px 24px;border-bottom:1px solid var(--gray200)}
+.video-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.video-placeholder{background:var(--dark);border-radius:20px;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden}
+.video-placeholder::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(212,54,48,.15),transparent)}
+.play-btn{width:60px;height:60px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,.25);z-index:1;transition:transform .2s}
+.video-placeholder:hover .play-btn{transform:scale(1.1)}
+.play-btn svg{width:20px;height:20px;fill:var(--red);margin-left:3px}
+.video-text .eyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--red);margin-bottom:10px;display:block}
+.video-text h2{font-size:clamp(22px,3vw,32px);font-weight:900;letter-spacing:-1px;color:var(--text);margin-bottom:14px;line-height:1.2}
+.video-text p{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:24px}
+.btn-red{display:inline-flex;align-items:center;gap:8px;background:var(--red);color:#fff;border:none;border-radius:var(--r-btn);padding:12px 26px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;text-decoration:none;transition:background .2s,transform .1s}
+.btn-red:hover{background:var(--red2);transform:translateY(-1px)}
+.btn-red svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+/* FEATURES */
+.features{background:var(--gray50);padding:80px 24px}
+.features-inner{max-width:1200px;margin:0 auto}
+.sec-eyebrow{text-align:center;font-size:11px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--red);margin-bottom:10px}
+.sec-title{text-align:center;font-size:clamp(22px,3.5vw,36px);font-weight:900;letter-spacing:-1px;color:var(--text);margin-bottom:8px}
+.sec-sub{text-align:center;font-size:14px;color:var(--muted);max-width:520px;margin:0 auto 28px;line-height:1.6}
+.sec-cta{text-align:center;margin-bottom:48px}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.feat{background:#fff;border:1px solid var(--gray200);border-radius:var(--r-card);padding:28px 24px;transition:border-color .2s,transform .2s,box-shadow .2s}
+.feat:hover{border-color:rgba(212,54,48,.3);transform:translateY(-3px);box-shadow:0 8px 24px rgba(212,54,48,.08)}
+.feat-icon{width:44px;height:44px;background:rgba(212,54,48,.08);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.feat-icon svg{width:20px;height:20px;fill:none;stroke:var(--red);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.feat h3{font-size:15px;font-weight:800;color:var(--text);margin-bottom:6px}
+.feat p{font-size:13px;color:var(--muted);line-height:1.6}
+
+/* BRANDS */
+.brands{background:#fff;padding:48px 24px;border-top:1px solid var(--gray200);border-bottom:1px solid var(--gray200)}
+.brands-inner{max-width:1200px;margin:0 auto;text-align:center}
+.brands-lbl{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:22px}
+.brands-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.brand{background:var(--gray100);border:1px solid var(--gray200);border-radius:var(--r-btn);padding:9px 18px;font-size:12px;font-weight:600;color:var(--muted);transition:border-color .2s,color .2s;cursor:default}
+.brand:hover{border-color:var(--red);color:var(--red)}
+
+/* TESTIMONIALS */
+.testimonials{background:var(--gray50);padding:80px 24px}
+.testimonials-inner{max-width:1200px;margin:0 auto}
+.test-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:48px}
+.test-card{background:#fff;border:1px solid var(--gray200);border-radius:var(--r-card);padding:28px}
+.stars{color:var(--red);font-size:15px;margin-bottom:12px;letter-spacing:2px}
+.test-text{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:18px}
+.test-author{display:flex;align-items:center;gap:12px}
+.avatar{width:38px;height:38px;border-radius:50%;background:rgba(212,54,48,.1);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--red);flex-shrink:0}
+.author-name{font-size:13px;font-weight:700;color:var(--text)}
+.author-role{font-size:11px;color:var(--muted)}
+
+/* HOW */
+.how{background:#fff;padding:80px 24px;border-top:1px solid var(--gray200)}
+.how-inner{max-width:1200px;margin:0 auto}
+.how-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:48px;position:relative}
+.how-steps::before{content:'';position:absolute;top:35px;left:calc(16.67% + 16px);right:calc(16.67% + 16px);height:2px;background:var(--gray200);z-index:0}
+.how-step{text-align:center;position:relative;z-index:1}
+.step-circle{width:70px;height:70px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 4px 16px rgba(212,54,48,.3);position:relative}
+.step-num{position:absolute;top:-4px;right:-4px;width:22px;height:22px;background:#fff;border:2px solid var(--red);border-radius:50%;font-size:11px;font-weight:900;color:var(--red);display:flex;align-items:center;justify-content:center}
+.step-circle svg{width:26px;height:26px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.how-step h3{font-size:16px;font-weight:800;color:var(--text);margin-bottom:8px}
+.how-step p{font-size:13px;color:var(--muted);line-height:1.6;max-width:240px;margin:0 auto}
+
+/* FAQ */
+.faq{background:var(--gray50);padding:80px 24px}
+.faq-inner{max-width:760px;margin:0 auto}
+.faq-list{margin-top:48px}
+.faq-item{background:#fff;border:1px solid var(--gray200);border-radius:var(--r-sm);margin-bottom:8px;overflow:hidden}
+.faq-q{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;cursor:pointer;font-size:14px;font-weight:700;color:var(--text);gap:16px}
+.faq-q svg{width:18px;height:18px;fill:none;stroke:var(--muted);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;transition:transform .2s,stroke .2s}
+.faq-item.open .faq-q svg{transform:rotate(180deg);stroke:var(--red)}
+.faq-item.open .faq-q{color:var(--red)}
+.faq-a{font-size:13px;color:var(--muted);padding:0 22px 18px;line-height:1.7;display:none}
+.faq-item.open .faq-a{display:block}
+
+/* BLOG */
+.blog{background:#fff;padding:80px 24px;border-top:1px solid var(--gray200)}
+.blog-inner{max-width:1200px;margin:0 auto}
+.blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+.blog-card{border:1px solid var(--gray200);border-radius:var(--r-card);overflow:hidden;transition:box-shadow .2s,transform .2s}
+.blog-card:hover{box-shadow:0 8px 24px rgba(0,0,0,.08);transform:translateY(-3px)}
+.blog-img{background:var(--gray100);height:180px;display:flex;align-items:center;justify-content:center}
+.blog-img svg{width:44px;height:44px;fill:none;stroke:var(--gray300);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.blog-body{padding:20px}
+.blog-badge{display:inline-block;background:rgba(212,54,48,.08);border:1px solid rgba(212,54,48,.15);color:var(--red);font-size:10px;font-weight:700;padding:3px 10px;border-radius:var(--r-btn);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
+.blog-title{font-size:14px;font-weight:800;color:var(--text);line-height:1.4;margin-bottom:8px}
+.blog-excerpt{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:14px}
+.blog-meta{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted)}
+.blog-meta a{color:var(--red);font-weight:700;text-decoration:none}
+.blog-meta a:hover{text-decoration:underline}
+
+/* FOOTER */
+footer{background:var(--dark);padding:64px 24px 32px}
+.footer-inner{max-width:1200px;margin:0 auto}
+.footer-grid{display:grid;grid-template-columns:1.8fr 1fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px}
+.footer-logo{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.footer-logo-icon{width:34px;height:34px;background:var(--red);border-radius:9px;display:flex;align-items:center;justify-content:center}
+.footer-logo-icon svg{width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.footer-logo-text{font-size:14px;font-weight:800;color:#fff}
+.footer-logo-text span{color:var(--red)}
+.footer-tagline{font-size:12px;color:rgba(255,255,255,.4);line-height:1.7;max-width:220px;margin-bottom:20px}
+.socials{display:flex;gap:8px}
+.social{width:34px;height:34px;border:1px solid rgba(255,255,255,.12);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .2s,background .2s}
+.social:hover{border-color:var(--red)}
+.social svg{width:15px;height:15px;fill:rgba(255,255,255,.4)}
+.social:hover svg{fill:var(--red)}
+.social.whatsapp:hover{background:#25D366;border-color:#25D366}
+.social.whatsapp:hover svg{fill:#fff}
+.footer-col-title{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--red);margin-bottom:14px}
+.footer-link{display:block;font-size:13px;color:rgba(255,255,255,.4);margin-bottom:8px;text-decoration:none;transition:color .2s}
+.footer-link:hover{color:#fff}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.08);padding-top:24px;font-size:11px;color:rgba(255,255,255,.2);text-align:center}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .hero-inner,.video-inner{grid-template-columns:1fr}
+  .hero-visual{display:none}
+  .stats-inner{grid-template-columns:1fr}
+  .stat{border-right:none;border-bottom:1px solid var(--gray200)}
+  .stat:last-child{border-bottom:none}
+  .feat-grid{grid-template-columns:1fr 1fr}
+  .test-grid{grid-template-columns:1fr}
+  .how-steps{grid-template-columns:1fr}
+  .how-steps::before{display:none}
+  .blog-grid{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr}
+  .plans{grid-template-columns:1fr}
+  .data-grid{grid-template-columns:1fr 1fr}
+  .locked-grid{grid-template-columns:1fr}
+  .pix-row{flex-direction:column}
+  .report-grid{grid-template-columns:1fr}
+  .search-form{flex-direction:column}
+  .search-btn{justify-content:center}
+}
+@media(max-width:480px){
+  .feat-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="logo" href="#">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M20 10c0 5-7 11-8 11s-8-6-8-11a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      </div>
+      <div class="logo-text">SOS <span>Buscas</span>Online</div>
+    </a>
+    <div class="nav-links">
+      <a class="nav-link" href="#">Consultar</a>
+      <a class="nav-link" href="#features">Sobre Nós</a>
+      <a class="nav-link" href="#faq">Já Paguei</a>
+      <a class="nav-link" href="#blog">Blog</a>
+      <a class="nav-link" href="#footer">Contato</a>
+      <a class="nav-link" href="#faq">FAQ</a>
+    </div>
+    <a class="nav-cta" href="#hero" onclick="document.getElementById('searchInput').focus()">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Faça sua busca
+    </a>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a class="nav-link" href="#">Consultar</a>
+    <a class="nav-link" href="#features">Sobre Nós</a>
+    <a class="nav-link" href="#faq">Já Paguei</a>
+    <a class="nav-link" href="#blog">Blog</a>
+    <a class="nav-link" href="#footer">Contato</a>
+    <a class="nav-link" href="#faq">FAQ</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">Consulta Veicular Oficial</div>
+      <h1>Consulte qualquer veículo do Brasil <em>pela placa</em></h1>
+      <p class="hero-sub">Tenha acesso a mais de 20 informações oficiais do veículo em segundos: chassi, Renavam, proprietário, débitos, leilão e muito mais.</p>
+      <div class="search-form">
+        <input class="search-input" id="searchInput" type="text" maxlength="7" placeholder="AAA - 0000" autocomplete="off"/>
+        <button class="search-btn" id="searchBtn" onclick="doSearch()">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Faça sua busca
+        </button>
+      </div>
+      <p class="search-note">Este site utiliza dados e informações de fontes públicas.</p>
+      <a class="video-link" href="#">
+        <div class="play-circle">
+          <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </div>
+        <div class="video-text">
+          <strong>Saiba mais sobre a SOS Buscas.</strong>
+          <span>Assista ao vídeo agora!</span>
+        </div>
+      </a>
+    </div>
+    <div class="hero-visual">
+      <svg class="car-svg" viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="140" cy="145" rx="100" ry="10" fill="#e5e7eb"/>
+        <rect x="30" y="90" width="220" height="50" rx="8" fill="#1a1a1a"/>
+        <path d="M60 90 L80 50 L200 50 L220 90 Z" fill="#D43630"/>
+        <path d="M75 88 L92 60 L188 60 L205 88 Z" fill="#93c5fd" opacity=".7"/>
+        <rect x="30" y="115" width="220" height="8" rx="4" fill="#D43630"/>
+        <circle cx="75" cy="140" r="18" fill="#374151"/>
+        <circle cx="75" cy="140" r="10" fill="#6b7280"/>
+        <circle cx="205" cy="140" r="18" fill="#374151"/>
+        <circle cx="205" cy="140" r="10" fill="#6b7280"/>
+        <rect x="110" y="112" width="60" height="14" rx="4" fill="#FFD700"/>
+        <text x="140" y="123" text-anchor="middle" font-size="9" font-weight="900" font-family="Courier New" fill="#1a1a1a">SOS</text>
+        <circle cx="45" cy="108" r="6" fill="#fbbf24"/>
+        <circle cx="235" cy="108" r="6" fill="#fbbf24"/>
+      </svg>
+      <div class="chips">
+        <span class="chip">Renavam</span>
+        <span class="chip accent">Chassi</span>
+        <span class="chip">Proprietário</span>
+        <span class="chip accent">Leilão</span>
+        <span class="chip">Débitos</span>
+        <span class="chip">Situação</span>
+        <span class="chip accent">+ 20 dados</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stats-inner">
+    <div class="stat">
+      <div class="stat-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+      <p>Mais de <strong>3.922.964</strong> de consultas veiculares já realizadas.</p>
+    </div>
+    <div class="stat">
+      <div class="stat-icon"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
+      <p>Mais de <strong>850 empresas</strong> confiam na SOS Buscas.</p>
+    </div>
+    <div class="stat">
+      <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <p><strong>7 anos</strong> de experiência no mercado veicular.</p>
+    </div>
+  </div>
+</div>
+
+<!-- RESULTADO -->
+<section id="resultSection">
+  <div class="result-inner">
+    <div class="result-top">
+      <div class="result-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <h2>Pronto!</h2>
+      <p>Na <strong>análise gratuita</strong>, liberamos acesso às seguintes informações:</p>
+    </div>
+    <div class="result-card">
+      <div class="result-head">
+        <div class="plate" id="plateDisplay">---</div>
+        <img class="result-logo-img" id="brandLogoImg" src="" alt=""/>
+        <div>
+          <div class="result-car" id="carName">—</div>
+          <div class="result-car-sub">Consultado agora · Dados básicos gratuitos</div>
+        </div>
+      </div>
+      <div class="data-grid">
+        <div class="data-cell"><div class="data-label">Marca</div><div class="data-val" id="r_marca">—</div></div>
+        <div class="data-cell"><div class="data-label">Modelo</div><div class="data-val" id="r_modelo">—</div></div>
+        <div class="data-cell"><div class="data-label">Cor</div><div class="data-val" id="r_cor">—</div></div>
+        <div class="data-cell"><div class="data-label">Ano Fab/Mod</div><div class="data-val" id="r_anos">—</div></div>
+        <div class="data-cell"><div class="data-label">Município</div><div class="data-val" id="r_local">—</div></div>
+        <div class="data-cell"><div class="data-label">UF</div><div class="data-val" id="r_uf">—</div></div>
+      </div>
+      <div class="locked-area">
+        <div class="locked-title">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Encontramos mais <span id="infoCounter" style="color:var(--red);font-weight:900;margin:0 3px">1</span> informações ocultas
+        </div>
+        <div class="locked-grid">
+          <div class="locked-box"><div class="locked-box-title">Leilão</div><div class="locked-content">Passagem registrada<br>2 ocorrências detectadas<br>Sim — classificado</div></div>
+          <div class="locked-box"><div class="locked-box-title">Sinistros</div><div class="locked-content">Indício detectado<br>Colisão frontal<br>Detectado</div></div>
+          <div class="locked-box"><div class="locked-box-title">Débitos e Multas</div><div class="locked-content">R$ 3.240,00 em aberto<br>IPVA pendente<br>3 multas ativas</div></div>
+          <div class="locked-box"><div class="locked-box-title">Restrições</div><div class="locked-content">Alienação fiduciária<br>Renajud ativo<br>Gravame registrado</div></div>
+          <div class="locked-gradient">
+            <button class="unlock-btn" onclick="showPayment('basico')">
+              <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>
+              Liberar todas as informações
+            </button>
+          </div>
+        </div>
+        <div class="plans">
+          <div class="plan">
+            <div class="plan-name">Básico</div>
+            <div class="plan-price">R$19<sub>,90</sub></div>
+            <div class="plan-desc">Dados cadastrais + débitos</div>
+            <button class="plan-btn" onclick="showPayment('basico')">Selecionar</button>
+          </div>
+          <div class="plan hot">
+            <div class="plan-tag">MAIS VENDIDO</div>
+            <div class="plan-name">Completo</div>
+            <div class="plan-price">R$49<sub>,90</sub></div>
+            <div class="plan-desc">Tudo + leilão, sinistro, roubo</div>
+            <button class="plan-btn" onclick="showPayment('completo')">Selecionar</button>
+          </div>
+          <div class="plan">
+            <div class="plan-name">Simples</div>
+            <div class="plan-price">R$29<sub>,90</sub></div>
+            <div class="plan-desc">Dados + débitos + restrições</div>
+            <button class="plan-btn" onclick="showPayment('simples')">Selecionar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="new-search"><button onclick="novaConsulta()">Consultar outra placa</button></div>
+  </div>
+</section>
+
+<!-- PAGAMENTO -->
+<section id="pagSection">
+  <div class="pag-inner">
+    <div id="pagForm">
+      <div class="pag-header">
+        <p>Obtenha o relatório completo da placa <span class="pag-plate" id="pagPlaca">---</span><br>no email <strong id="pagEmail">—</strong> por apenas:</p>
+        <div class="pag-price-old" id="pagRiscado">R$ 79,90</div>
+        <div class="pag-price"><sup>R$</sup><span id="pagMain">49,90</span></div>
+      </div>
+      <div class="pag-plan">Plano selecionado: <span id="pagNomePlano">Completo</span></div>
+      <div class="pag-form">
+        <div class="pag-form-title">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Insira os dados para efetuar o pagamento via PIX
+        </div>
+        <div class="field"><label>E-mail</label><input type="email" id="pagEmailInput" placeholder="seu@email.com"/></div>
+        <div class="field"><label>Nome completo</label><input type="text" id="pagNomeInput" placeholder="Seu nome completo"/></div>
+        <div class="field" style="margin-bottom:0"><label>CPF</label><input type="text" id="pagCpfInput" placeholder="000.000.000-00" maxlength="14" inputmode="numeric"/></div>
+      </div>
+      <button class="pag-submit" id="pagBtn" onclick="gerarPix()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 12h.01"/><path d="M17 12h.01"/><path d="M7 12h.01"/></svg>
+        Concluir Pagamento
+      </button>
+      <p class="pag-error" id="pagError"></p>
+      <p class="terms">Ao finalizar, confirmo que li e concordo com os <a href="#">Termos de Uso</a> e a <a href="#">Política de Privacidade</a>.</p>
+    </div>
+    <div id="pixForm" style="display:none">
+      <div class="pag-header">
+        <p>Relatório da placa <span class="pag-plate" id="pixPlaca">---</span><br>Efetue o pagamento via <strong>PIX QR Code</strong> ou <strong>Copia e Cola</strong>.</p>
+        <div class="pag-price-old" id="pixRiscado">R$ 79,90</div>
+        <div class="pag-price"><sup>R$</sup><span id="pixMain">49,90</span></div>
+      </div>
+      <div style="text-align:center;margin-bottom:16px">
+        <span class="pix-status-badge">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+          Aguardando pagamento...
+        </span>
+      </div>
+      <div class="pix-box">
+        <div class="pix-row">
+          <div class="pix-left">
+            <div><div class="timer-lbl">Válido por:</div><div class="timer-val" id="timerVal">5:00</div></div>
+            <button class="copy-btn" id="copyBtn" onclick="copiarPix()">
+              <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copia e Cola
+            </button>
+          </div>
+          <div class="qr-wrap"><img id="qrImg" src="" alt="QR Code PIX"/></div>
+        </div>
+        <div class="pix-code-lbl">Código PIX</div>
+        <div class="pix-code" id="pixCode">—</div>
+      </div>
+      <p class="pix-status-msg" id="pixMsg">Verificando pagamento automaticamente...</p>
+      <p class="terms" style="margin-top:12px">Ao finalizar, confirmo que li e concordo com os <a href="#">Termos de Uso</a> e a <a href="#">Política de Privacidade</a>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- RELATÓRIO -->
+<section id="reportSection">
+  <div class="report-inner">
+    <div class="report-success">
+      <div class="report-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <h2 style="font-size:22px;font-weight:900">Pagamento confirmado!</h2>
+      <p style="font-size:13px;color:var(--muted);margin-top:4px">Aqui está o relatório completo do veículo</p>
+      <div class="report-plate" id="rel_placa">---</div>
+    </div>
+    <div class="report-grid">
+      <div class="report-cell"><div class="report-cell-lbl">Marca/Modelo</div><div class="report-cell-val" id="rel_veiculo">—</div></div>
+      <div class="report-cell"><div class="report-cell-lbl">Ano fab./mod.</div><div class="report-cell-val" id="rel_ano">—</div></div>
+      <div class="report-cell"><div class="report-cell-lbl">Cor</div><div class="report-cell-val" id="rel_cor">—</div></div>
+      <div class="report-cell"><div class="report-cell-lbl">Município/UF</div><div class="report-cell-val" id="rel_local">—</div></div>
+      <div class="report-cell"><div class="report-cell-lbl">Combustível</div><div class="report-cell-val" id="rel_combustivel">—</div></div>
+      <div class="report-cell"><div class="report-cell-lbl">Situação</div><div class="report-cell-val" id="rel_situacao">—</div></div>
+    </div>
+    <div class="report-section">
+      <div class="report-section-head">Restrições e Alertas</div>
+      <div class="report-row"><span>Restrição 1</span><span id="rel_r1">—</span></div>
+      <div class="report-row"><span>Restrição 2</span><span id="rel_r2">—</span></div>
+      <div class="report-row"><span>Gravame</span><span id="rel_gravame">—</span></div>
+      <div class="report-row"><span>Leilão</span><span id="rel_leilao">—</span></div>
+      <div class="report-row"><span>Sinistro</span><span id="rel_sinistro">—</span></div>
+      <div class="report-row"><span>Roubo/Furto</span><span id="rel_roubo">—</span></div>
+    </div>
+    <div style="text-align:center;margin-top:20px">
+      <button onclick="novaConsulta()" style="background:none;border:none;font-size:13px;color:var(--red);font-weight:700;cursor:pointer;font-family:inherit;text-decoration:underline">← Fazer nova consulta</button>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO + TEXTO -->
+<section class="video-sec">
+  <div class="video-inner">
+    <div class="video-placeholder">
+      <div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+    </div>
+    <div class="video-text">
+      <span class="eyebrow">Como funciona</span>
+      <h2>Veja como é simples, fácil e rápido consultar na SOS Buscas!</h2>
+      <p>Digite a placa do veículo, escolha o plano ideal, efetue o pagamento via PIX e receba o relatório completo no seu e-mail em poucos minutos.</p>
+      <a class="btn-red" href="#hero">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Comece sua consulta agora
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="features-inner">
+    <div class="sec-eyebrow">O que você descobre</div>
+    <h2 class="sec-title">Seu portal completo para consultas<br>veiculares rápidas e detalhadas.</h2>
+    <div class="sec-cta">
+      <a class="btn-red" href="#hero">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Faça sua busca
+      </a>
+    </div>
+    <div class="feat-grid">
+      <div class="feat">
+        <div class="feat-icon"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="7.5" cy="12" r="1.5"/><circle cx="16.5" cy="12" r="1.5"/></svg></div>
+        <h3>Informações do Veículo</h3>
+        <p>Cor, modelo, categoria, combustível e município de registro.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon"><svg viewBox="0 0 24 24"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg></div>
+        <h3>Descubra o Chassi</h3>
+        <p>Número do chassi para negociações seguras e transparentes.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+        <h3>Descubra o Renavam</h3>
+        <p>Número do Renavam de forma rápida e segura.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h3>Situação de Roubo ou Furto</h3>
+        <p>Consulte registros de roubo ou furto do veículo.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+        <h3>Nome do Proprietário</h3>
+        <p>Pessoa física ou empresa registrada no veículo.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+        <h3>Consulta pela Tabela FIPE</h3>
+        <p>Valor de mercado rápido e preciso do veículo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BRANDS -->
+<div class="brands">
+  <div class="brands-inner">
+    <div class="brands-lbl">Consultamos veículos de todas as marcas</div>
+    <div class="brands-row">
+      <span class="brand">Toyota</span><span class="brand">Honda</span><span class="brand">Fiat</span>
+      <span class="brand">Ford</span><span class="brand">Chevrolet</span><span class="brand">Jeep</span>
+      <span class="brand">Volkswagen</span><span class="brand">Hyundai</span><span class="brand">Nissan</span>
+      <span class="brand">Kia</span><span class="brand">Renault</span><span class="brand">Mitsubishi</span>
+      <span class="brand">Peugeot</span><span class="brand">BMW</span><span class="brand">Mercedes</span>
+    </div>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="testimonials-inner">
+    <div class="sec-eyebrow">Depoimentos</div>
+    <h2 class="sec-title">Veja o que nossos clientes<br>estão falando sobre nós!</h2>
+    <div class="test-grid">
+      <div class="test-card">
+        <div class="stars">★★★★★</div>
+        <p class="test-text">"Gostei do site SOS Buscas, paguei e me enviaram o proprietário que bateu em mim quando eu tava estacionada. Me ajudou muito!"</p>
+        <div class="test-author"><div class="avatar">B</div><div><div class="author-name">Bianca Matos</div><div class="author-role">Estudante</div></div></div>
+      </div>
+      <div class="test-card">
+        <div class="stars">★★★★★</div>
+        <p class="test-text">"Consultei minha placa pq precisava puxar o renavam e tbm já consultei os débitos com eles. Recomendo bastante! Nota 10!"</p>
+        <div class="test-author"><div class="avatar">C</div><div><div class="author-name">Carlos Souza</div><div class="author-role">Motorista de Aplicativo</div></div></div>
+      </div>
+      <div class="test-card">
+        <div class="stars">★★★★★</div>
+        <p class="test-text">"Deu certo a consulta, vou usar o SOS Buscas mais vezes, recomendo!! O resultado chegou em menos de 1 minuto."</p>
+        <div class="test-author"><div class="avatar">M</div><div><div class="author-name">Maria Liana</div><div class="author-role">Designer de Interiores</div></div></div>
+      </div>
+      <div class="test-card">
+        <div class="stars">★★★★★</div>
+        <p class="test-text">"Conheci o SOS Buscas através de um anúncio e consegui puxar o renavam que precisava. Foram rápidos e enviaram certinho."</p>
+        <div class="test-author"><div class="avatar">A</div><div><div class="author-name">André Kaefer</div><div class="author-role">Engenheiro de Software</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how">
+  <div class="how-inner">
+    <div class="sec-eyebrow">Simples e rápido</div>
+    <h2 class="sec-title">Como funciona a consulta</h2>
+    <div class="how-steps">
+      <div class="how-step">
+        <div class="step-circle">
+          <div class="step-num">1</div>
+          <svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/></svg>
+        </div>
+        <h3>Digite a placa</h3>
+        <p>Informe a placa do veículo no campo de busca.</p>
+      </div>
+      <div class="how-step">
+        <div class="step-circle">
+          <div class="step-num">2</div>
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <h3>Veja a prévia</h3>
+        <p>Visualize os dados básicos do veículo gratuitamente.</p>
+      </div>
+      <div class="how-step">
+        <div class="step-circle">
+          <div class="step-num">3</div>
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <h3>Receba o relatório</h3>
+        <p>Após o pagamento, receba o relatório completo no e-mail.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="faq-inner">
+    <div class="sec-eyebrow">Dúvidas</div>
+    <h2 class="sec-title">FAQ — Perguntas Frequentes</h2>
+    <div class="faq-list">
+      <div class="faq-item open">
+        <div class="faq-q" onclick="toggleFaq(this)">Quais tipos de veículos podem ser consultados?<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <p class="faq-a">Carros, motos, caminhões, ônibus e demais veículos registrados no DETRAN de todos os estados brasileiros.</p>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Há algum custo para realizar uma consulta?<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <p class="faq-a">Oferecemos uma consulta gratuita com dados básicos do veículo. Para informações completas, temos planos a partir de <strong>R$ 19,90</strong>.</p>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">As informações fornecidas são confiáveis?<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <p class="faq-a">Sim. Todas as informações são extraídas de fontes públicas oficiais e de parcerias com empresas de dados privadas certificadas.</p>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Quais métodos de pagamento são aceitos?<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <p class="faq-a">Aceitamos <strong>PIX</strong>. Optamos por este método pela facilidade e pela rapidez na confirmação do pagamento e liberação do relatório.</p>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">O que recebo ao efetuar uma compra?<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <p class="faq-a">Todos os dados bloqueados são desbloqueados e exibidos na tela imediatamente após a confirmação do pagamento. Um link também é enviado por e-mail.</p>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Posso solicitar reembolso do valor pago?<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <p class="faq-a">Se o relatório não for entregue em até 24 horas, você pode solicitar reembolso total entrando em contato com nosso suporte.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BLOG -->
+<section class="blog" id="blog">
+  <div class="blog-inner">
+    <div class="sec-eyebrow">Conteúdo</div>
+    <h2 class="sec-title">Últimas notícias</h2>
+    <div class="blog-grid">
+      <div class="blog-card">
+        <div class="blog-img"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
+        <div class="blog-body">
+          <span class="blog-badge">Guia</span>
+          <div class="blog-title">Como consultar placa de veículo online</div>
+          <p class="blog-excerpt">Passo a passo completo para consultar qualquer veículo pela placa.</p>
+          <div class="blog-meta"><span>Equipe SOS · 10 Jun 2026</span><a href="#">Ler mais →</a></div>
+        </div>
+      </div>
+      <div class="blog-card">
+        <div class="blog-img"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
+        <div class="blog-body">
+          <span class="blog-badge">Dicas</span>
+          <div class="blog-title">O que verificar antes de comprar um carro usado</div>
+          <p class="blog-excerpt">Itens essenciais para uma negociação segura e sem surpresas.</p>
+          <div class="blog-meta"><span>Equipe SOS · 02 Jun 2026</span><a href="#">Ler mais →</a></div>
+        </div>
+      </div>
+      <div class="blog-card">
+        <div class="blog-img"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
+        <div class="blog-body">
+          <span class="blog-badge">Notícias</span>
+          <div class="blog-title">Mudanças no DETRAN em 2026</div>
+          <p class="blog-excerpt">Confira as principais novidades que afetam motoristas brasileiros.</p>
+          <div class="blog-meta"><span>Equipe SOS · 28 Mai 2026</span><a href="#">Ler mais →</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">
+          <div class="footer-logo-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 5-7 11-8 11s-8-6-8-11a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <div class="footer-logo-text">SOS <span>Buscas</span>Online</div>
+        </div>
+        <p class="footer-tagline">A garantia de uma decisão segura começa com a busca certa.</p>
+        <div class="socials">
+          <div class="social"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></div>
+          <div class="social"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div>
+          <div class="social"><svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.54C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg></div>
+          <div class="social whatsapp"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Site</div>
+        <a class="footer-link" href="#">Home</a>
+        <a class="footer-link" href="#">Consultar</a>
+        <a class="footer-link" href="#">Sobre Nós</a>
+        <a class="footer-link" href="#">Contato</a>
+      </div>
+      <div>
+        <div class="footer-col-title">Blog</div>
+        <a class="footer-link" href="#">Últimas notícias</a>
+        <a class="footer-link" href="#">Guias</a>
+        <a class="footer-link" href="#">Dicas</a>
+        <a class="footer-link" href="#">Categorias</a>
+      </div>
+      <div>
+        <div class="footer-col-title">Parceiros</div>
+        <a class="footer-link" href="#">Seja parceiro</a>
+        <a class="footer-link" href="#">Empresas</a>
+        <a class="footer-link" href="#">Revendas</a>
+        <a class="footer-link" href="#">Despachantes</a>
+      </div>
+      <div>
+        <div class="footer-col-title">Links úteis</div>
+        <a class="footer-link" href="#">Termos de uso</a>
+        <a class="footer-link" href="#">Política de privacidade</a>
+        <a class="footer-link" href="#">Reembolso</a>
+        <a class="footer-link" href="#">Já paguei</a>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 SOS Buscas Online — CNPJ 29.054.606/0001-91 — Todos os direitos reservados.</div>
+  </div>
+</footer>
+
+<script>
+const BACKEND='https://sos-backend-climey-production.up.railway.app';
+const planos={basico:{nome:'Básico',valor:19.90,riscado:'R$ 29,90'},completo:{nome:'Completo',valor:49.90,riscado:'R$ 79,90'},simples:{nome:'Simples',valor:29.90,riscado:'R$ 49,90'}};
+let planoAtual='basico',pagId=null,timerIv=null,verifIv=null,seg=300;
+
+function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open')}
+document.getElementById('searchInput').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch()});
+
+async function doSearch(){
+  const placa=document.getElementById('searchInput').value.trim().toUpperCase().replace(/[^A-Z0-9]/g,'');
+  const btn=document.getElementById('searchBtn');
+  if(placa.length<7){
+    document.getElementById('searchInput').style.borderColor='var(--red)';
+    setTimeout(()=>document.getElementById('searchInput').style.borderColor='',2000);
+    return;
+  }
+  btn.disabled=true;
+  btn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" style="animation:spin .8s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Consultando...';
+  if(!document.getElementById('spinStyle')){const s=document.createElement('style');s.id='spinStyle';s.textContent='@keyframes spin{to{transform:rotate(360deg)}}';document.head.appendChild(s);}
+  try{
+    const res=await fetch(`${BACKEND}/api/consulta/basica/${placa}`);
+    const d=await res.json();
+    if(d.erro)throw new Error(d.erro);
+    document.getElementById('plateDisplay').textContent=placa;
+    document.getElementById('carName').textContent=`${d.marca||'—'} ${d.modelo||'—'}`;
+    document.getElementById('r_marca').textContent=d.marca||'—';
+    document.getElementById('r_modelo').textContent=d.modelo||'—';
+    document.getElementById('r_cor').textContent=d.cor||'—';
+    document.getElementById('r_anos').textContent=`${d.ano_fab||'—'}/${d.ano_modelo||'—'}`;
+    document.getElementById('r_local').textContent=d.municipio||'—';
+    document.getElementById('r_uf').textContent=d.uf||'—';
+    sessionStorage.setItem('placa',placa);
+    const logoEl=document.getElementById('brandLogoImg');
+    const logoUrl=d.logo||(d.marca?`https://apiplacas.com.br/logos/logosMarcas/${d.marca.toLowerCase().replace(/\s+/g,'-')}.png`:null);
+    if(logoUrl){logoEl.src=`${BACKEND}/api/logo?url=${encodeURIComponent(logoUrl)}`;logoEl.style.display='block';logoEl.onerror=()=>logoEl.style.display='none';}
+    document.getElementById('resultSection').style.display='block';
+    animarContador();
+    setTimeout(()=>document.getElementById('resultSection').scrollIntoView({behavior:'smooth',block:'start'}),80);
+  }catch(e){alert(e.message||'Erro ao consultar.');}
+  finally{
+    btn.disabled=false;
+    btn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Faça sua busca';
+  }
+}
+
+function animarContador(){
+  const el=document.getElementById('infoCounter');if(!el)return;
+  const passos=[1,3,6,10,15,20,25,29,32,34];let i=0;el.textContent='1';
+  const iv=setInterval(()=>{i++;if(i>=passos.length){el.textContent=34;clearInterval(iv);return;}el.textContent=passos[i];},220);
+}
+
+function showPayment(plano){
+  planoAtual=plano;
+  const p=planos[plano];
+  const placa=sessionStorage.getItem('placa')||'';
+  const email=sessionStorage.getItem('email')||'';
+  document.getElementById('pagPlaca').textContent=placa;
+  document.getElementById('pagEmail').textContent=email||'—';
+  document.getElementById('pagMain').textContent=p.valor.toFixed(2).replace('.',',');
+  document.getElementById('pagRiscado').textContent=p.riscado;
+  document.getElementById('pagNomePlano').textContent=p.nome;
+  if(email)document.getElementById('pagEmailInput').value=email;
+  document.getElementById('pagSection').style.display='block';
+  document.getElementById('pagForm').style.display='block';
+  document.getElementById('pixForm').style.display='none';
+  setTimeout(()=>document.getElementById('pagSection').scrollIntoView({behavior:'smooth',block:'start'}),80);
+}
+
+document.getElementById('pagCpfInput').addEventListener('input',function(){
+  let v=this.value.replace(/\D/g,'');if(v.length>11)v=v.slice(0,11);
+  v=v.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');
+  this.value=v;
+});
+
+async function gerarPix(){
+  const email=document.getElementById('pagEmailInput').value.trim();
+  const nome=document.getElementById('pagNomeInput').value.trim();
+  const cpf=document.getElementById('pagCpfInput').value.trim();
+  const placa=sessionStorage.getItem('placa')||'';
+  const btn=document.getElementById('pagBtn');
+  const err=document.getElementById('pagError');
+  err.style.display='none';
+  if(!placa){err.textContent='Placa não encontrada.';err.style.display='block';return;}
+  if(!email||!email.includes('@')){err.textContent='Digite um e-mail válido.';err.style.display='block';return;}
+  if(!nome){err.textContent='Digite seu nome completo.';err.style.display='block';return;}
+  if(cpf.replace(/\D/g,'').length<11){err.textContent='Digite um CPF válido.';err.style.display='block';return;}
+  sessionStorage.setItem('email',email);
+  btn.disabled=true;
+  btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="animation:spin .8s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Gerando PIX...';
+  try{
+    const res=await fetch(`${BACKEND}/api/pagamento/criar`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({plano:planoAtual,placa,email,nome,cpf})});
+    const d=await res.json();
+    if(d.erro)throw new Error(d.erro);
+    pagId=d.id;
+    const p=planos[planoAtual];
+    document.getElementById('pixPlaca').textContent=placa;
+    document.getElementById('pixMain').textContent=d.valor.toFixed(2).replace('.',',');
+    document.getElementById('pixRiscado').textContent=p.riscado;
+    document.getElementById('pixCode').textContent=d.qr_code||'—';
+    if(d.qr_code_base64)document.getElementById('qrImg').src=`data:image/png;base64,${d.qr_code_base64}`;
+    document.getElementById('pagForm').style.display='none';
+    document.getElementById('pixForm').style.display='block';
+    seg=300;atualizarTimer();
+    timerIv=setInterval(()=>{seg--;atualizarTimer();if(seg<=0){clearInterval(timerIv);clearInterval(verifIv);}},1000);
+    verifIv=setInterval(verificarPagamento,5000);
+  }catch(e){
+    err.textContent=e.message||'Erro ao gerar PIX.';err.style.display='block';
+    btn.disabled=false;
+    btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 12h.01"/></svg> Concluir Pagamento';
+  }
+}
+
+function atualizarTimer(){
+  const m=Math.floor(seg/60),s=seg%60;
+  const el=document.getElementById('timerVal');
+  el.textContent=`${m}:${s.toString().padStart(2,'0')}`;
+  el.classList.toggle('urgent',seg<=60);
+}
+
+async function verificarPagamento(){
+  if(!pagId)return;
+  try{
+    const res=await fetch(CKEND}/api/pagamento/status/${pagId}`);
+    const d=await res.json();
+    if(d.status==='approved'){
+      clearInterval(verifIv);clearInterval(timerIv);
+      document.getElementById('pixMsg').textContent='Pagamento confirmado! Carregando relatório...';
+      await carregarRelatorio();
+    }
+  }catch{}
+}
+
+async function carregarRelatorio(){
+  const placa=sessionStorage.getItem('placa')||'';
+  try{
+    const res=await fetch(`${BACKEND}/api/consulta/completa/${placa}/${pagId}`);
+    const d=await res.json();
+    if(d.erro)throw new Error(d.erro);
+    document.getElementById('rel_placa').textContent=placa;
+    document.getElementById('rel_veiculo').textContent=`${d.marca||'—'} ${d.modelo||'—'}`;
+    document.getElementById('rel_ano').textContent=`${d.ano_fab||'—'} / ${d.ano_modelo||'—'}`;
+    document.getElementById('rel_cor').textContent=d.cor||'—';
+    document.getElementById('rel_local').textContent=d.municipio&&d.uf?`${d.municipio}/${d.uf}`:'—';
+    document.getElementById('rel_combustivel').textContent=d.combustivel||'—';
+    document.getElementById('rel_situacao').textContent=d.situacao||'—';
+    document.getElementById('rel_r1').textContent=d.restricao_1||'Sem restrição';
+    document.getElementById('rel_r2').textContent=d.restricao_2||'Sem restrição';
+    document.getElementById('rel_gravame').textContent=d.gravame||'—';
+    document.getElementById('rel_leilao').textContent=d.leilao||'—';
+    document.getElementById('rel_sinistro').textContent=d.sinistro||'—';
+    document.getElementById('rel_roubo').textContent=d.roubo_furto||'—';
+    document.getElementById('pagSection').style.display='none';
+    document.getElementById('reportSection').style.display='block';
+    setTimeout(()=>document.getElementById('reportSection').scrollIntoView({behavior:'smooth',block:'start'}),80);
+  }catch(e){document.getElementById('pixMsg').textContent='Erro ao carregar relatório. Entre em contato com o suporte.';}
+}
+
+function copiarPix(){
+  const code=document.getElementById('pixCode').textContent;
+  navigator.clipboard.writeText(code).then(()=>{
+    const btn=document.getElementById('copyBtn');
+    btn.classList.add('copied');
+    btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg> Copiado!';
+    setTimeout(()=>{btn.classList.remove('copied');btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copia e Cola';},3000);
+  });
+}
+
+function novaConsulta(){
+  document.getElementById('searchInput').value='';
+  ['resultSection','pagSection','reportSection'].forEach(id=>document.getElementById(id).style.display='none');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toggleFaq(el){
+  const item=el.closest('.faq-item'),open=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+  if(!open)item.classList.add('open');
+}
+</script>
+</body>
+</html>
