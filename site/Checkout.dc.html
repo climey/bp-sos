@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+<script src="image-slot.js"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Figtree',system-ui,sans-serif;background:#1a1a1a;color:#fff;-webkit-font-smoothing:antialiased;}
+  ::selection{background:rgba(212,54,48,.35);}
+  input::placeholder{color:#5a5b5f;}
+  @keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 rgba(212,54,48,.4);}50%{box-shadow:0 0 0 7px rgba(212,54,48,0);}}
+</style>
+</helmet>
+
+<div style="background:#1a1a1a;min-height:100vh;--ac:{{ accent }};--ah:{{ accentHover }};">
+
+  <!-- ============ HEADER ============ -->
+  <header data-screen-label="Header" style="position:fixed;top:0;left:0;right:0;z-index:50;backdrop-filter:blur(14px);background:rgba(21,10,9,.78);border-bottom:1px solid rgba(255,255,255,.07);">
+    <div style="max-width:1240px;margin:0 auto;padding:0 32px;height:74px;display:flex;align-items:center;justify-content:space-between;gap:24px;">
+      <a href="SOS Buscas Landing.dc.html" style="display:flex;align-items:center;gap:11px;text-decoration:none;color:#fff;">
+        <img src="images/logo-sos.svg" alt="SOS Buscas" style="height:42px;width:auto;display:block;">
+      </a>
+      <nav style="display:flex;align-items:center;gap:34px;">
+        <a href="SOS Buscas Landing.dc.html#consultar" style="color:#c4c5c9;text-decoration:none;font-weight:600;font-size:15px;">Consultar</a>
+        <a href="SOS Buscas Landing.dc.html#sobre" style="color:#808185;text-decoration:none;font-weight:600;font-size:15px;">Sobre Nós</a>
+        <a href="SOS Buscas Landing.dc.html#faq" style="color:#808185;text-decoration:none;font-weight:600;font-size:15px;">FAQ</a>
+        <a href="SOS Buscas Landing.dc.html#contato" style="color:#808185;text-decoration:none;font-weight:600;font-size:15px;">Contato</a>
+        <a href="#" style="color:#808185;text-decoration:none;font-weight:600;font-size:15px;">Já paguei</a>
+      </nav>
+      <a href="Resultado da Consulta.dc.html" style="text-decoration:none;background:var(--ac,#D43630);color:#fff;font-weight:700;font-size:15px;padding:12px 26px;border-radius:9999px;box-shadow:0 8px 22px rgba(212,54,48,.32);transition:background .2s,transform .2s;" style-hover="background:var(--ah,#B02E28);transform:translateY(-2px);">Consultar débitos</a>
+    </div>
+  </header>
+
+  <!-- ============ CHECKOUT ============ -->
+  <section data-screen-label="Checkout" style="padding:110px 32px 64px;background:radial-gradient(1100px 460px at 50% -12%,rgba(212,54,48,.13),transparent 60%),#1a1a1a;">
+    <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.25fr .85fr;gap:28px;align-items:start;">
+
+      <!-- LEFT COLUMN -->
+      <div style="display:flex;flex-direction:column;gap:24px;">
+        <!-- info card -->
+        <div style="background:#26282d;border:1px solid #3d4042;border-radius:20px;padding:34px 36px;">
+          <h1 style="font-size:28px;font-weight:900;letter-spacing:-.8px;">Preencha suas Informações</h1>
+          <label style="display:block;font-size:15px;font-weight:700;color:#c4c5c9;margin:24px 0 10px;">Informe o seu e-mail</label>
+          <input type="email" value="{{ email }}" onInput="{{ onEmail }}" placeholder="Insira um endereço de e-mail válido" style="width:100%;background:#1a1a1a;border:1px solid #3d4042;border-radius:10px;color:#fff;font-family:'Figtree';font-size:16px;padding:16px 18px;outline:none;transition:border-color .2s,box-shadow .2s;" style-focus="border-color:var(--ac,#D43630);box-shadow:0 0 0 3px rgba(212,54,48,.18);">
+          <p style="font-size:13.5px;color:#808185;margin-top:12px;">Neste e-mail enviaremos seu relatório. Por favor, informe um e-mail válido.</p>
+        </div>
+
+        <!-- order bumps -->
+        <sc-for list="{{ bumps }}" as="bump" hint-placeholder-count="2">
+          <div onClick="{{ bump.onToggle }}" style="background:#26282d;border:1px solid {{ bump.borderColor }};border-radius:20px;overflow:hidden;cursor:pointer;transition:border-color .25s;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 22px;background:{{ bump.headerBg }};border-bottom:1px solid #3d4042;transition:background .25s;">
+              <div style="display:flex;align-items:center;gap:11px;">
+                <span style="flex:none;width:30px;height:30px;border-radius:50%;border:2px solid rgba(212,54,48,.45);display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2.4" stroke-linecap="round"><path d="M19 5L5 19M9 6.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0zM20 17.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"></path></svg></span>
+                <span style="font-size:14.5px;font-weight:800;color:#fff;">{{ bump.headline }}</span>
+              </div>
+              <span style="flex:none;width:24px;height:24px;border-radius:50%;border:2px solid {{ bump.radioBorder }};background:{{ bump.radioBg }};display:flex;align-items:center;justify-content:center;transition:all .2s;"><sc-if value="{{ bump.selected }}" hint-placeholder-val="{{ false }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 6"></path></svg></sc-if></span>
+            </div>
+            <div style="padding:20px 22px 22px;">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;">
+                <div>
+                  <div style="font-size:14px;color:#808185;margin-bottom:2px;">de <span style="text-decoration:line-through;">{{ bump.was }}</span> por</div>
+                  <div style="font-size:28px;font-weight:900;color:#fff;letter-spacing:-.5px;">{{ bump.price }}</div>
+                </div>
+                <span style="font-size:12px;font-weight:800;letter-spacing:1px;color:#27c06b;background:rgba(39,192,107,.12);border:1px solid rgba(39,192,107,.3);padding:5px 11px;border-radius:9999px;">OFERTA</span>
+              </div>
+              <div style="font-size:18px;font-weight:800;color:var(--ac,#D43630);margin-top:12px;">{{ bump.title }}</div>
+              <p style="font-size:14.5px;color:#808185;margin-top:5px;line-height:1.5;">{{ bump.desc }}</p>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+
+      <!-- RIGHT COLUMN — order summary -->
+      <div style="background:#26282d;border:1px solid #3d4042;border-radius:20px;padding:34px 32px;position:sticky;top:96px;">
+        <h2 style="font-size:24px;font-weight:900;letter-spacing:-.6px;margin-bottom:22px;">Resumo do Pedido</h2>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid #33363b;">
+          <span style="font-size:14.5px;color:#c4c5c9;">Placa</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:14.5px;font-weight:800;color:#fff;">QMN-8E87</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid #33363b;">
+          <span style="font-size:14.5px;color:#c4c5c9;">Subtotal</span>
+          <span style="font-size:14.5px;font-weight:700;color:#fff;">{{ subtotalStr }}</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid #33363b;">
+          <span style="font-size:14.5px;color:#c4c5c9;">Dados extras</span>
+          <span style="font-size:14.5px;font-weight:700;color:#27c06b;">{{ extrasStr }}</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid #33363b;">
+          <span style="font-size:14.5px;color:#c4c5c9;">Desconto</span>
+          <span style="font-size:14.5px;font-weight:700;color:{{ discountColor }};">{{ discountStr }}</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid #33363b;">
+          <span style="font-size:14.5px;color:#c4c5c9;">Método</span>
+          <img src="images/pix-logo.webp" alt="PIX" style="width:74px;height:30px;object-fit:contain;display:block;">
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 0 4px;">
+          <span style="font-size:22px;font-weight:900;color:#fff;">TOTAL</span>
+          <span style="font-size:26px;font-weight:900;color:var(--ac,#D43630);letter-spacing:-.5px;">{{ totalStr }}</span>
+        </div>
+
+        <!-- coupon -->
+        <label style="display:block;font-size:13.5px;font-weight:700;color:#c4c5c9;margin:22px 0 9px;">Cupom de desconto</label>
+        <div style="display:flex;gap:10px;">
+          <div style="display:flex;align-items:center;flex:1;background:#1a1a1a;border:1px solid {{ couponBorder }};border-radius:10px;overflow:hidden;transition:border-color .2s;">
+            <span style="padding:0 0 0 14px;display:flex;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5a5b5f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a2 2 0 0 1 2-2V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v3a2 2 0 0 1 0 4v3a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-3a2 2 0 0 1-2-2z"></path><path d="M9 7v10"></path></svg></span>
+            <input type="text" value="{{ coupon }}" onInput="{{ onCoupon }}" placeholder="Adicionar Cupom" style="flex:1;background:transparent;border:none;outline:none;color:#fff;font-family:'Figtree';font-size:14.5px;padding:13px 14px;text-transform:uppercase;">
+          </div>
+          <button onClick="{{ onApplyCoupon }}" style="background:#1a1a1a;border:1px solid #3d4042;color:#c4c5c9;font-family:'Figtree';font-weight:700;font-size:14px;padding:0 20px;border-radius:10px;cursor:pointer;transition:border-color .2s,color .2s;" style-hover="border-color:var(--ac,#D43630);color:#fff;">Validar</button>
+        </div>
+        <p style="font-size:12.5px;font-weight:600;color:{{ couponMsgColor }};margin-top:8px;min-height:16px;">{{ couponMsg }}</p>
+
+        <!-- terms -->
+        <label style="display:flex;align-items:flex-start;gap:10px;margin-top:18px;cursor:pointer;">
+          <span onClick="{{ onTerms }}" style="flex:none;margin-top:1px;width:22px;height:22px;border-radius:6px;border:2px solid {{ termsBorder }};background:{{ termsBg }};display:flex;align-items:center;justify-content:center;transition:all .2s;"><sc-if value="{{ agreed }}" hint-placeholder-val="{{ false }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 6"></path></svg></sc-if></span>
+          <span style="font-size:13.5px;color:#c4c5c9;line-height:1.5;">Li e concordo com os <a href="#" style="color:var(--ac,#D43630);font-weight:700;text-decoration:none;">Termos e Condições</a> deste serviço.</span>
+        </label>
+
+        <!-- continue -->
+        <button onClick="{{ onContinue }}" disabled="{{ continueDisabled }}" style="width:100%;margin-top:20px;display:flex;align-items:center;justify-content:center;gap:10px;background:{{ continueBg }};color:#fff;border:none;font-family:'Figtree';font-weight:800;font-size:17px;padding:18px;border-radius:9999px;cursor:{{ continueCursor }};opacity:{{ continueOpacity }};box-shadow:{{ continueShadow }};transition:background .2s,transform .2s,opacity .2s;" style-hover="transform:translateY(-2px);">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0"></path></svg>
+          Continuar
+        </button>
+
+        <!-- trust badges -->
+        <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-top:24px;flex-wrap:wrap;">
+          <img src="images/selo-ssl.png" alt="Site seguro - Certificado SSL" style="height:48px;width:auto;object-fit:contain;display:block;">
+          <img src="images/selo-reclame.avif" alt="Empresa verificada no Reclame Aqui" style="height:48px;width:auto;object-fit:contain;display:block;">
+          <img src="images/selo-google.avif" alt="Avaliação 4.9 no Google" style="height:48px;width:auto;object-fit:contain;display:block;">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TESTIMONIALS ============ -->
+  <section style="padding:24px 32px 80px;background:#1a1a1a;">
+    <div style="max-width:1180px;margin:0 auto;">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px;">
+        <div style="background:#26282d;border:1px solid #3d4042;border-radius:16px;padding:28px;">
+          <div style="display:flex;gap:3px;margin-bottom:16px;">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="#f5b50a"><path d="M12 2l2.9 6.2 6.6.7-4.9 4.5 1.4 6.6L12 17.7 5.9 20.5l1.4-6.6L2.5 9l6.6-.8z"></path></svg><svg width="17" height="17" viewBox="0 0 24 24" fill="#f5b50a"><path d="M12 2l2.9 6.2 6.6.7-4.9 4.5 1.4 6.6L12 17.7 5.9 20.5l1.4-6.6L2.5 9l6.6-.8z"></path></svg><svg width="17" height="17" viewBox="0 0 24 24" fill="#f5b50a"><path d="M12 2l2.9 6.2 6.6.7-4.9 4.5 1.4 6.6L12 17.7 5.9 20.5l1.4-6.6L2.5 9l6.6-.8z"></path></svg><svg width="17" height="17" viewBox="0 0 24 24" fill="#f5b50a"><path d="M12 2l2.9 6.2 6.6.7-4.9 4.5 1.4 6.6L12 17.7 5.9 20.5l1.4-6.6L2.5 9l6.6-.8z"></path></svg><svg width="17" height="17" viewBox="0 0 24 24" fill="#f5b50a"><path d="M12 2l2.9 6.2 6.6.7-4.9 4.5 1.4 6.6L12 17.7 5.9 20.5l1.4-6.6L2.5 9l6.6-.8z"></path></svg>
+          </div>
+          <p style="font-size:15px;line-height:1.6;color:#c4c5c9;margin-bottom:22px;">"Consultei antes de comprar meu carro e me senti muito mais seguro. Veio tudo certinho!"</p>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#D43630,#8a1f1b);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:#fff;">LO</div>
+            <div><div style="font-weight:800;font-size:14.5px;">Lucas Oliveira</div><div style="font-size:12.5px;color:#808185;">Comprador particular</div></div>
+          </div>
+        </div>
+        <div style="background:#26282d;border:1px solid #3d4042;border-radius:16px;padding:28px;">
+          <div style="display:flex;gap:3px;margin-bottom:16px;">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="#f5b50a"><path d="M12 2l2.9 6.2 6.6.7-4.9 4.5 1.4 6.6L12 17.7 5.9 20.5l1.4-6.6L2.5 9l6.6-.8z"></path></svg><svg width="17" height="17" viewBox="0 0 24 24" fill="#f5b50a"><path d="M12 2l2.9 6.2 6.6.7-4.9 4.5 1.4 6.6L12 17.7 5.9 20.5l1.4-6.6L2.5 9l6.6-.8z"></path></svg><svg width="17" height="17" viewBox="0 0 24 24" fill="#f5b50a"><path d="M12 2l2.9 6.2 6.6.7-4.9 4.5 1.4 6.6L12 17.7 5.9 20.5l1.4-6.6L2.5 9l6.6-.8z"></path></svg><svg width="17" height="17" viewBox="0 0 24 24" fill="#f5b50a"><path d="M12 2l2.9 6.2 6.6.7-4.9 4.5 1.4 6.6L12 17.7 5.9 20.5l1.4-6.6L2.5 9l6.6-.8z"></path></svg><svg width="17" height="17" viewBox="0 0 24 24" fill="#f5b50a"><path d="M12 2l2.9 6.2 6.6.7-4.9 4.5 1.4 6.6L12 17.7 5.9 20.5l1.4-6.6L2.5 9l6.6-.8z"></path></svg>
+          </div>
+          <p style="font-size:15px;line-height:1.6;color:#c4c5c9;margin-bottom:22px;">"Uso a SOS Buscas todos os dias na loja. Agilidade e confiança pra passar as informações certas aos clientes."</p>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#3a5fcc,#1c2c66);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:#fff;">FC</div>
+            <div><div style="font-weight:800;font-size:14.5px;">Fernanda Costa</div><div style="font-size:12.5px;color:#808185;">Vendedora de veículos</div></div>
+          </div>
+        </div>
+        <div style="background:#26282d;border:1px solid #3d4042;border-radius:16px;padding:28px;">
+          <div style="display:flex;gap:3px;margin-bottom:16px;">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="#f5b50a"><path d="M12 2l2.9 6.2 6.6.7-4.9 4.5 1.4 6.6L12 17.7 5.9 20.5l1.4-6.6L2.5 9l6.6-.8z"></path></svg><svg width="17" height="17" viewBox="0 0 24 24" fill="#f5b50a"><path d="M12 2l2.9 6.2 6.6.7-4.9 4.5 1.4 6.6L12 17.7 5.9 20.5l1.4-6.6L2.5 9l6.6-.8z"></path></svg><svg width="17" height="17" viewBox="0 0 24 24" fill="#f5b50a"><path d="M12 2l2.9 6.2 6.6.7-4.9 4.5 1.4 6.6L12 17.7 5.9 20.5l1.4-6.6L2.5 9l6.6-.8z"></path></svg><svg width="17" height="17" viewBox="0 0 24 24" fill="#f5b50a"><path d="M12 2l2.9 6.2 6.6.7-4.9 4.5 1.4 6.6L12 17.7 5.9 20.5l1.4-6.6L2.5 9l6.6-.8z"></path></svg><svg width="17" height="17" viewBox="0 0 24 24" fill="#f5b50a"><path d="M12 2l2.9 6.2 6.6.7-4.9 4.5 1.4 6.6L12 17.7 5.9 20.5l1.4-6.6L2.5 9l6.6-.8z"></path></svg>
+          </div>
+          <p style="font-size:15px;line-height:1.6;color:#c4c5c9;margin-bottom:22px;">"Recomendo demais! Em poucos minutos tive acesso a tudo sobre o veículo. Vale cada centavo."</p>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2ea05a,#15522f);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:#fff;">TM</div>
+            <div><div style="font-weight:800;font-size:14.5px;">Tiago Martins</div><div style="font-size:12.5px;color:#808185;">Mecânico</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer data-screen-label="Footer" style="background:#141414;border-top:1px solid #2a2c30;padding:48px 32px 32px;">
+    <div style="max-width:1180px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;">
+      <img src="images/logo-sos.svg" alt="SOS Buscas" style="height:36px;width:auto;display:block;">
+      <p style="font-size:13.5px;color:#5a5b5f;">© 2026 SOS Buscas. Todos os direitos reservados · CNPJ 29.054.606/0001-91</p>
+      <div style="display:flex;gap:20px;">
+        <a href="#" style="font-size:13.5px;color:#808185;text-decoration:none;" style-hover="color:#fff;">Termos</a>
+        <a href="#" style="font-size:13.5px;color:#808185;text-decoration:none;" style-hover="color:#fff;">Privacidade</a>
+        <a href="#" style="font-size:13.5px;color:#808185;text-decoration:none;" style-hover="color:#fff;">LGPD</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============ WHATSAPP FAB ============ -->
+  <a href="https://wa.me/5500000000000" target="_blank" rel="noopener" aria-label="Fale conosco no WhatsApp" style="position:fixed;right:24px;bottom:24px;z-index:90;width:60px;height:60px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px rgba(37,211,102,.45);transition:transform .2s;" style-hover="transform:scale(1.08);">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 1 1 12 20zm4.4-5.6c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.7.9-.3.2-.5.1a6.6 6.6 0 0 1-3.2-2.8c-.2-.4.2-.4.6-1.2.1-.2 0-.3 0-.5l-.7-1.6c-.2-.4-.4-.4-.5-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.7 11.7 0 0 0 4.5 4c2 .8 2 .6 2.4.5a2.5 2.5 0 0 0 1.6-1.2 2 2 0 0 0 .1-1.2c0-.1-.2-.2-.4-.3z"></path></svg>
+  </a>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:880},&quot;accentColor&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#D43630&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = {
+    email: '',
+    coupon: '',
+    bumps: [false, false],
+    agreed: false,
+    couponApplied: false,
+    couponMsg: '',
+    couponOk: false,
+  };
+
+  darken(hex, amt) {
+    const h = (hex || '#D43630').replace('#', '');
+    const n = h.length === 3 ? h.split('').map(c => c + c).join('') : h;
+    let r = parseInt(n.slice(0,2),16), g = parseInt(n.slice(2,4),16), b = parseInt(n.slice(4,6),16);
+    r = Math.max(0, Math.round(r*(1-amt))); g = Math.max(0, Math.round(g*(1-amt))); b = Math.max(0, Math.round(b*(1-amt)));
+    return '#' + [r,g,b].map(v => v.toString(16).padStart(2,'0')).join('');
+  }
+
+  brl(n) { return 'R$ ' + n.toFixed(2).replace('.', ','); }
+
+  renderVals() {
+    const accent = this.props.accentColor ?? '#D43630';
+    const accentHover = this.darken(accent, 0.16);
+
+    const base = 12.99;
+    const bumpDefs = [
+      { headline: '96% dos compradores também levaram', was: 'R$ 14,99', price: 'R$ 9,99', amount: 9.99, title: 'Débitos Veiculares', desc: 'Descubra se o veículo tem débitos de IPVA, Licenciamento e multas.' },
+      { headline: '89% dos compradores também levaram', was: 'R$ 29,99', price: 'R$ 24,99', amount: 24.99, title: 'Leilão', desc: 'Descubra se o veículo já teve passagem por leilões.' },
+    ];
+
+    const extras = bumpDefs.reduce((s, b, i) => s + (this.state.bumps[i] ? b.amount : 0), 0);
+    const discount = this.state.couponOk ? (base + extras) * 0.10 : 0;
+    const total = base + extras - discount;
+
+    const bumps = bumpDefs.map((b, i) => {
+      const selected = this.state.bumps[i];
+      return {
+        ...b,
+        selected,
+        onToggle: () => this.setState(s => { const arr = s.bumps.slice(); arr[i] = !arr[i]; return { bumps: arr }; }),
+        borderColor: selected ? accent : '#3d4042',
+        headerBg: selected ? 'rgba(212,54,48,.12)' : '#1f2125',
+        radioBorder: selected ? accent : '#5a5b5f',
+        radioBg: selected ? accent : 'transparent',
+      };
+    });
+
+    const onEmail = (e) => this.setState({ email: e.target.value });
+    const onCoupon = (e) => this.setState({ coupon: e.target.value, couponApplied: false });
+    const onApplyCoupon = () => {
+      const code = (this.state.coupon || '').trim().toUpperCase();
+      if (!code) { this.setState({ couponMsg: 'Digite um cupom.', couponOk: false, couponApplied: true }); return; }
+      if (code === 'SOS10' || code === 'PLACA10') {
+        this.setState({ couponMsg: 'Cupom aplicado: 10% de desconto!', couponOk: true, couponApplied: true });
+      } else {
+        this.setState({ couponMsg: 'Cupom inválido ou expirado.', couponOk: false, couponApplied: true });
+      }
+    };
+    const onTerms = () => this.setState(s => ({ agreed: !s.agreed }));
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.state.email);
+    const canContinue = this.state.agreed && emailOk;
+    const onContinue = () => {
+      if (!canContinue) return;
+      window.location.href = 'Pagamento PIX.dc.html';
+    };
+
+    return {
+      accent, accentHover,
+      email: this.state.email,
+      coupon: this.state.coupon,
+      bumps,
+      subtotalStr: this.brl(base),
+      extrasStr: '+ ' + this.brl(extras),
+      discountStr: discount > 0 ? '- ' + this.brl(discount) : '- R$ 0,00',
+      discountColor: discount > 0 ? '#27c06b' : '#808185',
+      totalStr: this.brl(total),
+      onEmail, onCoupon, onApplyCoupon, onTerms, onContinue,
+      agreed: this.state.agreed,
+      termsBorder: this.state.agreed ? accent : '#5a5b5f',
+      termsBg: this.state.agreed ? accent : 'transparent',
+      couponMsg: this.state.couponMsg,
+      couponMsgColor: this.state.couponApplied ? (this.state.couponOk ? '#27c06b' : '#D43630') : '#808185',
+      couponBorder: this.state.couponApplied ? (this.state.couponOk ? '#27c06b' : '#D43630') : '#3d4042',
+      continueDisabled: !canContinue,
+      continueBg: canContinue ? accent : '#3a3c41',
+      continueCursor: canContinue ? 'pointer' : 'not-allowed',
+      continueOpacity: canContinue ? '1' : '.7',
+      continueShadow: canContinue ? '0 12px 30px rgba(212,54,48,.4)' : 'none',
+    };
+  }
+}
+</script>
+</body>
+</html>
