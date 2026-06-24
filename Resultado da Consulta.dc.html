@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@500;700;800&amp;display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Figtree',system-ui,sans-serif;background:#1a1a1a;color:#fff;-webkit-font-smoothing:antialiased;}
+  ::selection{background:rgba(212,54,48,.35);}
+  @keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 rgba(212,54,48,.4);}50%{box-shadow:0 0 0 7px rgba(212,54,48,0);}}
+</style>
+</helmet>
+
+<div style="background:#1a1a1a;min-height:100vh;--ac:{{ accent }};--ah:{{ accentHover }};">
+
+  <!-- ============ HEADER ============ -->
+  <header data-screen-label="Header" style="position:fixed;top:0;left:0;right:0;z-index:50;backdrop-filter:blur(14px);background:rgba(21,10,9,.78);border-bottom:1px solid rgba(255,255,255,.07);">
+    <div style="max-width:1240px;margin:0 auto;padding:0 32px;height:74px;display:flex;align-items:center;justify-content:space-between;gap:24px;">
+      <a href="SOS Buscas Landing.dc.html" style="display:flex;align-items:center;gap:11px;text-decoration:none;color:#fff;">
+        <img src="images/logo-sos.svg" alt="SOS Buscas" style="height:42px;width:auto;display:block;">
+      </a>
+      <nav style="display:flex;align-items:center;gap:34px;">
+        <a href="SOS Buscas Landing.dc.html#consultar" style="color:#c4c5c9;text-decoration:none;font-weight:600;font-size:15px;">Consultar</a>
+        <a href="SOS Buscas Landing.dc.html#sobre" style="color:#808185;text-decoration:none;font-weight:600;font-size:15px;">Sobre Nós</a>
+        <a href="SOS Buscas Landing.dc.html#faq" style="color:#808185;text-decoration:none;font-weight:600;font-size:15px;">FAQ</a>
+        <a href="SOS Buscas Landing.dc.html#contato" style="color:#808185;text-decoration:none;font-weight:600;font-size:15px;">Contato</a>
+        <a href="#" style="color:#808185;text-decoration:none;font-weight:600;font-size:15px;">Já paguei</a>
+      </nav>
+      <a href="Checkout.dc.html" style="text-decoration:none;background:var(--ac,#D43630);color:#fff;font-weight:700;font-size:15px;padding:12px 26px;border-radius:9999px;box-shadow:0 8px 22px rgba(212,54,48,.32);transition:background .2s,transform .2s;" style-hover="background:var(--ah,#B02E28);transform:translateY(-2px);">Liberar informações</a>
+    </div>
+  </header>
+
+  <!-- ============ RESULT HERO ============ -->
+  <section data-screen-label="Resultado" style="padding:122px 32px 40px;background:radial-gradient(1100px 460px at 50% -10%,rgba(212,54,48,.16),transparent 60%),#1a1a1a;">
+    <div style="max-width:1180px;margin:0 auto;">
+      <div style="background:#26282d;border:1px solid #3d4042;border-radius:24px;padding:48px;display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;">
+        <div>
+          <h1 style="font-size:clamp(34px,4.4vw,54px);line-height:1.02;font-weight:900;letter-spacing:-1.6px;">Resultado da<br>sua consulta!</h1>
+          <p style="margin-top:20px;font-size:13px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#808185;">Você consultou um: <span style="color:var(--ac,#D43630);">FIAT/STRADA ENDURANCE CD</span></p>
+        </div>
+        <!-- Mercosul plate -->
+        <div style="justify-self:end;width:100%;max-width:400px;border:3px solid #0c0c0c;border-radius:14px;background:#fff;overflow:hidden;box-shadow:0 18px 44px rgba(0,0,0,.5);">
+          <div style="background:#0b3aa3;display:flex;align-items:center;justify-content:space-between;padding:7px 14px;">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;color:#fff;letter-spacing:.5px;">MERCOSUL</span>
+            <span style="font-size:13px;font-weight:800;color:#fff;letter-spacing:3px;">BRASIL</span>
+            <span style="width:22px;height:15px;border-radius:2px;background:linear-gradient(135deg,#1f9b3a 40%,#f7d417 40% 60%,#1f9b3a 60%);display:block;"></span>
+          </div>
+          <div style="position:relative;padding:16px 18px 20px;text-align:center;">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:clamp(36px,5vw,58px);font-weight:800;color:#111;letter-spacing:2px;">QMN&nbsp;8E87</span>
+            <span style="position:absolute;left:14px;bottom:10px;background:#0b3aa3;color:#fff;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:800;padding:2px 6px;border-radius:3px;">BR</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- actions -->
+      <div style="display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap;margin-top:24px;">
+        <button onClick="{{ onCopy }}" style="display:flex;align-items:center;gap:8px;background:#26282d;border:1px solid #3d4042;color:#c4c5c9;font-family:'Figtree';font-weight:700;font-size:14px;padding:11px 20px;border-radius:10px;cursor:pointer;transition:border-color .2s,color .2s;" style-hover="border-color:#5a5b5f;color:#fff;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V5a2 2 0 0 1 2-2h10"></path></svg>
+          {{ copyLabel }}
+        </button>
+        <button onClick="{{ onPrint }}" style="display:flex;align-items:center;gap:8px;background:#26282d;border:1px solid #3d4042;color:#c4c5c9;font-family:'Figtree';font-weight:700;font-size:14px;padding:11px 20px;border-radius:10px;cursor:pointer;transition:border-color .2s,color .2s;" style-hover="border-color:#5a5b5f;color:#fff;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="7"></rect></svg>
+          Imprimir
+        </button>
+        <a href="Checkout.dc.html" style="display:flex;align-items:center;gap:8px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-weight:700;font-size:14px;padding:11px 22px;border-radius:10px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0"></path></svg>
+          Liberar informações
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DATA CARDS ============ -->
+  <section style="padding:24px 32px 56px;background:radial-gradient(900px 360px at 50% 50%,rgba(212,54,48,.06),transparent 70%),linear-gradient(180deg,#f4f1ee 0%,#f4f1ee calc(100% - 90px),#1a1a1a 100%);">
+    <div style="max-width:1180px;margin:0 auto;position:relative;">
+      <!-- decorative dotted texture -->
+      <div style="position:absolute;left:-8px;right:-8px;top:48px;bottom:48px;z-index:0;pointer-events:none;background-image:radial-gradient(rgba(26,20,18,.05) 1.2px,transparent 1.2px);background-size:22px 22px;mask-image:radial-gradient(680px 420px at 50% 50%,#000,transparent 78%);-webkit-mask-image:radial-gradient(680px 420px at 50% 50%,#000,transparent 78%);"></div>
+      <div style="position:relative;z-index:1;">
+      <div style="display:inline-flex;align-items:center;gap:9px;background:#ffffff;border:1px solid #e7e2dd;border-radius:9999px;padding:8px 16px;margin-bottom:24px;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>
+        <span style="font-size:13.5px;font-weight:600;color:#3a3b3f;">Pré-visualização — alguns dados estão bloqueados. Libere o relatório completo.</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+        <!-- Principais -->
+        <div style="background:#ffffff;border:1px solid #e7e2dd;border-radius:18px;padding:30px 32px;">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+            <span style="flex:none;width:46px;height:46px;border-radius:50%;border:2px solid rgba(212,54,48,.4);display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13l2-5.5A2 2 0 0 1 6.9 6h10.2a2 2 0 0 1 1.9 1.5L21 13v5a1 1 0 0 1-1 1h-1.5a1 1 0 0 1-1-1v-1H6.5v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"></path><circle cx="7" cy="15.5" r="1"></circle><circle cx="17" cy="15.5" r="1"></circle></svg></span>
+            <div><h3 style="font-size:21px;font-weight:800;color:#18120f;">Principais</h3><p style="font-size:13.5px;color:#808185;margin-top:1px;">Principais dados do veículo</p></div>
+          </div>
+          <sc-for list="{{ principais }}" as="row" hint-placeholder-count="8">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
+              <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
+              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="Checkout.dc.html" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
+              <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:#46506b;text-align:right;">{{ row.value }}</span></sc-if>
+            </div>
+          </sc-for>
+        </div>
+
+        <!-- Identificação -->
+        <div style="background:#ffffff;border:1px solid #e7e2dd;border-radius:18px;padding:30px 32px;">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+            <span style="flex:none;width:46px;height:46px;border-radius:50%;border:2px solid rgba(212,54,48,.4);display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="3.2"></circle><path d="M12 3v3M12 18v3M3 12h3M18 12h3"></path></svg></span>
+            <div><h3 style="font-size:21px;font-weight:800;color:#18120f;">Identificação</h3><p style="font-size:13.5px;color:#808185;margin-top:1px;">Dados de identificação do veículo</p></div>
+          </div>
+          <sc-for list="{{ identificacao }}" as="row" hint-placeholder-count="6">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
+              <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
+              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="Checkout.dc.html" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
+              <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:#46506b;text-align:right;">{{ row.value }}</span></sc-if>
+            </div>
+          </sc-for>
+        </div>
+
+        <!-- Proprietário -->
+        <div style="background:#ffffff;border:1px solid #e7e2dd;border-radius:18px;padding:30px 32px;">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+            <span style="flex:none;width:46px;height:46px;border-radius:50%;border:2px solid rgba(212,54,48,.4);display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"></path></svg></span>
+            <div><h3 style="font-size:21px;font-weight:800;color:#18120f;">Proprietário</h3><p style="font-size:13.5px;color:#808185;margin-top:1px;">Dados sobre o proprietário</p></div>
+          </div>
+          <sc-for list="{{ proprietario }}" as="row" hint-placeholder-count="5">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
+              <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
+              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="Checkout.dc.html" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
+              <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:#46506b;text-align:right;">{{ row.value }}</span></sc-if>
+            </div>
+          </sc-for>
+        </div>
+
+        <!-- Outros -->
+        <div style="background:#ffffff;border:1px solid #e7e2dd;border-radius:18px;padding:30px 32px;">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+            <span style="flex:none;width:46px;height:46px;border-radius:50%;border:2px solid rgba(212,54,48,.4);display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"></path></svg></span>
+            <div><h3 style="font-size:21px;font-weight:800;color:#18120f;">Outros</h3><p style="font-size:13.5px;color:#808185;margin-top:1px;">Outras informações do veículo</p></div>
+          </div>
+          <sc-for list="{{ outros }}" as="row" hint-placeholder-count="5">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
+              <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
+              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="Checkout.dc.html" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
+              <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:#46506b;text-align:right;">{{ row.value }}</span></sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- Tabela FIPE -->
+      <div style="background:#ffffff;border:1px solid #e7e2dd;border-radius:18px;padding:30px 32px;margin-top:24px;">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:22px;">
+          <span style="flex:none;width:46px;height:46px;border-radius:50%;border:2px solid rgba(212,54,48,.4);display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"></rect><path d="M9 7h6M9 11h6M9 15h4"></path></svg></span>
+          <div><h3 style="font-size:21px;font-weight:800;color:#18120f;">Tabela FIPE</h3><p style="font-size:13.5px;color:#808185;margin-top:1px;">Valores de mercado do seu veículo</p></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <sc-for list="{{ fipe }}" as="item" hint-placeholder-count="5">
+            <div style="background:#faf8f7;border:1px solid #ececec;border-radius:12px;overflow:hidden;">
+              <button onClick="{{ item.onToggle }}" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 22px;background:transparent;border:none;cursor:pointer;text-align:left;font-family:'Figtree';">
+                <span style="font-size:16px;font-weight:800;color:#18120f;">{{ item.title }}</span>
+                <span style="flex:none;width:26px;height:26px;border-radius:50%;background:rgba(212,54,48,.14);display:flex;align-items:center;justify-content:center;transition:transform .3s;transform:{{ item.iconRotate }};"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="3" stroke-linecap="round"><path d="M6 9l6 6 6-6"></path></svg></span>
+              </button>
+              <div style="max-height:{{ item.maxH }};overflow:hidden;transition:max-height .35s ease;">
+                <div style="padding:4px 22px 24px;">
+                  <div style="font-size:30px;font-weight:900;color:#27c06b;letter-spacing:-.5px;margin-bottom:14px;">{{ item.price }}</div>
+                  <div style="display:flex;flex-direction:column;gap:9px;">
+                    <sc-for list="{{ item.fields }}" as="f" hint-placeholder-count="4">
+                      <div style="font-size:14.5px;color:#808185;">{{ f.k }}: <span style="color:#3a3b3f;font-weight:700;">{{ f.v }}</span></div>
+                    </sc-for>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ UNLOCK CTA ============ -->
+  <section id="liberar" style="padding:0 32px 80px;background:#1a1a1a;">
+    <div style="position:relative;max-width:1180px;margin:0 auto;border-radius:26px;overflow:hidden;background:#26282d;border:1px solid #3d4042;min-height:440px;">
+      <span style="position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(620px 340px at 18% 35%,rgba(212,54,48,.34),transparent 70%);"></span>
+      <!-- pessoa apontando para o preço/infos à esquerda -->
+      <img src="images/cta-pessoa.png" alt="" style="position:absolute;right:0;bottom:0;height:100%;width:auto;max-width:52%;object-fit:contain;object-position:bottom right;z-index:1;pointer-events:none;filter:drop-shadow(0 14px 30px rgba(0,0,0,.4));">
+      <div style="position:relative;z-index:2;max-width:560px;padding:56px 48px;">
+        <h2 style="font-size:clamp(30px,3.8vw,46px);font-weight:900;letter-spacing:-1.4px;line-height:1.04;">Libere as informações<br>agora mesmo!</h2>
+        <p style="font-size:16px;color:#c4c5c9;margin-top:16px;">Nome do proprietário, Renavam, Chassi, Município, UF, situação de roubo/furto e muito mais.</p>
+        <p style="font-size:15px;color:#808185;margin-top:26px;">De <span style="text-decoration:line-through;">R$ 27,99</span> por apenas:</p>
+        <div style="display:flex;align-items:baseline;gap:2px;margin-top:4px;">
+          <span style="font-size:34px;font-weight:800;color:#fff;">R$</span>
+          <span style="font-size:74px;font-weight:900;color:#fff;letter-spacing:-3px;line-height:1;">12</span>
+          <span style="font-size:34px;font-weight:800;color:#fff;">,99</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:18px;color:var(--ac,#D43630);font-weight:700;font-size:14.5px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+          Oferta por tempo limitado
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:10px;color:#c4c5c9;font-weight:600;font-size:14.5px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#27c06b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>
+          + de 1 milhão de clientes confiam na SOS Buscas.
+        </div>
+        <a href="Checkout.dc.html" style="position:relative;display:inline-flex;align-items:center;gap:11px;margin-top:30px;overflow:hidden;text-decoration:none;background:var(--ac,#D43630);color:#fff;font-weight:800;font-size:18px;padding:18px 38px;border-radius:9999px;box-shadow:0 14px 34px rgba(212,54,48,.42);animation:pulseGlow 2.4s ease-in-out infinite;transition:transform .2s;" style-hover="transform:translateY(-2px);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0"></path></svg>
+          Liberar agora por R$ 12,99
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer data-screen-label="Footer" style="background:#141414;border-top:1px solid #2a2c30;padding:48px 32px 32px;">
+    <div style="max-width:1180px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;">
+      <img src="images/logo-sos.svg" alt="SOS Buscas" style="height:36px;width:auto;display:block;">
+      <p style="font-size:13.5px;color:#5a5b5f;">© 2026 SOS Buscas. Todos os direitos reservados · CNPJ 29.054.606/0001-91</p>
+      <div style="display:flex;gap:20px;">
+        <a href="#" style="font-size:13.5px;color:#808185;text-decoration:none;" style-hover="color:#fff;">Termos</a>
+        <a href="#" style="font-size:13.5px;color:#808185;text-decoration:none;" style-hover="color:#fff;">Privacidade</a>
+        <a href="#" style="font-size:13.5px;color:#808185;text-decoration:none;" style-hover="color:#fff;">LGPD</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============ WHATSAPP FAB ============ -->
+  <a href="https://wa.me/5500000000000" target="_blank" rel="noopener" aria-label="Fale conosco no WhatsApp" style="position:fixed;right:24px;bottom:24px;z-index:90;width:60px;height:60px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px rgba(37,211,102,.45);transition:transform .2s;" style-hover="transform:scale(1.08);">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 1 1 12 20zm4.4-5.6c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.7.9-.3.2-.5.1a6.6 6.6 0 0 1-3.2-2.8c-.2-.4.2-.4.6-1.2.1-.2 0-.3 0-.5l-.7-1.6c-.2-.4-.4-.4-.5-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.7 11.7 0 0 0 4.5 4c2 .8 2 .6 2.4.5a2.5 2.5 0 0 0 1.6-1.2 2 2 0 0 0 .1-1.2c0-.1-.2-.2-.4-.3z"></path></svg>
+  </a>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:860},&quot;accentColor&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#D43630&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { fipeOpen: 0, copyLabel: 'Copiar' };
+
+  darken(hex, amt) {
+    const h = (hex || '#D43630').replace('#', '');
+    const n = h.length === 3 ? h.split('').map(c => c + c).join('') : h;
+    let r = parseInt(n.slice(0,2),16), g = parseInt(n.slice(2,4),16), b = parseInt(n.slice(4,6),16);
+    r = Math.max(0, Math.round(r*(1-amt))); g = Math.max(0, Math.round(g*(1-amt))); b = Math.max(0, Math.round(b*(1-amt)));
+    return '#' + [r,g,b].map(v => v.toString(16).padStart(2,'0')).join('');
+  }
+
+  row(label, value) {
+    const locked = value == null;
+    return { label, value: value || '', locked, unlocked: !locked };
+  }
+
+  renderVals() {
+    const accent = this.props.accentColor ?? '#D43630';
+    const accentHover = this.darken(accent, 0.16);
+
+    const principais = [
+      this.row('Placa', 'QMN 8E87'),
+      this.row('Placa Alternativa', 'QMN-8487'),
+      this.row('Marca/Modelo', 'FIAT/STRADA ENDURANCE CD'),
+      this.row('Marca', 'FIAT'),
+      this.row('Modelo', 'STRADA ENDURANCE CD'),
+      this.row('Cor', null),
+      this.row('Ano Modelo', '2022'),
+      this.row('Ano Fabricação', '2021'),
+    ];
+    const identificacao = [
+      this.row('Renavam', null),
+      this.row('Chassi', null),
+      this.row('Final do Chassi', '**********27801'),
+      this.row('Origem', 'NACIONAL'),
+      this.row('Cilindradas', null),
+      this.row('Combustível', 'Álcool / Gasolina'),
+    ];
+    const proprietario = [
+      this.row('Nome do Proprietário', null),
+      this.row('Doc. Proprietário (Parcial)', null),
+      this.row('Tipo Doc. Proprietário', null),
+      this.row('Tipo Doc. Faturado', 'Jurídica'),
+      this.row('Estado (UF) Faturado', 'SE'),
+    ];
+    const outros = [
+      this.row('Situação Roubo/Furto', null),
+      this.row('Município', null),
+      this.row('Estado (UF)', null),
+      this.row('Segmento', 'Comercial Leve'),
+      this.row('Sub Segmento', 'CL - PICK-UP PEQUENA'),
+    ];
+
+    const fipeData = [
+      { title: 'Strada Endurance 1.4 Flex 8V CD', price: 'R$ 77.890,00', codigo: '001529-6', modelo: 'Strada Endurance 1.4 Flex 8V CD' },
+      { title: 'Strada Endurance 1.4 Flex 8V CS Plus', price: 'R$ 82.450,00', codigo: '001530-0', modelo: 'Strada Endurance 1.4 Flex 8V CS Plus' },
+      { title: 'Strada Ranch 1.3 Flex 8V CD Aut.', price: 'R$ 96.310,00', codigo: '001541-5', modelo: 'Strada Ranch 1.3 Flex 8V CD Aut.' },
+      { title: 'Strada Freedom 1.3 Flex 8V CD', price: 'R$ 88.720,00', codigo: '001538-5', modelo: 'Strada Freedom 1.3 Flex 8V CD' },
+      { title: 'Strada Freedom 1.3 Flex 8V CS Plus', price: 'R$ 79.990,00', codigo: '001536-9', modelo: 'Strada Freedom 1.3 Flex 8V CS Plus' },
+    ];
+    const fipe = fipeData.map((f, i) => ({
+      title: f.title,
+      price: f.price,
+      fields: [
+        { k: 'Código Fipe', v: f.codigo },
+        { k: 'Combustível', v: 'Flex' },
+        { k: 'Marca', v: 'Fiat' },
+        { k: 'Modelo', v: f.modelo },
+        { k: 'Tipo', v: 'Carro' },
+      ],
+      maxH: i === this.state.fipeOpen ? '320px' : '0px',
+      iconRotate: i === this.state.fipeOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+      onToggle: () => this.setState(s => ({ fipeOpen: s.fipeOpen === i ? -1 : i })),
+    }));
+
+    const onCopy = () => {
+      const txt = 'QMN 8E87';
+      try { navigator.clipboard && navigator.clipboard.writeText(txt); } catch (e) {}
+      this.setState({ copyLabel: 'Copiado!' });
+      clearTimeout(this._ct);
+      this._ct = setTimeout(() => this.setState({ copyLabel: 'Copiar' }), 1800);
+    };
+    const onPrint = () => { try { window.print(); } catch (e) {} };
+
+    return { accent, accentHover, principais, identificacao, proprietario, outros, fipe, onCopy, onPrint, copyLabel: this.state.copyLabel };
+  }
+}
+</script>
+</body>
+</html>
