@@ -25,6 +25,7 @@
   @keyframes floatY{0%,100%{transform:translateY(0);}50%{transform:translateY(-7px);}}
 </style>
 <script src="image-slot.js"></script>
+<script src="api.js"></script>
 </helmet>
 
 <div style="background:transparent;min-height:100vh;--ac:{{ accent }};--ah:{{ accentHover }};">
@@ -62,13 +63,14 @@
         <div style="display:flex;gap:12px;padding:10px;background:#26282d;border:1px solid #3d4042;border-radius:16px;animation:plateGlow 2.6s ease-in-out infinite;">
           <div style="display:flex;align-items:center;flex:1;background:#1a1a1a;border-radius:8px;border:1px solid #3d4042;overflow:hidden;">
             
-            <input type="text" placeholder="ABC1D23" maxlength="8" style="flex:1;background:transparent;border:none;outline:none;color:#fff;font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;letter-spacing:4px;text-transform:uppercase;padding:16px 14px;width:100%;">
+            <input type="text" value="{{ placa }}" onInput="{{ onPlaca }}" placeholder="ABC1D23" maxlength="8" style="flex:1;background:transparent;border:none;outline:none;color:#fff;font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;letter-spacing:4px;text-transform:uppercase;padding:16px 14px;width:100%;">
           </div>
-          <a href="Resultado da Consulta.dc.html" style="display:flex;align-items:center;gap:9px;background:var(--ac,#D43630);color:#fff;border:none;text-decoration:none;font-family:'Figtree';font-weight:700;font-size:16px;padding:0 28px;border-radius:8px;cursor:pointer;transition:background .2s;white-space:nowrap;" style-hover="background:var(--ah,#B02E28);">
+          <button onClick="{{ onConsultar }}" disabled="{{ loading }}" style="display:flex;align-items:center;gap:9px;background:var(--ac,#D43630);color:#fff;border:none;text-decoration:none;font-family:'Figtree';font-weight:700;font-size:16px;padding:0 28px;border-radius:8px;cursor:{{ btnCursor }};opacity:{{ btnOpacity }};transition:background .2s,opacity .2s;white-space:nowrap;" style-hover="background:var(--ah,#B02E28);">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M21 21l-5.2-5.2"></path></svg>
-            Consultar
-          </a>
+            {{ btnLabel }}
+          </button>
         </div>
+        <sc-if value="{{ error }}" hint-placeholder-val="{{ false }}"><p style="font-size:13px;color:#ff6b6b;font-weight:600;margin-top:12px;">{{ error }}</p></sc-if>
         <p style="font-size: 13px; color: #808185; margin-top: 14px">Resultado na hora - Consulta gratuita</p>
         <!-- trust badges — drop full images here -->
         <div style="display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;margin-top:20px;">
@@ -358,7 +360,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:820},&quot;accentColor&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#D43630&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
 class Component extends DCLogic {
-  state = { faqOpen: 0 };
+  state = { faqOpen: 0, placa: '', loading: false, error: '' };
 
   darken(hex, amt) {
     const h = (hex || '#D43630').replace('#', '');
@@ -401,7 +403,34 @@ class Component extends DCLogic {
       iconRotate: i === this.state.faqOpen ? 'rotate(180deg)' : 'rotate(0deg)',
       onToggle: () => this.setState(s => ({ faqOpen: s.faqOpen === i ? -1 : i })),
     }));
-    return { accent, accentHover, faqs };
+
+    const onPlaca = (e) => this.setState({ placa: e.target.value.toUpperCase(), error: '' });
+    const onConsultar = async () => {
+      if (this.state.loading) return;
+      const placa = (this.state.placa || '').trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+      if (placa.length < 7) { this.setState({ error: 'Digite uma placa válida (ex.: ABC1D23).' }); return; }
+      this.setState({ loading: true, error: '' });
+      try {
+        const data = await window.SOS.consultarPlaca(placa);
+        sessionStorage.setItem('sos_dados', JSON.stringify(data));
+        sessionStorage.setItem('sos_placa', placa);
+        sessionStorage.removeItem('sos_pago');
+        window.location.href = 'Resultado da Consulta.dc.html';
+      } catch (err) {
+        this.setState({ loading: false, error: 'Não foi possível consultar essa placa. Verifique e tente novamente.' });
+      }
+    };
+
+    return {
+      accent, accentHover, faqs,
+      placa: this.state.placa,
+      onPlaca, onConsultar,
+      loading: this.state.loading,
+      error: this.state.error,
+      btnLabel: this.state.loading ? 'Consultando...' : 'Consultar',
+      btnCursor: this.state.loading ? 'wait' : 'pointer',
+      btnOpacity: this.state.loading ? '.7' : '1',
+    };
   }
 }
 </script>

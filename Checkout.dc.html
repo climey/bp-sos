@@ -12,6 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
 <script src="image-slot.js"></script>
+<script src="api.js"></script>
 <style>
   *{box-sizing:border-box;margin:0;padding:0;}
   html{scroll-behavior:smooth;}
@@ -86,7 +87,7 @@
 
         <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid #33363b;">
           <span style="font-size:14.5px;color:#c4c5c9;">Placa</span>
-          <span style="font-family:'JetBrains Mono',monospace;font-size:14.5px;font-weight:800;color:#fff;">QMN-8E87</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:14.5px;font-weight:800;color:#fff;">{{ placaFmt }}</span>
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid #33363b;">
           <span style="font-size:14.5px;color:#c4c5c9;">Subtotal</span>
@@ -130,8 +131,9 @@
         <!-- continue -->
         <button onClick="{{ onContinue }}" disabled="{{ continueDisabled }}" style="width:100%;margin-top:20px;display:flex;align-items:center;justify-content:center;gap:10px;background:{{ continueBg }};color:#fff;border:none;font-family:'Figtree';font-weight:800;font-size:17px;padding:18px;border-radius:9999px;cursor:{{ continueCursor }};opacity:{{ continueOpacity }};box-shadow:{{ continueShadow }};transition:background .2s,transform .2s,opacity .2s;" style-hover="transform:translateY(-2px);">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0"></path></svg>
-          Continuar
+          {{ continueLabel }}
         </button>
+        <sc-if value="{{ payError }}" hint-placeholder-val="{{ false }}"><p style="font-size:13px;color:#ff6b6b;font-weight:600;margin-top:12px;text-align:center;">{{ payError }}</p></sc-if>
 
         <!-- trust badges -->
         <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-top:24px;flex-wrap:wrap;">
@@ -211,6 +213,10 @@ class Component extends DCLogic {
     couponApplied: false,
     couponMsg: '',
     couponOk: false,
+    placa: '',
+    dados: {},
+    processing: false,
+    payError: '',
   };
 
   darken(hex, amt) {
@@ -219,6 +225,12 @@ class Component extends DCLogic {
     let r = parseInt(n.slice(0,2),16), g = parseInt(n.slice(2,4),16), b = parseInt(n.slice(4,6),16);
     r = Math.max(0, Math.round(r*(1-amt))); g = Math.max(0, Math.round(g*(1-amt))); b = Math.max(0, Math.round(b*(1-amt)));
     return '#' + [r,g,b].map(v => v.toString(16).padStart(2,'0')).join('');
+  }
+
+  componentDidMount() {
+    const dados = JSON.parse(sessionStorage.getItem('sos_dados') || '{}');
+    const placa = sessionStorage.getItem('sos_placa') || '';
+    this.setState({ dados, placa });
   }
 
   brl(n) { return 'R$ ' + n.toFixed(2).replace('.', ','); }
@@ -263,10 +275,31 @@ class Component extends DCLogic {
     };
     const onTerms = () => this.setState(s => ({ agreed: !s.agreed }));
     const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.state.email);
-    const canContinue = this.state.agreed && emailOk;
-    const onContinue = () => {
+    const canContinue = this.state.agreed && emailOk && !this.state.processing;
+
+    const selecionados = bumpDefs.filter((b, i) => this.state.bumps[i]).map(b => b.title);
+    const placaRaw = (this.state.placa || (this.state.dados && this.state.dados.placa) || '').toUpperCase();
+    const placaFmt = placaRaw ? placaRaw.replace(/^(.{3})(.+)$/, '$1-$2') : '—';
+
+    const onContinue = async () => {
       if (!canContinue) return;
-      window.location.href = 'Pagamento PIX.dc.html';
+      this.setState({ processing: true, payError: '' });
+      try {
+        const data = await window.SOS.criarPagamento({
+          plano: 'completo',
+          placa: placaRaw,
+          email: this.state.email,
+          nome: '',
+          cpf: '',
+          valor: total,
+          extras: selecionados,
+        });
+        sessionStorage.setItem('sos_pagamento_id', data.id);
+        sessionStorage.setItem('sos_pix', JSON.stringify(data));
+        window.location.href = 'Pagamento PIX.dc.html';
+      } catch (e) {
+        this.setState({ processing: false, payError: 'Não foi possível gerar o pagamento. Tente novamente.' });
+      }
     };
 
     return {
@@ -274,6 +307,9 @@ class Component extends DCLogic {
       email: this.state.email,
       coupon: this.state.coupon,
       bumps,
+      placaFmt,
+      payError: this.state.payError,
+      continueLabel: this.state.processing ? 'Gerando pagamento...' : 'Continuar',
       subtotalStr: this.brl(base),
       extrasStr: '+ ' + this.brl(extras),
       discountStr: discount > 0 ? '- ' + this.brl(discount) : '- R$ 0,00',

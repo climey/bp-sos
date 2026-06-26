@@ -20,6 +20,7 @@
   @keyframes blink{0%,100%{opacity:1;}50%{opacity:.25;}}
 </style>
 <script src="image-slot.js"></script>
+<script src="api.js"></script>
 </helmet>
 
 <div style="background:#1a1a1a;min-height:100vh;--ac:{{ accent }};--ah:{{ accentHover }};">
@@ -104,7 +105,7 @@
 
         <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid #33363b;">
           <span style="font-size:14.5px;color:#c4c5c9;">Placa</span>
-          <span style="font-family:'JetBrains Mono',monospace;font-size:14.5px;font-weight:800;color:#fff;">QMN-8E87</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:14.5px;font-weight:800;color:#fff;">{{ placaFmt }}</span>
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid #33363b;">
           <span style="font-size:14.5px;color:#c4c5c9;">Subtotal</span>
@@ -164,7 +165,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:760},&quot;accentColor&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#D43630&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
 class Component extends DCLogic {
-  state = { remaining: 2 * 3600 - 2, copyLabel: 'Copiar código PIX' };
+  state = { remaining: 2 * 3600 - 2, copyLabel: 'Copiar código PIX', pixCode: '', placa: '' };
 
   darken(hex, amt) {
     const h = (hex || '#D43630').replace('#', '');
@@ -178,8 +179,37 @@ class Component extends DCLogic {
     this._t = setInterval(() => {
       this.setState(s => ({ remaining: s.remaining > 0 ? s.remaining - 1 : 0 }));
     }, 1000);
+
+    const pix = JSON.parse(sessionStorage.getItem('sos_pix') || '{}');
+    const placa = sessionStorage.getItem('sos_placa') || '';
+    const code = pix.qr_code || pix.pix_code || pix.copia_e_cola || '';
+    this.setState({ pixCode: code, placa });
+
+    // Render the QR code into the image-slot via its `src` attribute.
+    const b64 = pix.qr_code_base64 || pix.qrCodeBase64;
+    if (b64) {
+      const url = /^data:/i.test(b64) ? b64 : 'data:image/png;base64,' + b64;
+      const slot = document.getElementById('pix_qr_code');
+      if (slot) slot.setAttribute('src', url);
+    }
+
+    // Poll payment status every 5s; on approval, unlock and go to the report.
+    const id = sessionStorage.getItem('sos_pagamento_id');
+    if (id && window.SOS) {
+      this._poll = setInterval(async () => {
+        try {
+          const st = await window.SOS.statusPagamento(id);
+          const status = st && st.status;
+          if (status === 'approved' || status === 'paid' || status === 'CONCLUIDA') {
+            clearInterval(this._poll);
+            sessionStorage.setItem('sos_pago', 'true');
+            window.location.href = 'Resultado da Consulta.dc.html';
+          }
+        } catch (e) {}
+      }, 5000);
+    }
   }
-  componentWillUnmount() { clearInterval(this._t); if (this._ct) clearTimeout(this._ct); }
+  componentWillUnmount() { clearInterval(this._t); if (this._poll) clearInterval(this._poll); if (this._ct) clearTimeout(this._ct); }
 
   pad(n) { return String(n).padStart(2, '0'); }
 
@@ -190,16 +220,20 @@ class Component extends DCLogic {
     const hh = this.pad(Math.floor(r / 3600));
     const mm = this.pad(Math.floor((r % 3600) / 60));
     const ss = this.pad(r % 60);
-    const pixCode = '00020126580014br.gov.bcb.pix0136a1b2c3d4-e5f6-7890-abcd-ef1234567890520400005303986540512.995802BR5921SOS BUSCAS CONSULTAS6009SAO PAULO62070503***6304A1B2';
+    const pixCode = this.state.pixCode || 'Carregando código PIX...';
+
+    const placaRaw = (this.state.placa || '').toUpperCase();
+    const placaFmt = placaRaw ? placaRaw.replace(/^(.{3})(.+)$/, '$1-$2') : '—';
 
     const onCopy = () => {
-      try { navigator.clipboard && navigator.clipboard.writeText(pixCode); } catch (e) {}
+      const code = this.state.pixCode || '';
+      try { navigator.clipboard && navigator.clipboard.writeText(code); } catch (e) {}
       this.setState({ copyLabel: 'Código copiado!' });
       clearTimeout(this._ct);
       this._ct = setTimeout(() => this.setState({ copyLabel: 'Copiar código PIX' }), 1800);
     };
 
-    return { accent, accentHover, hh, mm, ss, pixCode, onCopy, copyLabel: this.state.copyLabel };
+    return { accent, accentHover, hh, mm, ss, pixCode, placaFmt, onCopy, copyLabel: this.state.copyLabel };
   }
 }
 </script>

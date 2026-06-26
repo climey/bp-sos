@@ -18,6 +18,7 @@
   ::selection{background:rgba(212,54,48,.35);}
   @keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 rgba(212,54,48,.4);}50%{box-shadow:0 0 0 7px rgba(212,54,48,0);}}
 </style>
+<script src="api.js"></script>
 </helmet>
 
 <div style="background:#1a1a1a;min-height:100vh;--ac:{{ accent }};--ah:{{ accentHover }};">
@@ -45,7 +46,7 @@
       <div style="background:#26282d;border:1px solid #3d4042;border-radius:24px;padding:48px;display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;">
         <div>
           <h1 style="font-size:clamp(34px,4.4vw,54px);line-height:1.02;font-weight:900;letter-spacing:-1.6px;">Resultado da<br>sua consulta!</h1>
-          <p style="margin-top:20px;font-size:13px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#808185;">Você consultou um: <span style="color:var(--ac,#D43630);">FIAT/STRADA ENDURANCE CD</span></p>
+          <p style="margin-top:20px;font-size:13px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#808185;">Você consultou um: <span style="color:var(--ac,#D43630);">{{ veiculoNome }}</span></p>
         </div>
         <!-- Mercosul plate -->
         <div style="justify-self:end;width:100%;max-width:400px;border:3px solid #0c0c0c;border-radius:14px;background:#fff;overflow:hidden;box-shadow:0 18px 44px rgba(0,0,0,.5);">
@@ -55,7 +56,7 @@
             <span style="width:22px;height:15px;border-radius:2px;background:linear-gradient(135deg,#1f9b3a 40%,#f7d417 40% 60%,#1f9b3a 60%);display:block;"></span>
           </div>
           <div style="position:relative;padding:16px 18px 20px;text-align:center;">
-            <span style="font-family:'JetBrains Mono',monospace;font-size:clamp(36px,5vw,58px);font-weight:800;color:#111;letter-spacing:2px;">QMN&nbsp;8E87</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:clamp(36px,5vw,58px);font-weight:800;color:#111;letter-spacing:2px;">{{ placaFmt }}</span>
             <span style="position:absolute;left:14px;bottom:10px;background:#0b3aa3;color:#fff;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:800;padding:2px 6px;border-radius:3px;">BR</span>
           </div>
         </div>
@@ -236,7 +237,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:860},&quot;accentColor&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#D43630&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
 class Component extends DCLogic {
-  state = { fipeOpen: 0, copyLabel: 'Copiar' };
+  state = { fipeOpen: 0, copyLabel: 'Copiar', dados: {}, placa: '', pago: false };
 
   darken(hex, amt) {
     const h = (hex || '#D43630').replace('#', '');
@@ -246,72 +247,111 @@ class Component extends DCLogic {
     return '#' + [r,g,b].map(v => v.toString(16).padStart(2,'0')).join('');
   }
 
+  componentDidMount() {
+    const dados = JSON.parse(sessionStorage.getItem('sos_dados') || '{}');
+    const placa = sessionStorage.getItem('sos_placa') || '';
+    const pago = sessionStorage.getItem('sos_pago') === 'true';
+    this.setState({ dados, placa, pago });
+
+    // If already paid, fetch the full report and merge the unlocked fields.
+    if (pago && window.SOS) {
+      const id = sessionStorage.getItem('sos_pagamento_id');
+      if (id) {
+        window.SOS.consultarPlacaCompleta(placa, id)
+          .then(full => {
+            const merged = Object.assign({}, dados, full);
+            sessionStorage.setItem('sos_dados', JSON.stringify(merged));
+            this.setState({ dados: merged });
+          })
+          .catch(() => {});
+      }
+    }
+  }
+
+  componentWillUnmount() { if (this._ct) clearTimeout(this._ct); }
+
   row(label, value) {
-    const locked = value == null;
-    return { label, value: value || '', locked, unlocked: !locked };
+    // Paid reports show every field; unpaid premium fields stay locked (CTA).
+    const v = value == null || value === '' ? null : value;
+    const locked = v == null && !this.state.pago;
+    return { label, value: v == null ? '—' : v, locked, unlocked: !locked };
   }
 
   renderVals() {
     const accent = this.props.accentColor ?? '#D43630';
     const accentHover = this.darken(accent, 0.16);
+    const d = this.state.dados || {};
+
+    const placaRaw = (this.state.placa || d.placa || '').toUpperCase();
+    const placaFmt = placaRaw ? placaRaw.replace(/^(.{3})(.+)$/, '$1 $2') : '—';
+    const veiculoNome = d.marcaModelo || [d.marca, d.modelo].filter(Boolean).join('/') || 'Veículo';
 
     const principais = [
-      this.row('Placa', 'QMN 8E87'),
-      this.row('Placa Alternativa', 'QMN-8487'),
-      this.row('Marca/Modelo', 'FIAT/STRADA ENDURANCE CD'),
-      this.row('Marca', 'FIAT'),
-      this.row('Modelo', 'STRADA ENDURANCE CD'),
-      this.row('Cor', null),
-      this.row('Ano Modelo', '2022'),
-      this.row('Ano Fabricação', '2021'),
+      this.row('Placa', placaRaw || null),
+      this.row('Placa Alternativa', d.placa_alternativa),
+      this.row('Marca/Modelo', d.marcaModelo),
+      this.row('Marca', d.marca),
+      this.row('Modelo', d.modelo),
+      this.row('Versão', d.versao || d.submodelo),
+      this.row('Cor', d.cor),
+      this.row('Ano Modelo', d.ano_modelo),
+      this.row('Ano Fabricação', d.ano_fab),
     ];
     const identificacao = [
-      this.row('Renavam', null),
-      this.row('Chassi', null),
-      this.row('Final do Chassi', '**********27801'),
-      this.row('Origem', 'NACIONAL'),
-      this.row('Cilindradas', null),
-      this.row('Combustível', 'Álcool / Gasolina'),
+      this.row('Renavam', d.renavam),
+      this.row('Chassi', d.chassi),
+      this.row('Origem', d.origem),
+      this.row('Combustível', d.combustivel),
+      this.row('Cilindradas', d.cilindradas),
+      this.row('Espécie', d.especie),
+      this.row('Tipo de Veículo', d.tipo_veiculo),
+      this.row('Número de Eixos', d.eixos),
+      this.row('Nacionalidade', d.nacionalidade),
     ];
     const proprietario = [
-      this.row('Nome do Proprietário', null),
-      this.row('Doc. Proprietário (Parcial)', null),
-      this.row('Tipo Doc. Proprietário', null),
-      this.row('Tipo Doc. Faturado', 'Jurídica'),
-      this.row('Estado (UF) Faturado', 'SE'),
+      this.row('Nome do Proprietário', d.proprietario || d.nome_proprietario),
+      this.row('Doc. Proprietário (Parcial)', d.documento_proprietario),
+      this.row('Tipo Doc. Proprietário', d.tipo_doc_prop),
+      this.row('Situação', d.situacao),
+      this.row('Código da Situação', d.codigoSituacao),
+      this.row('Município', d.municipio),
+      this.row('Estado (UF)', d.uf),
     ];
     const outros = [
-      this.row('Situação Roubo/Furto', null),
-      this.row('Município', null),
-      this.row('Estado (UF)', null),
-      this.row('Segmento', 'Comercial Leve'),
-      this.row('Sub Segmento', 'CL - PICK-UP PEQUENA'),
+      this.row('Situação Roubo/Furto', d.roubo_furto),
+      this.row('Situação do Chassi', d.situacao_chassi),
+      this.row('Situação do Veículo', d.situacao_veiculo),
+      this.row('Segmento', d.segmento),
+      this.row('Sub Segmento', d.sub_segmento),
+      this.row('Carroceria', d.tipo_carroceria),
+      this.row('Montagem', d.tipo_montagem),
+      this.row('Passageiros', d.quantidade_passageiro),
+      this.row('Peso Bruto Total', d.peso_bruto_total),
+      this.row('Cap. Máx. Tração', d.cap_maxima_tracao),
+      this.row('UF da Placa', d.uf_placa),
+      this.row('Placa Modelo Novo', d.placa_modelo_novo),
+      this.row('Placa Modelo Antigo', d.placa_modelo_antigo),
     ];
 
-    const fipeData = [
-      { title: 'Strada Endurance 1.4 Flex 8V CD', price: 'R$ 77.890,00', codigo: '001529-6', modelo: 'Strada Endurance 1.4 Flex 8V CD' },
-      { title: 'Strada Endurance 1.4 Flex 8V CS Plus', price: 'R$ 82.450,00', codigo: '001530-0', modelo: 'Strada Endurance 1.4 Flex 8V CS Plus' },
-      { title: 'Strada Ranch 1.3 Flex 8V CD Aut.', price: 'R$ 96.310,00', codigo: '001541-5', modelo: 'Strada Ranch 1.3 Flex 8V CD Aut.' },
-      { title: 'Strada Freedom 1.3 Flex 8V CD', price: 'R$ 88.720,00', codigo: '001538-5', modelo: 'Strada Freedom 1.3 Flex 8V CD' },
-      { title: 'Strada Freedom 1.3 Flex 8V CS Plus', price: 'R$ 79.990,00', codigo: '001536-9', modelo: 'Strada Freedom 1.3 Flex 8V CS Plus' },
-    ];
-    const fipe = fipeData.map((f, i) => ({
-      title: f.title,
-      price: f.price,
+    const f = d.fipe;
+    const fipe = f ? [{
+      title: f.modelo || veiculoNome,
+      price: f.valor || '—',
       fields: [
-        { k: 'Código Fipe', v: f.codigo },
-        { k: 'Combustível', v: 'Flex' },
-        { k: 'Marca', v: 'Fiat' },
-        { k: 'Modelo', v: f.modelo },
-        { k: 'Tipo', v: 'Carro' },
+        { k: 'Código Fipe', v: f.codigo || '—' },
+        { k: 'Combustível', v: f.combustivel || '—' },
+        { k: 'Marca', v: f.marca || '—' },
+        { k: 'Modelo', v: f.modelo || '—' },
+        { k: 'Ano Modelo', v: f.ano_modelo || '—' },
+        { k: 'Mês de Referência', v: f.referencia || '—' },
       ],
-      maxH: i === this.state.fipeOpen ? '320px' : '0px',
-      iconRotate: i === this.state.fipeOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-      onToggle: () => this.setState(s => ({ fipeOpen: s.fipeOpen === i ? -1 : i })),
-    }));
+      maxH: this.state.fipeOpen === 0 ? '320px' : '0px',
+      iconRotate: this.state.fipeOpen === 0 ? 'rotate(180deg)' : 'rotate(0deg)',
+      onToggle: () => this.setState(s => ({ fipeOpen: s.fipeOpen === 0 ? -1 : 0 })),
+    }] : [];
 
     const onCopy = () => {
-      const txt = 'QMN 8E87';
+      const txt = placaRaw || '';
       try { navigator.clipboard && navigator.clipboard.writeText(txt); } catch (e) {}
       this.setState({ copyLabel: 'Copiado!' });
       clearTimeout(this._ct);
@@ -319,7 +359,7 @@ class Component extends DCLogic {
     };
     const onPrint = () => { try { window.print(); } catch (e) {} };
 
-    return { accent, accentHover, principais, identificacao, proprietario, outros, fipe, onCopy, onPrint, copyLabel: this.state.copyLabel };
+    return { accent, accentHover, veiculoNome, placaFmt, principais, identificacao, proprietario, outros, fipe, onCopy, onPrint, copyLabel: this.state.copyLabel };
   }
 }
 </script>
