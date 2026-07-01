@@ -6,7 +6,15 @@ const https    = require('https');
 const app = express();
 app.set('trust proxy', 1);
 app.use(express.json());
-app.use(cors({ origin: '*' }));
+app.use(cors({
+  origin: [
+    'https://bp-sos.vercel.app',
+    'https://sospc.vercel.app',
+    'http://localhost:3000',
+    'http://localhost:5173'
+  ],
+  methods: ['GET', 'POST'],
+}));
 
 
 // ─────────────────────────────────────────────────────────────────────────────
