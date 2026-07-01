@@ -270,10 +270,11 @@ class Component extends DCLogic {
 
   componentWillUnmount() { if (this._ct) clearTimeout(this._ct); }
 
-  row(label, value) {
-    // Paid reports show every field; unpaid premium fields stay locked (CTA).
+  row(label, value, premium = false) {
+    // Paid reports show every field. Sem pagamento: campos premium ficam
+    // travados MESMO com dado, e qualquer campo vazio também trava (CTA).
     const v = value == null || value === '' ? null : value;
-    const locked = v == null && !this.state.pago;
+    const locked = !this.state.pago && (premium || v == null);
     return { label, value: v == null ? '—' : v, locked, unlocked: !locked };
   }
 
@@ -299,35 +300,35 @@ class Component extends DCLogic {
     ];
     const identificacao = [
       this.row('Renavam', d.renavam),
-      this.row('Chassi', d.chassi),
+      this.row('Chassi', d.chassi, true),
       this.row('Origem', d.origem),
       this.row('Combustível', d.combustivel),
       this.row('Cilindradas', d.cilindradas),
       this.row('Espécie', d.especie),
       this.row('Tipo de Veículo', d.tipo_veiculo),
-      this.row('Número de Eixos', d.eixos),
+      this.row('Número de Eixos', d.eixos, true),
       this.row('Nacionalidade', d.nacionalidade),
     ];
     const proprietario = [
       this.row('Nome do Proprietário', d.proprietario || d.nome_proprietario),
       this.row('Doc. Proprietário (Parcial)', d.documento_proprietario),
       this.row('Tipo Doc. Proprietário', d.tipo_doc_prop),
-      this.row('Situação', d.situacao),
-      this.row('Código da Situação', d.codigoSituacao),
-      this.row('Município', d.municipio),
-      this.row('Estado (UF)', d.uf),
+      this.row('Situação', d.situacao, true),
+      this.row('Código da Situação', d.codigoSituacao, true),
+      this.row('Município', d.municipio, true),
+      this.row('Estado (UF)', d.uf, true),
     ];
     const outros = [
       this.row('Situação Roubo/Furto', d.roubo_furto),
-      this.row('Situação do Chassi', d.situacao_chassi),
-      this.row('Situação do Veículo', d.situacao_veiculo),
+      this.row('Situação do Chassi', d.situacao_chassi, true),
+      this.row('Situação do Veículo', d.situacao_veiculo, true),
       this.row('Segmento', d.segmento),
-      this.row('Sub Segmento', d.sub_segmento),
-      this.row('Carroceria', d.tipo_carroceria),
+      this.row('Sub Segmento', d.sub_segmento, true),
+      this.row('Carroceria', d.tipo_carroceria, true),
       this.row('Montagem', d.tipo_montagem),
       this.row('Passageiros', d.quantidade_passageiro),
-      this.row('Peso Bruto Total', d.peso_bruto_total),
-      this.row('Cap. Máx. Tração', d.cap_maxima_tracao),
+      this.row('Peso Bruto Total', d.peso_bruto_total, true),
+      this.row('Cap. Máx. Tração', d.cap_maxima_tracao, true),
       this.row('UF da Placa', d.uf_placa),
       this.row('Placa Modelo Novo', d.placa_modelo_novo),
       this.row('Placa Modelo Antigo', d.placa_modelo_antigo),
