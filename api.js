@@ -5,7 +5,7 @@
 (function () {
   if (window.SOS) return; // já inicializado — segunda execução é no-op
 
-  window.SOS_API = window.SOS_API || 'https://sos-backend-climey-production.up.railway.app';
+  window.SOS_API = window.SOS_API || 'https://bp-sos-production.up.railway.app';
 
   async function consultarPlaca(placa) {
     const r = await fetch(`${window.SOS_API}/api/consulta/basica/${placa}`);
