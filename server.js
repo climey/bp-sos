@@ -103,33 +103,25 @@ let _fdTokenExpires = 0;
 async function getFutureDataToken() {
   const now = Date.now();
 
-  // Se tem token válido em cache, usa ele
+  // Token válido em cache — evita chamar /auth a cada consulta
   if (_fdToken && now < _fdTokenExpires) return _fdToken;
 
-  // Se o token é estático (configurado direto na env), usa sem auth
-  if (process.env.FUTUREDATA_TOKEN) {
-    _fdToken = process.env.FUTUREDATA_TOKEN;
-    _fdTokenExpires = now + 24 * 60 * 60 * 1000; // 24h
-    return _fdToken;
+  let res;
+  try {
+    res = await httpPost(process.env.FUTURE_DATA_API_AUTH_URL, {
+      username: process.env.FUTURE_DATA_API_USERNAME,
+      password: process.env.FUTURE_DATA_API_PASSWORD
+    });
+  } catch (e) {
+    throw new Error('FutureData auth failed');
   }
 
-  // Autenticação via login/senha (caso o token expire)
-  const res = await httpPost('https://apigateway.futuredata.com.br/auth', {
-    login: process.env.FUTUREDATA_LOGIN,
-    senha: process.env.FUTUREDATA_SENHA
-    // Ajuste os campos conforme a documentação da FutureData
-    // Pode ser: { email, password } ou { username, password } etc.
-  });
+  const token = res && (res.token || res.access_token);
+  if (!token) throw new Error('FutureData auth failed');
 
-  if (!res.token && !res.access_token) {
-    throw new Error('FutureData: não foi possível obter token de autenticação');
-  }
-
-  _fdToken = res.token || res.access_token;
-  // Token expira em 23h (margem de segurança)
-  _fdTokenExpires = now + 23 * 60 * 60 * 1000;
-
-  console.log('[FutureData] Token renovado com sucesso');
+  _fdToken = token;
+  _fdTokenExpires = now + 30 * 60 * 1000; // cache de 30 minutos
+  console.log('[FutureData] Token renovado');
   return _fdToken;
 }
 
@@ -137,7 +129,7 @@ async function consultarFutureData(placa) {
   const token = await getFutureDataToken();
 
   const res = await httpPost(
-    'https://apigateway.futuredata.com.br/consulta/veicular-nacional-v2',
+    `${process.env.FUTURE_DATA_API_BASE_URL}/veicular-nacional-v2`,
     { placa },
     { 'x-access-token': token }
   );
@@ -147,6 +139,25 @@ async function consultarFutureData(placa) {
   }
 
   return res.dados;
+}
+
+// Monta a consulta premium unificada (wdapi2 básico + FutureData), usada tanto
+// pela rota POST /api/consulta/premium quanto pelo fluxo de pagamento aprovado.
+const _premiumCache = new Map(); // pagamento_id -> resultado premium (em memória)
+
+async function montarConsultaPremium(placa) {
+  const [wdapi, futuredata] = await Promise.allSettled([
+    httpGet(`https://wdapi2.com.br/consulta/${placa}/${process.env.WDAPI_TOKEN}`),
+    consultarFutureData(placa)
+  ]);
+
+  const basico = wdapi.status === 'fulfilled' ? wdapi.value : null;
+
+  if (futuredata.status === 'fulfilled') {
+    return { futuredata: futuredata.value, basico };
+  }
+  console.error('[premium] FutureData falhou:', futuredata.reason?.message);
+  return { futuredata: null, futuredata_error: true, basico };
 }
 
 // Mapeia todos os campos da FutureData para um objeto padronizado
@@ -360,14 +371,62 @@ app.post('/api/pagamento/criar', async (req, res) => {
   }
 });
 
-// Status do pagamento
+// Status do pagamento — quando aprovado, dispara a consulta premium,
+// guarda o resultado em memória (chave = pagamento_id) e o devolve junto.
 app.get('/api/pagamento/status/:id', async (req, res) => {
   try {
     const d = await mpGet(`/v1/payments/${req.params.id}`);
-    res.json({ id: d.id, status: d.status, plano: d.metadata?.plano, placa: d.metadata?.placa });
+    const out = { id: d.id, status: d.status, plano: d.metadata?.plano, placa: d.metadata?.placa };
+
+    if (d.status === 'approved' && d.metadata?.placa) {
+      const id = String(d.id);
+      let premium = _premiumCache.get(id);
+      if (!premium) {
+        const placa = d.metadata.placa.toUpperCase().replace(/[^A-Z0-9]/g, '');
+        try {
+          premium = await montarConsultaPremium(placa);
+          _premiumCache.set(id, premium); // cache p/ não reconsultar a cada polling
+        } catch (e) {
+          console.error('[status/premium]', e.message);
+          premium = null;
+        }
+      }
+      out.premium = premium;
+    }
+
+    res.json(out);
   } catch (err) {
     console.error('[status]', err.message);
     res.status(500).json({ erro: 'Erro ao verificar pagamento.' });
+  }
+});
+
+// Consulta premium (FutureData + wdapi2) — só após pagamento aprovado.
+// Segurança: exige pagamento_id não vazio E confirma no Mercado Pago que o
+// pagamento está 'approved' e que a placa corresponde ao pagamento.
+app.post('/api/consulta/premium', async (req, res) => {
+  const { placa, pagamento_id } = req.body || {};
+
+  if (!pagamento_id) return res.status(403).json({ erro: 'pagamento_id obrigatório.' });
+  if (!placa || !placaValida(placa))
+    return res.status(400).json({ erro: 'Formato de placa inválido.' });
+
+  const placaU = placa.toUpperCase().replace(/[^A-Z0-9]/g, '');
+
+  try {
+    // Verificação real: o pagamento existe, está aprovado e é desta placa?
+    const pag = await mpGet(`/v1/payments/${pagamento_id}`);
+    if (pag.status !== 'approved')
+      return res.status(402).json({ erro: 'Pagamento não confirmado.' });
+    if (pag.metadata?.placa && pag.metadata.placa.toUpperCase() !== placaU)
+      return res.status(403).json({ erro: 'Placa não corresponde ao pagamento.' });
+
+    const resultado = await montarConsultaPremium(placaU);
+    _premiumCache.set(String(pagamento_id), resultado);
+    res.json(resultado);
+  } catch (err) {
+    console.error('[premium]', err.message);
+    res.status(500).json({ erro: 'Erro ao consultar.' });
   }
 });
 
