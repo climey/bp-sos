@@ -325,7 +325,7 @@ app.post('/api/pagamento/criar', async (req, res) => {
   const planos = {
     basico:   { valor: 19.90, descricao: 'Consulta Veicular Básica'   },
     simples:  { valor: 29.90, descricao: 'Consulta Veicular Simples'  },
-    completo: { valor: 49.90, descricao: 'Consulta Veicular Completa' }
+    completo: { valor: 1.99, descricao: 'Consulta Veicular Completa' } // TESTE: era 49.90
   };
   const p = planos[plano];
   if (!p) return res.status(400).json({ erro: 'Plano inválido.' });
