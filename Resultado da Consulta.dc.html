@@ -259,13 +259,56 @@ class Component extends DCLogic {
       if (id) {
         window.SOS.consultarPlacaCompleta(placa, id)
           .then(full => {
-            const merged = Object.assign({}, dados, full);
+            const merged = this.mesclarPremium(dados, full);
             sessionStorage.setItem('sos_dados', JSON.stringify(merged));
             this.setState({ dados: merged });
           })
           .catch(() => {});
       }
     }
+  }
+
+  // Mescla a resposta da /completa. Os dados da FutureData vêm aninhados em
+  // `full.premium` (saída do mapearFutureData no backend), com nomes próprios —
+  // aqui são traduzidos para as chaves que as linhas da página leem. Só
+  // sobrescreve quando há valor, para não apagar o que a básica já trouxe.
+  mesclarPremium(dados, full) {
+    const merged = Object.assign({}, dados);
+    const overlay = (obj) => {
+      if (!obj) return;
+      Object.keys(obj).forEach(k => {
+        const v = obj[k];
+        if (v != null && v !== '' && typeof v !== 'object') merged[k] = v;
+      });
+    };
+
+    overlay(full); // campos wdapi2 do /completa (só sobrescreve com valor)
+
+    // FutureData (premium) -> chaves das linhas da página
+    const p = (full && full.premium) || {};
+    overlay({
+      renavam:                p.renavam,
+      chassi:                 p.chassi_completo,
+      proprietario:           p.proprietario,
+      nome_proprietario:      p.proprietario,
+      documento_proprietario: p.cpf_cnpj_proprietario,
+      tipo_doc_prop:          p.tipo_doc_proprietario,
+      roubo_furto:            p.ocorrencia_roubo_furto,
+      situacao_veiculo:       p.situacao_veiculo,
+      eixos:                  p.eixos,
+      peso_bruto_total:       p.pbt,
+      cap_maxima_tracao:      p.cmt,
+      tipo_carroceria:        p.carroceria,
+      quantidade_passageiro:  p.capacidade_passag,
+      cilindradas:            p.cilindrada,
+      combustivel:            p.combustivel,
+      especie:                p.especie,
+      tipo_veiculo:           p.tipo,
+      municipio:              p.municipio,
+      uf:                     p.uf
+    });
+
+    return merged;
   }
 
   componentWillUnmount() { if (this._ct) clearTimeout(this._ct); }
