@@ -106,16 +106,12 @@ async function getFutureDataToken() {
   // Token válido em cache — evita chamar /auth a cada consulta
   if (_fdToken && now < _fdTokenExpires) return _fdToken;
 
-  // Diagnóstico temporário: loga só SE as variáveis existem (nunca os valores)
-  console.log('[FutureData] auth check — url:', !!process.env.FUTURE_DATA_API_AUTH_URL,
-    '| user:', !!process.env.FUTURE_DATA_API_USERNAME,
-    '| pass:', !!process.env.FUTURE_DATA_API_PASSWORD);
-
+  // A FutureData espera os campos `email` e `pass` (conforme doc /auth).
   let res;
   try {
     res = await httpPost(process.env.FUTURE_DATA_API_AUTH_URL, {
-      username: process.env.FUTURE_DATA_API_USERNAME,
-      password: process.env.FUTURE_DATA_API_PASSWORD
+      email: process.env.FUTURE_DATA_API_USERNAME,
+      pass:  process.env.FUTURE_DATA_API_PASSWORD
     });
   } catch (e) {
     console.error('[FutureData] auth request error:', e.message);
