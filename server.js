@@ -147,6 +147,22 @@ async function consultarFutureData(placa) {
   return res.dados;
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// VIP CAR (DespBrasil) — provedor premium alternativo
+// Dormente por enquanto: função pronta, mas ainda NÃO ligada no fluxo.
+// Requer a env VIPCAR_API_KEY. Custo: R$ 21/consulta (debita saldo da conta).
+// ─────────────────────────────────────────────────────────────────────────────
+async function consultarVipCar(placa) {
+  const res = await httpPost(
+    'https://api.base44.app/api/apps/68062bc85d1e6fdf75b7cbfe/functions/apiConsulta',
+    { servico: 'vipcar', placa, api_key: process.env.VIPCAR_API_KEY }
+  );
+  if (!res || res.sucesso !== true) {
+    throw new Error((res && (res.message || res.erro || res.status)) || 'Erro na consulta VIP CAR');
+  }
+  return res.dados;
+}
+
 // Monta a consulta premium unificada (wdapi2 básico + FutureData), usada tanto
 // pela rota POST /api/consulta/premium quanto pelo fluxo de pagamento aprovado.
 const _premiumCache = new Map(); // pagamento_id -> resultado premium (em memória)
