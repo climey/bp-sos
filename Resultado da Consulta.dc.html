@@ -151,6 +151,36 @@
             </div>
           </sc-for>
         </div>
+
+        <!-- Restrições e Gravame -->
+        <div style="background:#ffffff;border:1px solid #e7e2dd;border-radius:18px;padding:30px 32px;">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+            <span style="flex:none;width:46px;height:46px;border-radius:50%;border:2px solid rgba(212,54,48,.4);display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z"></path><path d="M12 8v4M12 16h.01"></path></svg></span>
+            <div><h3 style="font-size:21px;font-weight:800;color:#18120f;">Restrições e Gravame</h3><p style="font-size:13.5px;color:#808185;margin-top:1px;">Restrições, financiamento e situação legal</p></div>
+          </div>
+          <sc-for list="{{ restricoes }}" as="row" hint-placeholder-count="6">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
+              <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
+              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="Checkout.dc.html" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
+              <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:#46506b;text-align:right;">{{ row.value }}</span></sc-if>
+            </div>
+          </sc-for>
+        </div>
+
+        <!-- Faturamento e Motor -->
+        <div style="background:#ffffff;border:1px solid #e7e2dd;border-radius:18px;padding:30px 32px;">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+            <span style="flex:none;width:46px;height:46px;border-radius:50%;border:2px solid rgba(212,54,48,.4);display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h7l5 5v11a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"></path><path d="M14 4v5h5M9 13h6M9 17h4"></path></svg></span>
+            <div><h3 style="font-size:21px;font-weight:800;color:#18120f;">Faturamento e Motor</h3><p style="font-size:13.5px;color:#808185;margin-top:1px;">Dados de faturamento e mecânica</p></div>
+          </div>
+          <sc-for list="{{ faturamento }}" as="row" hint-placeholder-count="6">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
+              <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
+              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="Checkout.dc.html" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
+              <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:#46506b;text-align:right;">{{ row.value }}</span></sc-if>
+            </div>
+          </sc-for>
+        </div>
       </div>
 
       <!-- Tabela FIPE -->
@@ -308,17 +338,42 @@ class Component extends DCLogic {
       uf:                     p.uf
     });
 
+    // Guarda o objeto premium cru para os cards de Restrições/Gravame e Faturamento.
+    merged._premium = p;
     return merged;
   }
 
   componentWillUnmount() { if (this._ct) clearTimeout(this._ct); }
 
   row(label, value, premium = false) {
-    // Paid reports show every field. Sem pagamento: campos premium ficam
-    // travados MESMO com dado, e qualquer campo vazio também trava (CTA).
-    const v = value == null || value === '' ? null : value;
+    // Normaliza vazios/"-"/"N/A" para nulo -> exibe "não informado" quando liberado.
+    // Campos premium ficam travados (CTA) sem pagamento.
+    let v = value;
+    if (v != null) {
+      const s = String(v).trim();
+      const up = s.toUpperCase();
+      if (s === '' || up === '-' || up === 'N/A' || up === 'NA' ||
+          up === 'NAO INFORMADO' || up === 'NÃO INFORMADO' ||
+          up === 'NULL' || up === 'UNDEFINED') v = null;
+    }
     const locked = !this.state.pago && (premium || v == null);
-    return { label, value: v == null ? '—' : v, locked, unlocked: !locked };
+    return { label, value: v == null ? 'não informado' : v, locked, unlocked: !locked };
+  }
+
+  // "0"/"0,00"/vazio -> nulo (para campos numéricos onde 0 significa não informado)
+  nzNum(v) {
+    if (v == null) return null;
+    const s = String(v).trim();
+    if (s === '' || /^0([.,]0+)?$/.test(s)) return null;
+    return v;
+  }
+
+  // Normaliza indicadores SIM/NÃO
+  simNao(v) {
+    const s = v == null ? '' : String(v).trim().toUpperCase();
+    if (s === 'SIM' || s === 'S' || s === 'TRUE' || s === '1') return 'Sim';
+    if (s === 'NAO' || s === 'NÃO' || s === 'N' || s === 'FALSE') return 'Não';
+    return v;
   }
 
   renderVals() {
@@ -346,10 +401,10 @@ class Component extends DCLogic {
       this.row('Chassi', d.chassi, true),
       this.row('Origem', d.origem),
       this.row('Combustível', d.combustivel),
-      this.row('Cilindradas', d.cilindradas),
+      this.row('Cilindradas', this.nzNum(d.cilindradas)),
       this.row('Espécie', d.especie),
       this.row('Tipo de Veículo', d.tipo_veiculo),
-      this.row('Número de Eixos', d.eixos, true),
+      this.row('Número de Eixos', this.nzNum(d.eixos), true),
       this.row('Nacionalidade', d.nacionalidade),
     ];
     const proprietario = [
@@ -369,12 +424,49 @@ class Component extends DCLogic {
       this.row('Sub Segmento', d.sub_segmento, true),
       this.row('Carroceria', d.tipo_carroceria, true),
       this.row('Montagem', d.tipo_montagem),
-      this.row('Passageiros', d.quantidade_passageiro),
-      this.row('Peso Bruto Total', d.peso_bruto_total, true),
-      this.row('Cap. Máx. Tração', d.cap_maxima_tracao, true),
+      this.row('Passageiros', this.nzNum(d.quantidade_passageiro)),
+      this.row('Peso Bruto Total', this.nzNum(d.peso_bruto_total), true),
+      this.row('Cap. Máx. Tração', this.nzNum(d.cap_maxima_tracao), true),
       this.row('UF da Placa', d.uf_placa),
       this.row('Placa Modelo Novo', d.placa_modelo_novo),
       this.row('Placa Modelo Antigo', d.placa_modelo_antigo),
+    ];
+
+    // ── Dados premium adicionais (FutureData) ────────────────────────────────
+    const pr = d._premium || {};
+    const meaningful = (x) => {
+      if (x == null) return false;
+      const up = String(x).trim().toUpperCase();
+      return up !== '' && up !== 'NADA CONSTA' && up !== '-' && up !== 'N/A';
+    };
+
+    // Restrições cadastrais consolidadas (sem repetir "NADA CONSTA")
+    const listaRestr = [pr.restricao01, pr.restricao02, pr.restricao03, pr.restricao04]
+      .concat(Array.isArray(pr.outras_restricoes) ? pr.outras_restricoes : [])
+      .filter(meaningful)
+      .map(x => String(x).trim());
+    const restricoesResumo = listaRestr.length ? listaRestr.join(' • ') : 'Nada consta';
+
+    // Gravame / financiamento
+    const temGravame = meaningful(pr.restricao_financeira) || meaningful(pr.restricao_nome_agente) || meaningful(pr.restricao_financiado);
+    const gravameResumo = temGravame ? (meaningful(pr.restricao_financeira) ? pr.restricao_financeira : 'Consta gravame/financiamento') : 'Nada consta';
+
+    const restricoes = [
+      this.row('Comunicado de Venda', this.simNao(pr.comunicado_venda), true),
+      this.row('Restrição Judicial (Renajud)', this.simNao(pr.restricao_renajud), true),
+      this.row('Restrições Cadastrais', restricoesResumo, true),
+      this.row('Gravame / Financiamento', gravameResumo, true),
+      this.row('Agente Financeiro', pr.restricao_nome_agente, true),
+      this.row('Data de Inclusão (Gravame)', pr.restricao_data_inclusao, true),
+    ];
+
+    const faturamento = [
+      this.row('Tipo Doc. Faturado', pr.tipo_doc_faturado, true),
+      this.row('UF de Faturamento', pr.uf_faturado, true),
+      this.row('Número do Motor', pr.motor || pr.numero_motor, true),
+      this.row('Potência (cv)', this.nzNum(pr.potencia), true),
+      this.row('Categoria', pr.categoria, true),
+      this.row('Última Atualização', pr.ultima_atualizacao, true),
     ];
 
     const f = d.fipe;
@@ -403,7 +495,7 @@ class Component extends DCLogic {
     };
     const onPrint = () => { try { window.print(); } catch (e) {} };
 
-    return { accent, accentHover, veiculoNome, placaFmt, principais, identificacao, proprietario, outros, fipe, onCopy, onPrint, copyLabel: this.state.copyLabel };
+    return { accent, accentHover, veiculoNome, placaFmt, principais, identificacao, proprietario, outros, restricoes, faturamento, fipe, onCopy, onPrint, copyLabel: this.state.copyLabel };
   }
 }
 </script>
