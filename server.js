@@ -135,7 +135,7 @@ async function consultarFutureData(placa) {
   const token = await getFutureDataToken();
 
   const res = await httpPost(
-    `${process.env.FUTURE_DATA_API_BASE_URL}/veicular-nacional-v2`,
+    `${process.env.FUTURE_DATA_API_BASE_URL}/veicular-completa`,
     { placa },
     { 'x-access-token': token }
   );
@@ -182,90 +182,128 @@ async function montarConsultaPremium(placa) {
   return { futuredata: null, futuredata_error: true, basico };
 }
 
-// Mapeia todos os campos da FutureData para um objeto padronizado
-function mapearFutureData(fd) {
-  if (!fd) return null;
+// Formata débito -> "Sem débito" ou "R$ valor"
+function fmtDebito(existe, valor) {
+  const e = String(existe || '').toUpperCase();
+  if (!e || e.includes('NAO EXISTE') || e.includes('NÃO EXISTE')) return 'Sem débito';
+  const v = String(valor || '').trim();
+  return v && v !== '0,00' && v !== '0.00' ? ('R$ ' + v) : 'Consta débito';
+}
+
+// Mapeia a resposta da Veicular Completa (estrutura aninhada) num objeto padronizado.
+// Também aceita a resposta antiga (plana) por retrocompatibilidade.
+function mapearFutureData(dados) {
+  if (!dados) return null;
+  // Se vier no formato antigo (plano, sem sub-objetos), embrulha em "nacional".
+  const flat = !dados.nacional && !dados.estadual && (dados.renavam || dados.chassi);
+  const e  = dados.estadual || {};
+  const n  = dados.nacional || (flat ? dados : {});
+  const rf = dados['roubo-furto'] || {};
+  const g  = dados.gravame || {};
+  const rj = dados.renajud || {};
+  const lo = (dados.leilao && dados.leilao.leilao) || {};
+  const lr = (dados.leilao && dados.leilao.analise_risco) || {};
+  const si = dados['indicio-sinistro'] || {};
+  const rc = dados.recall || {};
+  const pa = dados['proprietario-atual'] || {};
+
+  const pick = (...vals) => {
+    for (const v of vals) { if (v != null && String(v).trim() !== '') return v; }
+    return null;
+  };
+
+  const outras = [
+    n.outras_restricoes_01, n.outras_restricoes_02, n.outras_restricoes_03, n.outras_restricoes_04,
+    n.outras_restricoes_05, n.outras_restricoes_06, n.outras_restricoes_07, n.outras_restricoes_08,
+    e.outras_restricoes_01, e.outras_restricoes_02, e.outras_restricoes_03, e.outras_restricoes_04
+  ].filter(r => r && String(r).trim().toUpperCase() !== 'NADA CONSTA');
+
   return {
-    // Proprietário (dados premium)
-    proprietario:          fd.nome_proprietario              || null,
-    cpf_cnpj_proprietario: fd.cpf_cnpj_proprietario         || null,
-    tipo_doc_proprietario: fd.tipodocproprietario           || null,
+    // Proprietário
+    proprietario:          pick(pa.nome, e.pronomeanterior, n.nome_proprietario),
+    cpf_cnpj_proprietario: pick(pa.documento, n.cpf_cnpj_proprietario, e.cpf_cnpj_proprietario),
+    tipo_doc_proprietario: pick(n.tipodocproprietario, e.tipodocumentoproprietario),
 
-    // Identificação do veículo
-    renavam:               fd.renavam                       || null,
-    chassi_completo:       fd.chassi                        || null,
-    motor:                 fd.motor                         || null,
-    placa:                 fd.placa                         || null,
-    municipio:             fd.municipio                     || null,
-    uf:                    fd.uf                            || null,
-    marca:                 fd.marca                         || null,
-    modelo:                fd.modelo                        || null,
-    ano_fabricacao:        fd.veianofabr                    || null,
-    ano_modelo:            fd.veianomodelo                  || null,
-    cor:                   fd.cor                           || null,
-    combustivel:           fd.combustivel                   || null,
-    tipo:                  fd.tipo                          || null,
-    especie:               fd.especie                       || null,
-    categoria:             fd.categoria                     || null,
-    procedencia:           fd.veiprocedencia                || null,
-
-    // Dados técnicos
-    potencia:              fd.potencia                      || null,
-    cilindrada:            fd.cilindrada                    || null,
-    capacidade_carga:      fd.capacidadecarga               || null,
-    capacidade_passag:     fd.capacidadepassag              || null,
-    eixos:                 fd.eixos                         || null,
-    pbt:                   fd.pbt                           || null,
-    cmt:                   fd.cmt                           || null,
-    carroceria:            fd.carroceria                    || null,
-    tipo_montagem:         fd.tipomontagem                  || null,
-    numero_motor:          fd.motor                         || null,
-    numero_cambio:         fd.numero_caixacambio            || null,
-    numero_carroceria:     fd.numero_carroceria             || null,
-    numero_eixo_traseiro:  fd.numero_eixotraseirodif        || null,
-    numero_terceiro_eixo:  fd.numero_terceiroeixo           || null,
-    tipo_remarcacao_chassi:fd.tiporemarcchassi              || null,
+    // Identificação
+    renavam:          pick(n.renavam, e.renavam, pa.renavam, rf.renavam),
+    chassi_completo:  pick(n.chassi, e.chassi, pa.chassi, rf.chassi),
+    motor:            pick(n.motor, e.motor, rf.motor, pa.motor),
+    municipio:        pick(n.municipio, e.municipio, pa.municipio),
+    uf:               pick(n.uf, e.uf, pa.uf),
+    marca:            pick(n.marca, e.marca),
+    modelo:           pick(n.modelo, e.modelo),
+    combustivel:      pick(n.combustivel, e.combustivel),
+    cilindrada:       pick(n.cilindrada, e.cilindrada),
+    especie:          pick(n.especie, e.especie),
+    tipo:             pick(n.tipo, e.tipo, pa.tipo),
+    carroceria:       pick(n.carroceria, e.carroceria, pa.carroceria),
+    tipo_montagem:    pick(n.tipomontagem, rf.montagem),
+    eixos:            pick(n.eixos, e.eixos, rf.num_eixo),
+    pbt:              pick(n.pbt, e.pbt),
+    cmt:              pick(n.cmt, e.cmt),
+    capacidade_carga: pick(n.capacidadecarga, e.capacidadecarga, pa.capacidade_carga),
+    capacidade_passag: pick(n.capacidadepassag, e.capacidadepassag),
+    potencia:         pick(n.potencia, e.potencia, pa.potencia),
+    categoria:        pick(n.categoria, e.veicategoria),
+    procedencia:      pick(n.veiprocedencia, e.veiprocedencia, pa.procedencia),
+    tipo_remarcacao_chassi: pick(n.tiporemarcchassi, e.tiporemarcacaochassi, rf.remarcacao_do_chassi),
+    ultima_atualizacao: pick(n.ultimaatualizacao, rf.ultima_atualizacao),
 
     // Faturamento
-    tipo_doc_faturado:     fd.tipodocumentofaturado         || null,
-    cpf_cnpj_faturado:     fd.cpfcnpjfaturado              || null,
-    uf_faturado:           fd.uffaturado                    || null,
-    tipo_doc_importadora:  fd.tipodocumentoimportadora      || null,
+    tipo_doc_faturado: pick(n.tipodocumentofaturado, e.tipodocumentofaturado),
+    cpf_cnpj_faturado: pick(n.cpfcnpjfaturado, e.cpfcnpjfaturado),
+    uf_faturado:       pick(n.uffaturado, e.uffaturado),
 
     // Situação
-    situacao_veiculo:      fd.situacaoveic                  || null,
-    ocorrencia_roubo_furto:fd.ocorrencia                    || null,
-    ultima_atualizacao:    fd.ultimaatualizacao             || null,
+    situacao_veiculo:       pick(n.situacaoveic, e.situacaoveiculo, rf.situacao),
+    ocorrencia_roubo_furto: pick(rf.ocorrencia, n.ocorrencia),
 
-    // Restrições principais
-    restricao01:           fd.restricao01                   || null,
-    restricao02:           fd.restricao02                   || null,
-    restricao03:           fd.restricao03                   || null,
-    restricao04:           fd.restricao04                   || null,
+    // Comunicado de venda / Renajud
+    comunicado_venda:  pick(n.indicadorcomunicacaodevendas, e.ccomunicacaovenda),
+    restricao_renajud: pick(rj.msg, e.resrenajud, n.indicadorrestricaorenajud),
 
-    // Comunicado de venda e Renajud
-    comunicado_venda:      fd.indicadorcomunicacaodevendas  || null,
-    restricao_renajud:     fd.indicadorrestricaorenajud     || null,
+    // Restrições cadastrais
+    restricao01: n.restricao01 || null, restricao02: n.restricao02 || null,
+    restricao03: n.restricao03 || null, restricao04: n.restricao04 || null,
+    outras_restricoes: outras,
 
-    // Restrição financeira (gravame)
-    restricao_tipo_transacao: fd.restricaotipotransacao     || null,
-    restricao_financeira:     fd.restricoesrestricaofinan   || null,
-    restricao_nome_agente:    fd.restricaonomeagente        || null,
-    restricao_financiado:     fd.restricaofinanciado        || null,
-    restricao_cpf_financiado: fd.restricaocpfcnpjfinanciado|| null,
-    restricao_data_inclusao:  fd.restricaodatainclusao      || null,
+    // Gravame / financiamento
+    gravame_status:          pick(g.descricaostatus, e.restricaofinan),
+    restricao_financeira:    pick(g.financeiranome, n.restricoesrestricaofinan, e.restricaofinan),
+    restricao_nome_agente:   pick(g.financeiranome, e.restricaonomeagente),
+    restricao_financiado:    pick(g.nomefinanciado, e.restricaoarrendatario),
+    restricao_data_inclusao: pick(g.datagravame, e.restricaodatainclusao),
 
-    // Outras restrições
-    outras_restricoes: [
-      fd.outras_restricoes_01,
-      fd.outras_restricoes_02,
-      fd.outras_restricoes_03,
-      fd.outras_restricoes_04,
-      fd.outras_restricoes_05,
-      fd.outras_restricoes_06,
-      fd.outras_restricoes_07,
-      fd.outras_restricoes_08
-    ].filter(r => r && r !== 'NADA CONSTA')
+    // Débitos (estadual) — já formatados para exibição
+    debitos: {
+      ipva:          fmtDebito(e.existedebitodeipva, e.debipva),
+      multa:         fmtDebito(e.existedebitomulta, e.valortotaldebitomulta),
+      licenciamento: fmtDebito(e.existedebitodelicenciamento, e.existedebitodelicenciamentovl),
+      dpvat:         fmtDebito(e.existedebitodedpvat, e.dpvat),
+    },
+
+    // Leilão
+    leilao: {
+      consta: (lo.qtdleilao && Number(lo.qtdleilao) > 0) || (Array.isArray(lo.registro) && lo.registro.length > 0) || false,
+      quantidade: lo.qtdleilao || (Array.isArray(lo.registro) ? String(lo.registro.length) : '0'),
+      parecer_risco: pick(lr.parecer, lr.descricaoretorno),
+      registros: (Array.isArray(lo.registro) ? lo.registro : []).map(r => ({
+        data: r.dataleilao || null, lote: r.lote || null,
+        comitente: r.comitente || null, patio: r.patio || null
+      })),
+    },
+
+    // Indício de sinistro
+    sinistro: { consta: !!si.consta_indicio_sinistro, msg: si.msg || null },
+
+    // Recall
+    recall: {
+      possui: !!rc.possui_recall,
+      itens: (Array.isArray(rc.recalls) ? rc.recalls : []).map(r => ({
+        descricao: r.descricao || r.identificador || null,
+        situacao: r.situacao || null, data: r.dataRegistro || null
+      })),
+    },
   };
 }
 

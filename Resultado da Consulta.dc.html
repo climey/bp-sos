@@ -181,6 +181,36 @@
             </div>
           </sc-for>
         </div>
+
+        <!-- Débitos -->
+        <div style="background:#ffffff;border:1px solid #e7e2dd;border-radius:18px;padding:30px 32px;">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+            <span style="flex:none;width:46px;height:46px;border-radius:50%;border:2px solid rgba(212,54,48,.4);display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20M6 15h4"></path></svg></span>
+            <div><h3 style="font-size:21px;font-weight:800;color:#18120f;">Débitos</h3><p style="font-size:13.5px;color:#808185;margin-top:1px;">IPVA, multas, licenciamento e DPVAT</p></div>
+          </div>
+          <sc-for list="{{ debitos }}" as="row" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
+              <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
+              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="Checkout.dc.html" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
+              <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:#46506b;text-align:right;">{{ row.value }}</span></sc-if>
+            </div>
+          </sc-for>
+        </div>
+
+        <!-- Alertas: Leilão, Sinistro e Recall -->
+        <div style="background:#ffffff;border:1px solid #e7e2dd;border-radius:18px;padding:30px 32px;">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+            <span style="flex:none;width:46px;height:46px;border-radius:50%;border:2px solid rgba(212,54,48,.4);display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9.5 16.5H2.5L12 3z"></path><path d="M12 10v4M12 17h.01"></path></svg></span>
+            <div><h3 style="font-size:21px;font-weight:800;color:#18120f;">Alertas</h3><p style="font-size:13.5px;color:#808185;margin-top:1px;">Leilão, indício de sinistro e recall</p></div>
+          </div>
+          <sc-for list="{{ alertas }}" as="row" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
+              <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
+              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="Checkout.dc.html" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
+              <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:{{ row.color }};text-align:right;">{{ row.value }}</span></sc-if>
+            </div>
+          </sc-for>
+        </div>
       </div>
 
       <!-- Tabela FIPE -->
@@ -469,6 +499,36 @@ class Component extends DCLogic {
       this.row('Última Atualização', pr.ultima_atualizacao, true),
     ];
 
+    // Débitos (já vêm formatados do backend: "Sem débito" ou "R$ x,xx")
+    const deb = pr.debitos || {};
+    const debitos = [
+      this.row('IPVA', deb.ipva, true),
+      this.row('Multas', deb.multa, true),
+      this.row('Licenciamento', deb.licenciamento, true),
+      this.row('DPVAT / Seguro', deb.dpvat, true),
+    ];
+
+    // Alertas: Leilão, Sinistro, Recall (verde = ok, vermelho = problema)
+    const lei = pr.leilao || {};
+    const sin = pr.sinistro || {};
+    const rec = pr.recall || {};
+    const alerta = (label, ruim, txtRuim, txtOk) => {
+      const r = this.row(label, ruim ? txtRuim : txtOk, true);
+      r.color = ruim ? '#D43630' : '#27c06b';
+      return r;
+    };
+    const risco = lei.parecer_risco || null;
+    const riscoColor = risco && /ALTO/i.test(risco) ? '#D43630'
+      : (risco && /M[EÉ]DIO/i.test(risco) ? '#e08a00' : '#27c06b');
+    const alertas = [
+      alerta('Passagem por Leilão', !!lei.consta, 'Consta' + (Number(lei.quantidade) ? ' (' + lei.quantidade + 'x)' : ''), 'Nada consta'),
+      alerta('Indício de Sinistro', !!sin.consta, 'Consta indício', 'Nada consta'),
+      alerta('Recall Pendente', !!rec.possui, 'Possui recall', 'Sem recall'),
+    ];
+    const rRisco = this.row('Parecer de Risco', risco, true);
+    rRisco.color = risco ? riscoColor : '#46506b';
+    alertas.push(rRisco);
+
     const f = d.fipe;
     const fipe = f ? [{
       title: f.modelo || veiculoNome,
@@ -495,7 +555,7 @@ class Component extends DCLogic {
     };
     const onPrint = () => { try { window.print(); } catch (e) {} };
 
-    return { accent, accentHover, veiculoNome, placaFmt, principais, identificacao, proprietario, outros, restricoes, faturamento, fipe, onCopy, onPrint, copyLabel: this.state.copyLabel };
+    return { accent, accentHover, veiculoNome, placaFmt, principais, identificacao, proprietario, outros, restricoes, faturamento, debitos, alertas, fipe, onCopy, onPrint, copyLabel: this.state.copyLabel };
   }
 }
 </script>
