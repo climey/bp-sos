@@ -409,6 +409,12 @@ class Component extends DCLogic {
     return v;
   }
 
+  // Enxuga cards técnicos: remove linhas já liberadas que ficaram "não informado".
+  // Mantém linhas travadas (CTA de upsell) e as que têm valor real.
+  enxugar(rows) {
+    return rows.filter(r => !(r.unlocked && r.value === 'não informado'));
+  }
+
   renderVals() {
     const accent = this.props.accentColor ?? '#D43630';
     const accentHover = this.darken(accent, 0.16);
@@ -558,7 +564,18 @@ class Component extends DCLogic {
     };
     const onPrint = () => { try { window.print(); } catch (e) {} };
 
-    return { accent, accentHover, veiculoNome, placaFmt, principais, identificacao, proprietario, outros, restricoes, faturamento, debitos, alertas, fipe, onCopy, onPrint, copyLabel: this.state.copyLabel };
+    return {
+      accent, accentHover, veiculoNome, placaFmt,
+      // Cards técnicos: enxutos (sem linhas vazias)
+      principais:    this.enxugar(principais),
+      identificacao: this.enxugar(identificacao),
+      proprietario:  this.enxugar(proprietario),
+      outros:        this.enxugar(outros),
+      faturamento:   this.enxugar(faturamento),
+      // Cards de valor: mantêm "Nada consta"/"Sem débito"/"não informado"
+      restricoes, debitos, alertas,
+      fipe, onCopy, onPrint, copyLabel: this.state.copyLabel
+    };
   }
 }
 </script>
