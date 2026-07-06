@@ -153,12 +153,15 @@ async function consultarFutureData(placa) {
 // Requer a env VIPCAR_API_KEY. Custo: R$ 21/consulta (debita saldo da conta).
 // ─────────────────────────────────────────────────────────────────────────────
 async function consultarVipCar(placa) {
+  // Endpoint/formato corretos (via suporte DespBrasil): app id 6994...,
+  // chave no header `chaveAcesso`, body só { servico, placa }.
   const res = await httpPost(
-    'https://api.base44.app/api/apps/68062bc85d1e6fdf75b7cbfe/functions/apiConsulta',
-    { servico: 'vipcar', placa, api_key: process.env.VIPCAR_API_KEY }
+    'https://api.base44.app/api/apps/6994c2ecf6eea3bac6164bbf/functions/apiConsulta',
+    { servico: 'vipcar', placa },
+    { 'chaveAcesso': process.env.VIPCAR_API_KEY }
   );
   if (!res || res.sucesso !== true) {
-    throw new Error((res && (res.message || res.erro || res.status)) || 'Erro na consulta VIP CAR');
+    throw new Error((res && (res.message || res.erro || res.mensagem)) || 'Erro na consulta VIP CAR');
   }
   return res.dados;
 }
