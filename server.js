@@ -314,6 +314,48 @@ function mapearFutureData(dados) {
 // ROTAS
 // ─────────────────────────────────────────────────────────────────────────────
 
+// Índice em memória p/ recuperação de consulta paga (chave: "PLACA|email").
+// ⚠️ Volátil: zera a cada restart/deploy. Para persistir de verdade, usar um DB.
+const _consultasPorChave = new Map();
+function chaveConsulta(placa, email) {
+  return String(placa || '').toUpperCase().replace(/[^A-Z0-9]/g, '') +
+         '|' + String(email || '').trim().toLowerCase();
+}
+
+// Formata a resposta "completa" (wdapi2 básico + FutureData premium).
+// Usado pela rota /completa e pela /recuperar.
+function formatarCompleta(d, futuredataDados, placa) {
+  d = d || {};
+  return {
+    marca:            d.MARCA        || null,
+    modelo:           d.MODELO       || null,
+    submodelo:        d.SUBMODELO    || null,
+    versao:           d.VERSAO       || null,
+    ano_fab:          d.ano          || null,
+    ano_modelo:       d.anoModelo    || null,
+    chassi:           d.chassi       || null,
+    cor:              d.cor          || null,
+    origem:           d.origem       || null,
+    placa:            d.placa        || placa || null,
+    situacao:         d.situacao     || null,
+    municipio:        d.municipio    || null,
+    uf:               d.uf           || null,
+    logo:             d.logo         || null,
+    combustivel:      d.extra?.combustivel      || null,
+    cilindradas:      d.extra?.cilindradas      || null,
+    especie:          d.extra?.especie          || null,
+    tipo_veiculo:     d.extra?.tipo_veiculo     || null,
+    tipo_carroceria:  d.extra?.tipo_carroceria  || null,
+    segmento:         d.extra?.segmento         || null,
+    sub_segmento:     d.extra?.sub_segmento     || null,
+    quantidade_passageiro: d.extra?.quantidade_passageiro || null,
+    peso_bruto_total: d.extra?.peso_bruto_total || null,
+    nacionalidade:    d.extra?.nacionalidade    || null,
+    fipe:             melhorFipe(d),
+    premium:          futuredataDados ? mapearFutureData(futuredataDados) : null
+  };
+}
+
 // Consulta básica — wdapi2 (gratuita, antes do pagamento)
 app.get('/api/consulta/basica/:placa', async (req, res) => {
   const placa = req.params.placa.toUpperCase().replace(/[^A-Z0-9]/g, '');
@@ -443,9 +485,9 @@ app.get('/api/pagamento/status/:id', async (req, res) => {
 
     if (d.status === 'approved' && d.metadata?.placa) {
       const id = String(d.id);
+      const placa = d.metadata.placa.toUpperCase().replace(/[^A-Z0-9]/g, '');
       let premium = _premiumCache.get(id);
       if (!premium) {
-        const placa = d.metadata.placa.toUpperCase().replace(/[^A-Z0-9]/g, '');
         try {
           premium = await montarConsultaPremium(placa);
           _premiumCache.set(id, premium); // cache p/ não reconsultar a cada polling
@@ -453,6 +495,10 @@ app.get('/api/pagamento/status/:id', async (req, res) => {
           console.error('[status/premium]', e.message);
           premium = null;
         }
+      }
+      // Indexa por placa+email para a rota /recuperar
+      if (premium && d.payer?.email) {
+        _consultasPorChave.set(chaveConsulta(placa, d.payer.email), premium);
       }
       out.premium = premium;
     }
@@ -486,6 +532,7 @@ app.post('/api/consulta/premium', async (req, res) => {
 
     const resultado = await montarConsultaPremium(placaU);
     _premiumCache.set(String(pagamento_id), resultado);
+    if (pag.payer?.email) _consultasPorChave.set(chaveConsulta(placaU, pag.payer.email), resultado);
     res.json(resultado);
   } catch (err) {
     console.error('[premium]', err.message);
@@ -520,42 +567,53 @@ app.get('/api/consulta/completa/:placa/:pagamento_id', async (req, res) => {
       console.error('[FutureData]', futuredata.reason?.message);
     }
 
-    // 3. Retorna tudo junto
-    res.json({
-      // ── wdapi2
-      marca:            d.MARCA        || null,
-      modelo:           d.MODELO       || null,
-      submodelo:        d.SUBMODELO    || null,
-      versao:           d.VERSAO       || null,
-      ano_fab:          d.ano          || null,
-      ano_modelo:       d.anoModelo    || null,
-      chassi:           d.chassi       || null,
-      cor:              d.cor          || null,
-      origem:           d.origem       || null,
-      placa:            d.placa        || placa,
-      situacao:         d.situacao     || null,
-      municipio:        d.municipio    || null,
-      uf:               d.uf           || null,
-      logo:             d.logo         || null,
-      combustivel:      d.extra?.combustivel      || null,
-      cilindradas:      d.extra?.cilindradas      || null,
-      especie:          d.extra?.especie          || null,
-      tipo_veiculo:     d.extra?.tipo_veiculo     || null,
-      tipo_carroceria:  d.extra?.tipo_carroceria  || null,
-      segmento:         d.extra?.segmento         || null,
-      sub_segmento:     d.extra?.sub_segmento     || null,
-      quantidade_passageiro: d.extra?.quantidade_passageiro || null,
-      peso_bruto_total: d.extra?.peso_bruto_total || null,
-      nacionalidade:    d.extra?.nacionalidade    || null,
-      fipe:             melhorFipe(d),
-
-      // ── FutureData (dados premium)
-      premium: fd
-    });
+    // 3. Retorna tudo junto (mesmo formato usado pela /recuperar)
+    res.json(formatarCompleta(d, futuredata.status === 'fulfilled' ? futuredata.value : null, placa));
 
   } catch (err) {
     console.error('[completa]', err.message);
     res.status(500).json({ erro: 'Erro ao consultar.' });
+  }
+});
+
+// Recuperar consulta já paga — pelo par placa + email ("Já paguei")
+app.get('/api/consulta/recuperar', async (req, res) => {
+  const { placa, email } = req.query;
+
+  // 1. Validar parâmetros
+  if (!placa || !email) {
+    return res.status(400).json({ found: false, msg: 'Placa e e-mail obrigatórios.' });
+  }
+
+  const placaU = String(placa).toUpperCase().replace(/[^A-Z0-9]/g, '');
+
+  try {
+    // 2. Buscar no índice de pagamentos aprovados por placa + email
+    const chave = chaveConsulta(placaU, email);
+    let resultado = _consultasPorChave.get(chave);
+
+    // 5. Não encontrou nenhum pagamento para essa placa+email
+    if (!resultado) {
+      return res.json({ found: false });
+    }
+
+    // 4. Encontrou o pagamento, mas sem os dados da FutureData → gera agora
+    if (!resultado.futuredata) {
+      try {
+        resultado = await montarConsultaPremium(placaU);
+        _consultasPorChave.set(chave, resultado);
+      } catch (e) {
+        console.error('[recuperar] regerar premium:', e.message);
+      }
+    }
+
+    // 3. Retorna os dados unificados (mesmo formato da /completa)
+    const dados = formatarCompleta(resultado.basico, resultado.futuredata, placaU);
+    return res.json({ found: true, dados });
+
+  } catch (err) {
+    console.error('[recuperar]', err.message);
+    return res.status(500).json({ found: false, msg: 'Erro ao buscar consulta.' });
   }
 });
 
