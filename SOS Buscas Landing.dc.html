@@ -28,6 +28,13 @@
     .sos-nav-desktop{display:none !important;}
     .sos-cta-desktop{display:none !important;}
     .sos-burger{display:flex !important;}
+    /* evita scroll horizontal / vazamento de elementos no mobile */
+    body{overflow-x:hidden;}
+    /* 1. reduz o espaço entre os stats (hero) e a seção "Simples e rápido" */
+    #top{padding-bottom:32px !important;}
+    #sobre{padding-top:28px !important;}
+    /* 2. empilha a grid do "Sobre": imagem full-width, labels não são cortados */
+    #sobre > div{grid-template-columns:1fr !important;gap:28px !important;}
   }
 </style>
 <script src="image-slot.js"></script>
