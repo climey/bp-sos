@@ -35,9 +35,16 @@
     return r.json();
   }
 
+  async function recuperarConsulta(placa, email) {
+    const url = `${window.SOS_API}/api/consulta/recuperar?placa=${encodeURIComponent(placa)}&email=${encodeURIComponent(email)}`;
+    const r = await fetch(url);
+    if (!r.ok) throw new Error('Erro ao recuperar consulta');
+    return r.json();
+  }
+
   function logoUrl(url) {
     return `${window.SOS_API}/api/logo?url=${encodeURIComponent(url)}`;
   }
 
-  window.SOS = { consultarPlaca, consultarPlacaCompleta, criarPagamento, statusPagamento, logoUrl };
+  window.SOS = { consultarPlaca, consultarPlacaCompleta, criarPagamento, statusPagamento, recuperarConsulta, logoUrl };
 })();

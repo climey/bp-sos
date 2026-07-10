@@ -308,9 +308,17 @@ class Component extends DCLogic {
   }
 
   componentDidMount() {
-    const dados = JSON.parse(sessionStorage.getItem('sos_dados') || '{}');
+    let dados = JSON.parse(sessionStorage.getItem('sos_dados') || '{}');
     const placa = sessionStorage.getItem('sos_placa') || '';
     const pago = sessionStorage.getItem('sos_pago') === 'true';
+
+    // Vindo do "Recuperar consulta": dados já é o objeto /completa (com o
+    // premium aninhado) e não há pagamento_id — achata o premium nas chaves
+    // das linhas para exibir tudo, igual ao fluxo pós-pagamento.
+    if (pago && dados && dados.premium) {
+      dados = this.mesclarPremium(dados, dados);
+    }
+
     this.setState({ dados, placa, pago });
 
     // If already paid, fetch the full report and merge the unlocked fields.

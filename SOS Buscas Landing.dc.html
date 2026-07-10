@@ -23,6 +23,12 @@
   @keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
   @keyframes spinSlow{to{transform:rotate(360deg);}}
   @keyframes floatY{0%,100%{transform:translateY(0);}50%{transform:translateY(-7px);}}
+  .sos-burger{display:none;}
+  @media (max-width:768px){
+    .sos-nav-desktop{display:none !important;}
+    .sos-cta-desktop{display:none !important;}
+    .sos-burger{display:flex !important;}
+  }
 </style>
 <script src="image-slot.js"></script>
 <script src="api.js"></script>
@@ -36,16 +42,32 @@
       <a href="#" onclick="event.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' })" style="display:flex;align-items:center;gap:11px;text-decoration:none;color:#fff;">
         <img src="images/logo-sos.svg" alt="SOS Buscas" style="height:42px;width:auto;display:block;">
       </a>
-      <nav style="display:flex;align-items:center;gap:34px;">
+      <nav class="sos-nav-desktop" style="display:flex;align-items:center;gap:34px;">
         <a href="#consultar" style="color:#c4c5c9;text-decoration:none;font-weight:600;font-size:15px;">Consultar</a>
         <a href="#sobre" style="color:#808185;text-decoration:none;font-weight:600;font-size:15px;">Sobre Nós</a>
         <a href="#faq" style="color:#808185;text-decoration:none;font-weight:600;font-size:15px;">FAQ</a>
         <a href="#contato" style="color:#808185;text-decoration:none;font-weight:600;font-size:15px;">Contato</a>
-        <a href="#consultar" style="color:#808185;text-decoration:none;font-weight:600;font-size:15px;">Já paguei</a>
+        <a href="#" onClick="{{ openRecover }}" style="color:#808185;text-decoration:none;font-weight:600;font-size:15px;cursor:pointer;">Já paguei</a>
       </nav>
-      <a href="#consultar" style="text-decoration:none;background:var(--ac,#D43630);color:#fff;font-weight:700;font-size:15px;padding:12px 26px;border-radius:9999px;box-shadow:0 8px 22px rgba(212,54,48,.32);transition:background .2s,transform .2s;" style-hover="background:var(--ah,#B02E28);transform:translateY(-2px);">Consultar agora</a>
+      <a href="#consultar" class="sos-cta-desktop" style="text-decoration:none;background:var(--ac,#D43630);color:#fff;font-weight:700;font-size:15px;padding:12px 26px;border-radius:9999px;box-shadow:0 8px 22px rgba(212,54,48,.32);transition:background .2s,transform .2s;" style-hover="background:var(--ah,#B02E28);transform:translateY(-2px);">Consultar agora</a>
+      <button class="sos-burger" onClick="{{ toggleMenu }}" aria-label="Abrir menu" style="align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;border:1px solid #3d4042;background:#26282d;color:#fff;cursor:pointer;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
+      </button>
     </div>
   </header>
+
+  <!-- ============ MOBILE DRAWER ============ -->
+  <div style="display:{{ menuDisplay }};position:fixed;inset:0;z-index:60;" onClick="{{ closeMenu }}">
+    <div style="position:absolute;inset:0;background:rgba(10,5,4,.6);backdrop-filter:blur(6px);"></div>
+    <div style="position:absolute;top:74px;right:12px;left:12px;background:#1c1412;border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:14px;box-shadow:0 24px 60px rgba(0,0,0,.55);display:flex;flex-direction:column;gap:2px;">
+      <a href="#consultar" onClick="{{ closeMenu }}" style="color:#fff;text-decoration:none;font-weight:600;font-size:16px;padding:14px 16px;border-radius:10px;" style-hover="background:#26282d;">Consultar</a>
+      <a href="#sobre" onClick="{{ closeMenu }}" style="color:#c4c5c9;text-decoration:none;font-weight:600;font-size:16px;padding:14px 16px;border-radius:10px;" style-hover="background:#26282d;">Sobre Nós</a>
+      <a href="#faq" onClick="{{ closeMenu }}" style="color:#c4c5c9;text-decoration:none;font-weight:600;font-size:16px;padding:14px 16px;border-radius:10px;" style-hover="background:#26282d;">FAQ</a>
+      <a href="#contato" onClick="{{ closeMenu }}" style="color:#c4c5c9;text-decoration:none;font-weight:600;font-size:16px;padding:14px 16px;border-radius:10px;" style-hover="background:#26282d;">Contato</a>
+      <a href="#" onClick="{{ openRecoverFromMenu }}" style="color:#c4c5c9;text-decoration:none;font-weight:600;font-size:16px;padding:14px 16px;border-radius:10px;cursor:pointer;" style-hover="background:#26282d;">Já paguei</a>
+      <a href="#consultar" onClick="{{ closeMenu }}" style="margin-top:8px;text-align:center;text-decoration:none;background:var(--ac,#D43630);color:#fff;font-weight:700;font-size:16px;padding:14px;border-radius:9999px;box-shadow:0 8px 22px rgba(212,54,48,.32);">Consultar agora</a>
+    </div>
+  </div>
 
   <!-- ============ HERO ============ -->
   <section id="top" data-screen-label="Hero" style="position:relative;padding:158px 32px 96px;overflow:hidden;background:radial-gradient(1100px 520px at 50% -8%,rgba(212,54,48,.18),transparent 60%),transparent;">
@@ -352,6 +374,39 @@
     </div>
   </footer>
 
+  <!-- ============ MODAL: RECUPERAR CONSULTA ============ -->
+  <div style="display:{{ recoverDisplay }};position:fixed;inset:0;z-index:100;overflow-y:auto;padding:20px;background:rgba(10,5,4,.66);backdrop-filter:blur(8px);">
+    <div style="position:relative;width:100%;max-width:440px;margin:auto;background:#1c1412;border:1px solid rgba(255,255,255,.09);border-radius:20px;padding:36px 32px 30px;box-shadow:0 30px 80px rgba(0,0,0,.55);">
+      <button onClick="{{ closeRecover }}" aria-label="Fechar" style="position:absolute;top:16px;right:16px;width:34px;height:34px;border-radius:50%;border:1px solid #3d4042;background:#26282d;color:#c4c5c9;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;" style-hover="background:#33363b;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+      </button>
+      <h3 style="font-size:24px;font-weight:900;letter-spacing:-.6px;color:#fff;margin:0 0 6px;">Recuperar minha consulta</h3>
+      <p style="font-size:14.5px;line-height:1.5;color:#808185;margin:0 0 22px;">Informe a placa e o e-mail usados no pagamento para acessar seu relatório.</p>
+
+      <label style="display:block;font-size:12px;font-weight:700;color:#808185;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px;">Placa do veículo</label>
+      <div style="display:flex;align-items:center;background:#0f0a09;border-radius:10px;border:1px solid #3d4042;overflow:hidden;margin-bottom:16px;">
+        <input value="{{ recoverPlaca }}" onInput="{{ onRecoverPlaca }}" type="text" placeholder="ABC1D23" maxlength="8" style="flex:1;background:transparent;border:none;outline:none;color:#fff;font-family:'JetBrains Mono',monospace;font-size:19px;font-weight:700;letter-spacing:3px;text-transform:uppercase;padding:14px 16px;width:100%;">
+      </div>
+
+      <label style="display:block;font-size:12px;font-weight:700;color:#808185;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px;">E-mail do pagamento</label>
+      <div style="display:flex;align-items:center;background:#0f0a09;border-radius:10px;border:1px solid #3d4042;overflow:hidden;margin-bottom:6px;">
+        <input value="{{ recoverEmail }}" onInput="{{ onRecoverEmail }}" type="email" placeholder="voce@email.com" style="flex:1;background:transparent;border:none;outline:none;color:#fff;font-family:'Figtree';font-size:16px;padding:14px 16px;width:100%;">
+      </div>
+
+      <div style="display:{{ recoverErrorDisplay }};margin:14px 0 0;padding:14px 16px;background:rgba(212,54,48,.1);border:1px solid rgba(212,54,48,.35);border-radius:10px;">
+        <p style="font-size:13.5px;line-height:1.5;color:#f0b6b3;margin:0 0 10px;">Não encontramos uma consulta com esses dados. Verifique a placa e o e-mail usados no pagamento ou fale com a gente no WhatsApp.</p>
+        <a href="https://wa.me/5511921356541" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:7px;text-decoration:none;background:#25D366;color:#fff;font-weight:700;font-size:13.5px;padding:9px 16px;border-radius:9999px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 1 1 12 20z"></path></svg>
+          Falar no WhatsApp
+        </a>
+      </div>
+
+      <button onClick="{{ submitRecover }}" style="width:100%;margin-top:20px;display:flex;align-items:center;justify-content:center;gap:9px;background:var(--ac,#D43630);color:#fff;border:none;font-family:'Figtree';font-weight:700;font-size:16px;padding:15px;border-radius:9999px;cursor:pointer;box-shadow:0 10px 26px rgba(212,54,48,.3);transition:background .2s;" style-hover="background:var(--ah,#B02E28);">{{ recoverBtnLabel }}</button>
+
+      <a href="https://wa.me/5511921356541" target="_blank" rel="noopener" style="display:block;text-align:center;margin-top:16px;font-size:13.5px;color:#808185;text-decoration:none;" style-hover="color:#fff;">Precisa de ajuda? Fale no WhatsApp</a>
+    </div>
+  </div>
+
   <!-- ============ WHATSAPP FAB ============ -->
   <a href="https://wa.me/5511921356541" target="_blank" rel="noopener" aria-label="Fale conosco no WhatsApp" style="position:fixed;right:24px;bottom:24px;z-index:90;width:60px;height:60px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px rgba(37,211,102,.45);transition:transform .2s;" style-hover="transform:scale(1.08);">
     <svg width="32" height="32" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 1 1 12 20zm4.4-5.6c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.7.9-.3.2-.5.1a6.6 6.6 0 0 1-3.2-2.8c-.2-.4.2-.4.6-1.2.1-.2 0-.3 0-.5l-.7-1.6c-.2-.4-.4-.4-.5-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.7 11.7 0 0 0 4.5 4c2 .8 2 .6 2.4.5a2.5 2.5 0 0 0 1.6-1.2 2 2 0 0 0 .1-1.2c0-.1-.2-.2-.4-.3z"></path></svg>
@@ -361,7 +416,34 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:820},&quot;accentColor&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#D43630&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
 class Component extends DCLogic {
-  state = { faqOpen: 0, placa: '', loading: false, error: '' };
+  state = { faqOpen: 0, placa: '', loading: false, error: '', menuOpen: false, recoverOpen: false, recoverPlaca: '', recoverEmail: '', recoverStatus: 'idle' };
+
+  toggleMenu = (e) => { if (e) e.preventDefault(); this.setState(s => ({ menuOpen: !s.menuOpen })); };
+  closeMenu = (e) => { if (e) e.preventDefault(); this.setState({ menuOpen: false }); };
+  openRecoverFromMenu = (e) => { if (e) e.preventDefault(); this.setState({ menuOpen: false, recoverOpen: true, recoverStatus: 'idle' }); };
+  openRecover = (e) => { if (e) e.preventDefault(); this.setState({ recoverOpen: true, recoverStatus: 'idle' }); };
+  closeRecover = (e) => { if (e) e.preventDefault(); this.setState({ recoverOpen: false }); };
+
+  submitRecover = async (e) => {
+    if (e) e.preventDefault();
+    const placa = (this.state.recoverPlaca || '').trim().toUpperCase();
+    const email = (this.state.recoverEmail || '').trim();
+    if (!placa || !email) { this.setState({ recoverStatus: 'notfound' }); return; }
+    this.setState({ recoverStatus: 'loading' });
+    try {
+      const data = await window.SOS.recuperarConsulta(placa, email);
+      if (data && data.found !== false) {
+        sessionStorage.setItem('sos_dados', JSON.stringify(data.dados || data));
+        sessionStorage.setItem('sos_placa', placa);
+        sessionStorage.setItem('sos_pago', 'true');
+        window.location.href = 'Resultado da Consulta.dc.html';
+      } else {
+        this.setState({ recoverStatus: 'notfound' });
+      }
+    } catch (err) {
+      this.setState({ recoverStatus: 'notfound' });
+    }
+  };
 
   darken(hex, amt) {
     const h = (hex || '#D43630').replace('#', '');
@@ -422,6 +504,7 @@ class Component extends DCLogic {
       }
     };
 
+    const st = this.state.recoverStatus;
     return {
       accent, accentHover, faqs,
       placa: this.state.placa,
@@ -431,6 +514,22 @@ class Component extends DCLogic {
       btnLabel: this.state.loading ? 'Consultando...' : 'Consultar agora',
       btnCursor: this.state.loading ? 'wait' : 'pointer',
       btnOpacity: this.state.loading ? '.7' : '1',
+      // Menu hamburguer
+      toggleMenu: this.toggleMenu,
+      closeMenu: this.closeMenu,
+      openRecoverFromMenu: this.openRecoverFromMenu,
+      menuDisplay: this.state.menuOpen ? 'block' : 'none',
+      // Modal recuperar consulta
+      openRecover: this.openRecover,
+      closeRecover: this.closeRecover,
+      submitRecover: this.submitRecover,
+      recoverPlaca: this.state.recoverPlaca,
+      recoverEmail: this.state.recoverEmail,
+      onRecoverPlaca: (e) => this.setState({ recoverPlaca: e.target.value }),
+      onRecoverEmail: (e) => this.setState({ recoverEmail: e.target.value }),
+      recoverDisplay: this.state.recoverOpen ? 'flex' : 'none',
+      recoverErrorDisplay: st === 'notfound' ? 'block' : 'none',
+      recoverBtnLabel: st === 'loading' ? 'Buscando…' : 'Buscar minha consulta',
     };
   }
 }
