@@ -18,6 +18,11 @@
   ::selection{background:rgba(212,54,48,.35);}
   @keyframes qrGlow{0%,100%{box-shadow:0 0 0 0 rgba(212,54,48,.32);}50%{box-shadow:0 0 0 8px rgba(212,54,48,0);}}
   @keyframes blink{0%,100%{opacity:1;}50%{opacity:.25;}}
+  @media (max-width:768px){
+    html,body{overflow-x:hidden;}
+    .sos-nav-m{display:none !important;}
+    .sos-stack{grid-template-columns:1fr !important;}
+  }
 </style>
 <script src="image-slot.js"></script>
 <script src="api.js"></script>
@@ -31,7 +36,7 @@
       <a href="SOS Buscas Landing.dc.html" style="display:flex;align-items:center;gap:11px;text-decoration:none;color:#fff;">
         <img src="images/logo-sos.svg" alt="SOS Buscas" style="height:42px;width:auto;display:block;">
       </a>
-      <nav style="display:flex;align-items:center;gap:34px;">
+      <nav class="sos-nav-m" style="display:flex;align-items:center;gap:34px;">
         <a href="SOS Buscas Landing.dc.html#consultar" style="color:#c4c5c9;text-decoration:none;font-weight:600;font-size:15px;">Consultar</a>
         <a href="SOS Buscas Landing.dc.html#sobre" style="color:#808185;text-decoration:none;font-weight:600;font-size:15px;">Sobre Nós</a>
         <a href="SOS Buscas Landing.dc.html#faq" style="color:#808185;text-decoration:none;font-weight:600;font-size:15px;">FAQ</a>
@@ -44,7 +49,7 @@
 
   <!-- ============ PIX ============ -->
   <section data-screen-label="Pagamento PIX" style="padding:110px 32px 64px;background:radial-gradient(1100px 460px at 50% -12%,rgba(212,54,48,.13),transparent 60%),#1a1a1a;">
-    <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.25fr .85fr;gap:28px;align-items:start;">
+    <div class="sos-stack" style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.25fr .85fr;gap:28px;align-items:start;">
 
       <!-- LEFT — payment -->
       <div style="min-width:0;background:#26282d;border:1px solid #3d4042;border-radius:20px;padding:38px 40px;">
@@ -52,7 +57,7 @@
         <p style="font-size:15px;color:#808185;margin-top:8px;">Efetue o pagamento para liberar as informações bloqueadas.</p>
         <div style="height:1px;background:#33363b;margin:26px 0;"></div>
 
-        <div style="display:grid;grid-template-columns:auto 1fr;gap:36px;align-items:center;">
+        <div class="sos-stack" style="display:grid;grid-template-columns:auto 1fr;gap:36px;align-items:center;">
           <!-- QR -->
           <div style="justify-self:start;padding:14px;background:#fff;border-radius:16px;animation:qrGlow 2.6s ease-in-out infinite;">
             <image-slot id="pix_qr_code" shape="rect" fit="contain" placeholder="QR Code PIX" style="width:200px;height:200px;display:block;"></image-slot>

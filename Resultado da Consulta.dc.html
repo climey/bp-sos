@@ -17,6 +17,11 @@
   body{font-family:'Figtree',system-ui,sans-serif;background:#1a1a1a;color:#fff;-webkit-font-smoothing:antialiased;}
   ::selection{background:rgba(212,54,48,.35);}
   @keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 rgba(212,54,48,.4);}50%{box-shadow:0 0 0 7px rgba(212,54,48,0);}}
+  @media (max-width:768px){
+    html,body{overflow-x:hidden;}
+    .sos-nav-m{display:none !important;}
+    .sos-stack{grid-template-columns:1fr !important;}
+  }
 </style>
 <script src="api.js"></script>
 </helmet>
@@ -29,7 +34,7 @@
       <a href="SOS Buscas Landing.dc.html" style="display:flex;align-items:center;gap:11px;text-decoration:none;color:#fff;">
         <img src="images/logo-sos.svg" alt="SOS Buscas" style="height:42px;width:auto;display:block;">
       </a>
-      <nav style="display:flex;align-items:center;gap:34px;">
+      <nav class="sos-nav-m" style="display:flex;align-items:center;gap:34px;">
         <a href="SOS Buscas Landing.dc.html#consultar" style="color:#c4c5c9;text-decoration:none;font-weight:600;font-size:15px;">Consultar</a>
         <a href="SOS Buscas Landing.dc.html#sobre" style="color:#808185;text-decoration:none;font-weight:600;font-size:15px;">Sobre Nós</a>
         <a href="SOS Buscas Landing.dc.html#faq" style="color:#808185;text-decoration:none;font-weight:600;font-size:15px;">FAQ</a>
@@ -43,7 +48,7 @@
   <!-- ============ RESULT HERO ============ -->
   <section data-screen-label="Resultado" style="padding:122px 32px 40px;background:radial-gradient(1100px 460px at 50% -10%,rgba(212,54,48,.16),transparent 60%),#1a1a1a;">
     <div style="max-width:1180px;margin:0 auto;">
-      <div style="background:#26282d;border:1px solid #3d4042;border-radius:24px;padding:48px;display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;">
+      <div class="sos-stack" style="background:#26282d;border:1px solid #3d4042;border-radius:24px;padding:48px;display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;">
         <div>
           <h1 style="font-size:clamp(34px,4.4vw,54px);line-height:1.02;font-weight:900;letter-spacing:-1.6px;">Resultado da<br>sua consulta!</h1>
           <p style="margin-top:20px;font-size:13px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#808185;">Você consultou um: <span style="color:var(--ac,#D43630);">{{ veiculoNome }}</span></p>
@@ -91,7 +96,7 @@
         <span style="font-size:13.5px;font-weight:600;color:#3a3b3f;">Pré-visualização — alguns dados estão bloqueados. Libere o relatório completo.</span>
       </div>
 
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+      <div class="sos-stack" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
         <!-- Principais -->
         <div style="background:#ffffff;border:1px solid #e7e2dd;border-radius:18px;padding:30px 32px;">
           <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
