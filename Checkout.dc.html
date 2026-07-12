@@ -218,7 +218,8 @@ class Component extends DCLogic {
     couponApplied: false,
     couponMsg: '',
     couponOk: false,
-    placa: '',
+    // Lê a placa já na inicialização (antes do 1º render) — não depende do componentDidMount.
+    placa: (typeof sessionStorage !== 'undefined' ? (sessionStorage.getItem('sos_placa') || '') : ''),
     dados: {},
     processing: false,
     payError: '',
