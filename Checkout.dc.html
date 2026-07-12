@@ -16,7 +16,7 @@
 <style>
   *{box-sizing:border-box;margin:0;padding:0;}
   html{scroll-behavior:smooth;}
-  body{font-family:'Figtree',system-ui,sans-serif;background:#1a1a1a;color:#fff;-webkit-font-smoothing:antialiased;}
+  body{font-family:'Figtree',system-ui,sans-serif;background:#16161a;color:#fff;-webkit-font-smoothing:antialiased;}
   ::selection{background:rgba(212,54,48,.35);}
   input::placeholder{color:#5a5b5f;}
   @keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 rgba(212,54,48,.4);}50%{box-shadow:0 0 0 7px rgba(212,54,48,0);}}
@@ -28,7 +28,7 @@
 </style>
 </helmet>
 
-<div style="background:#1a1a1a;min-height:100vh;--ac:{{ accent }};--ah:{{ accentHover }};">
+<div style="background:#16161a;min-height:100vh;--ac:{{ accent }};--ah:{{ accentHover }};">
 
   <!-- ============ HEADER ============ -->
   <header data-screen-label="Header" style="position:fixed;top:0;left:0;right:0;z-index:50;backdrop-filter:blur(14px);background:rgba(21,10,9,.78);border-bottom:1px solid rgba(255,255,255,.07);">
@@ -43,12 +43,12 @@
         <a href="SOS Buscas Landing.dc.html#contato" style="color:#B8BABE;text-decoration:none;font-weight:600;font-size:15px;">Contato</a>
         <a href="#" style="color:#B8BABE;text-decoration:none;font-weight:600;font-size:15px;">Já paguei</a>
       </nav>
-      <a href="Resultado da Consulta.dc.html" style="text-decoration:none;background:var(--ac,#D43630);color:#fff;font-weight:700;font-size:15px;padding:12px 26px;border-radius:9999px;box-shadow:0 8px 22px rgba(212,54,48,.32);transition:background .2s,transform .2s;" style-hover="background:var(--ah,#B02E28);transform:translateY(-2px);">Consultar débitos</a>
+      <a href="SOS Buscas Landing.dc.html" onclick="event.preventDefault(); history.back();" style="text-decoration:none;background:var(--ac,#D43630);color:#fff;font-weight:700;font-size:15px;padding:12px 26px;border-radius:9999px;box-shadow:0 8px 22px rgba(212,54,48,.32);transition:background .2s,transform .2s;" style-hover="background:var(--ah,#B02E28);transform:translateY(-2px);">← Voltar</a>
     </div>
   </header>
 
   <!-- ============ CHECKOUT ============ -->
-  <section data-screen-label="Checkout" style="padding:110px 32px 64px;background:radial-gradient(1100px 460px at 50% -12%,rgba(212,54,48,.13),transparent 60%),#1a1a1a;">
+  <section data-screen-label="Checkout" style="padding:110px 32px 64px;background:radial-gradient(1100px 460px at 50% -12%,rgba(212,54,48,.13),transparent 60%),#16161a;">
     <div class="sos-stack" style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.25fr .85fr;gap:28px;align-items:start;">
 
       <!-- LEFT COLUMN -->
@@ -63,7 +63,7 @@
 
         <!-- order bumps -->
         <sc-for list="{{ bumps }}" as="bump" hint-placeholder-count="2">
-          <div onClick="{{ bump.onToggle }}" style="background:#26282d;border:1px solid {{ bump.borderColor }};border-radius:20px;overflow:hidden;cursor:pointer;transition:border-color .25s;">
+          <div onClick="{{ bump.onToggle }}" style="background:#1e1e1e;border:1px solid {{ bump.borderColor }};border-radius:20px;overflow:hidden;cursor:pointer;transition:border-color .25s;">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 22px;background:{{ bump.headerBg }};border-bottom:1px solid #3d4042;transition:background .25s;">
               <div style="display:flex;align-items:center;gap:11px;">
                 <span style="flex:none;width:30px;height:30px;border-radius:50%;border:2px solid rgba(212,54,48,.45);display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2.4" stroke-linecap="round"><path d="M19 5L5 19M9 6.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0zM20 17.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"></path></svg></span>
@@ -87,7 +87,7 @@
       </div>
 
       <!-- RIGHT COLUMN — order summary -->
-      <div style="background:#26282d;border:1px solid #3d4042;border-radius:20px;padding:34px 32px;position:sticky;top:96px;">
+      <div style="background:#16161a;border:1px solid #3d4042;border-radius:20px;padding:34px 32px;position:sticky;top:96px;">
         <h2 style="font-size:24px;font-weight:900;letter-spacing:-.6px;margin-bottom:22px;">Resumo do Pedido</h2>
 
         <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid #33363b;">
@@ -134,7 +134,7 @@
         </label>
 
         <!-- continue -->
-        <button onClick="{{ onContinue }}" disabled="{{ continueDisabled }}" style="width:100%;margin-top:20px;display:flex;align-items:center;justify-content:center;gap:10px;background:{{ continueBg }};color:#fff;border:none;font-family:'Figtree';font-weight:800;font-size:17px;padding:18px;border-radius:9999px;cursor:{{ continueCursor }};opacity:{{ continueOpacity }};box-shadow:{{ continueShadow }};transition:background .2s,transform .2s,opacity .2s;" style-hover="transform:translateY(-2px);">
+        <button onClick="{{ onContinue }}" disabled="{{ continueDisabled }}" style="width:100%;margin-top:20px;display:flex;align-items:center;justify-content:center;gap:10px;background:{{ continueBg }};color:#fff;border:none;font-family:'Figtree';font-weight:800;font-size:17px;padding:18px;border-radius:9999px;cursor:{{ continueCursor }};opacity:{{ continueOpacity }};box-shadow:{{ continueShadow }};transition:background .2s,transform .2s,opacity .2s;" style-hover="background:#A62A25;transform:translateY(-2px);">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0"></path></svg>
           {{ continueLabel }}
         </button>
@@ -151,7 +151,7 @@
   </section>
 
   <!-- ============ TESTIMONIALS ============ -->
-  <section style="padding:24px 32px 80px;background:#1a1a1a;">
+  <section style="padding:24px 32px 80px;background:#16161a;">
     <div style="max-width:1180px;margin:0 auto;">
       <div class="sos-stack" style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px;">
         <div style="background:#26282d;border:1px solid #3d4042;border-radius:16px;padding:28px;">
@@ -233,8 +233,10 @@ class Component extends DCLogic {
   }
 
   componentDidMount() {
-    const dados = JSON.parse(sessionStorage.getItem('sos_dados') || '{}');
-    const placa = sessionStorage.getItem('sos_placa') || '';
+    let dados = {};
+    try { dados = JSON.parse(sessionStorage.getItem('sos_dados') || '{}'); } catch (e) {}
+    // Placa vem do sessionStorage (sos_placa), com fallback para os dados da consulta.
+    const placa = (sessionStorage.getItem('sos_placa') || (dados && dados.placa) || '').toUpperCase();
     this.setState({ dados, placa });
   }
 
@@ -260,7 +262,7 @@ class Component extends DCLogic {
         ...b,
         selected,
         onToggle: () => this.setState(s => { const arr = s.bumps.slice(); arr[i] = !arr[i]; return { bumps: arr }; }),
-        borderColor: selected ? accent : '#3d4042',
+        borderColor: selected ? accent : 'rgba(255,255,255,0.12)',
         headerBg: selected ? 'rgba(212,54,48,.12)' : '#1f2125',
         radioBorder: selected ? accent : '#5a5b5f',
         radioBg: selected ? accent : 'transparent',
@@ -328,10 +330,10 @@ class Component extends DCLogic {
       couponMsgColor: this.state.couponApplied ? (this.state.couponOk ? '#27c06b' : '#D43630') : '#B8BABE',
       couponBorder: this.state.couponApplied ? (this.state.couponOk ? '#27c06b' : '#D43630') : '#3d4042',
       continueDisabled: !canContinue,
-      continueBg: canContinue ? accent : '#3a3c41',
+      continueBg: '#D43630',
       continueCursor: canContinue ? 'pointer' : 'not-allowed',
       continueOpacity: canContinue ? '1' : '.7',
-      continueShadow: canContinue ? '0 12px 30px rgba(212,54,48,.4)' : 'none',
+      continueShadow: '0 12px 30px rgba(212,54,48,.4)',
     };
   }
 }
