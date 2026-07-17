@@ -2,6 +2,7 @@ require('dotenv').config();
 const express  = require('express');
 const cors     = require('cors');
 const https    = require('https');
+const xml2js   = require('xml2js');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -40,6 +41,22 @@ function httpGet(url, headers = {}) {
         try { resolve(JSON.parse(data)); }
         catch (e) { reject(new Error('Resposta inválida')); }
       });
+    }).on('error', reject).end();
+  });
+}
+
+// GET que retorna o corpo bruto (texto) — usado para respostas XML (BrasilCredit).
+function httpGetText(url) {
+  return new Promise((resolve, reject) => {
+    const urlObj = new URL(url);
+    https.request({
+      hostname: urlObj.hostname,
+      path: urlObj.pathname + urlObj.search,
+      method: 'GET'
+    }, (res) => {
+      let data = '';
+      res.on('data', c => data += c);
+      res.on('end', () => resolve(data));
     }).on('error', reject).end();
   });
 }
@@ -183,6 +200,49 @@ async function montarConsultaPremium(placa) {
   }
   console.error('[premium] FutureData falhou:', futuredata.reason?.message);
   return { futuredata: null, futuredata_error: true, basico };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BRASILCREDIT — upsell de Leilão (resposta em XML)
+// Requer as envs: BRASIL_CREDIT_API_BASE_URL, BRASIL_CREDIT_API_USERNAME,
+// BRASIL_CREDIT_API_PASSWORD e BRASIL_CREDIT_CONSULTA_ID (id numerico da consulta,
+// a confirmar com a BrasilCredit — configuravel abaixo via env).
+// ─────────────────────────────────────────────────────────────────────────────
+const _leilaoCache = new Map(); // pagamento_id -> resultado do leilao (em memória)
+
+async function consultarLeilao(placa) {
+  const base       = process.env.BRASIL_CREDIT_API_BASE_URL;
+  const login      = process.env.BRASIL_CREDIT_API_USERNAME;
+  const senha      = process.env.BRASIL_CREDIT_API_PASSWORD;
+  const consultaId = process.env.BRASIL_CREDIT_CONSULTA_ID; // <-- ID_CONSULTA configuravel
+
+  const url = `${base}/consulta?login=${encodeURIComponent(login)}` +
+              `&senha=${encodeURIComponent(senha)}` +
+              `&consulta=${encodeURIComponent(consultaId)}` +
+              `&placa=${encodeURIComponent(placa)}`;
+
+  const xml = await httpGetText(url);
+  const parsed = await xml2js.parseStringPromise(xml, { explicitArray: false, trim: true, ignoreAttrs: true });
+
+  // A raiz costuma ser um unico elemento envolvendo a resposta.
+  const root = parsed && typeof parsed === 'object' ? (Object.values(parsed)[0] || {}) : {};
+
+  // <mensagem>1</mensagem> = veiculo encontrado
+  const mensagem = String(root.mensagem ?? root.Mensagem ?? '').trim();
+  const encontrado = mensagem === '1';
+
+  const arr = (v) => (Array.isArray(v) ? v : (v == null || v === '' ? [] : [v]));
+
+  return {
+    encontrado,
+    leiloes:       arr(root.leiloes ?? root.leilao ?? root.Leiloes),
+    remarketing:   arr(root.remarketing ?? root.Remarketing),
+    score:         root.score ?? root.Score ?? {},
+    analise_risco: root.avaliacao_risco ?? root.analise_risco ?? root.parecer ?? {},
+    checklist:     root.checklist ?? root.Checklist ?? {},
+    // _raw: temporario, ajuda a mapear os campos reais do XML; remover apos ajuste.
+    _raw: root
+  };
 }
 
 // Formata débito -> "Sem débito" ou "R$ valor"
@@ -426,7 +486,9 @@ app.get('/api/logo', (req, res) => {
 
 // Criar pagamento PIX
 app.post('/api/pagamento/criar', async (req, res) => {
-  const { plano, placa, email, nome, cpf } = req.body;
+  const { plano, placa, email, nome, cpf, extras } = req.body;
+  // Marca se o upsell de Leilão foi selecionado (para disparar a BrasilCredit no pós-pagamento).
+  const querLeilao = Array.isArray(extras) && extras.some(x => String(x).toLowerCase().includes('leil'));
   const planos = {
     basico:   { valor: 19.90, descricao: 'Consulta Veicular Básica'   },
     simples:  { valor: 29.90, descricao: 'Consulta Veicular Simples'  },
@@ -449,7 +511,7 @@ app.post('/api/pagamento/criar', async (req, res) => {
           last_name:  nome?.split(' ').slice(1).join(' ') || 'SOS',
           identification: { type: 'CPF', number: cpf?.replace(/\D/g,'') || '00000000000' }
         },
-        metadata: { placa, plano }
+        metadata: { placa, plano, leilao: querLeilao ? '1' : '0' }
       },
       {
         'Authorization':    `Bearer ${process.env.MP_ACCESS_TOKEN}`,
@@ -501,6 +563,21 @@ app.get('/api/pagamento/status/:id', async (req, res) => {
         _consultasPorChave.set(chaveConsulta(placa, d.payer.email), premium);
       }
       out.premium = premium;
+
+      // Upsell de Leilão (BrasilCredit) — só se foi comprado (metadata.leilao === '1')
+      if (d.metadata?.leilao === '1') {
+        let leilao = _leilaoCache.get(id);
+        if (!leilao) {
+          try {
+            leilao = await consultarLeilao(placa);
+            _leilaoCache.set(id, leilao);
+          } catch (e) {
+            console.error('[status/leilao]', e.message);
+            leilao = null;
+          }
+        }
+        out.leilao = leilao;
+      }
     }
 
     res.json(out);
@@ -614,6 +691,33 @@ app.get('/api/consulta/recuperar', async (req, res) => {
   } catch (err) {
     console.error('[recuperar]', err.message);
     return res.status(500).json({ found: false, msg: 'Erro ao buscar consulta.' });
+  }
+});
+
+// Consulta de Leilão (BrasilCredit) — upsell, só após pagamento aprovado.
+app.post('/api/consulta/leilao', async (req, res) => {
+  const { placa, pagamento_id } = req.body || {};
+
+  if (!pagamento_id) return res.status(403).json({ erro: true, msg: 'pagamento_id obrigatório.' });
+  if (!placa || !placaValida(placa))
+    return res.status(400).json({ erro: true, msg: 'Formato de placa inválido.' });
+
+  const placaU = placa.toUpperCase().replace(/[^A-Z0-9]/g, '');
+
+  try {
+    // Mesmo padrão da /completa: confirma pagamento aprovado e placa correspondente.
+    const pag = await mpGet(`/v1/payments/${pagamento_id}`);
+    if (pag.status !== 'approved')
+      return res.status(402).json({ erro: true, msg: 'Pagamento não confirmado.' });
+    if (pag.metadata?.placa && pag.metadata.placa.toUpperCase() !== placaU)
+      return res.status(403).json({ erro: true, msg: 'Placa não corresponde ao pagamento.' });
+
+    const dados = await consultarLeilao(placaU);
+    _leilaoCache.set(String(pagamento_id), dados);
+    res.json(dados); // { encontrado, leiloes, remarketing, score, analise_risco, checklist }
+  } catch (err) {
+    console.error('[leilao]', err.message);
+    res.status(500).json({ erro: true, msg: 'Erro ao consultar leilão.' });
   }
 });
 
