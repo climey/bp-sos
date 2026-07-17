@@ -251,7 +251,7 @@
   </section>
 
   <!-- ============ UNLOCK CTA ============ -->
-  <section id="liberar" style="padding:0 32px 80px;background:#1a1a1a;">
+  <section id="liberar" style="display:{{ ctaDisplay }};padding:0 32px 80px;background:#1a1a1a;">
     <div style="position:relative;max-width:1180px;margin:0 auto;border-radius:26px;overflow:hidden;background:#26282d;border:1px solid #3d4042;min-height:440px;">
       <span style="position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(620px 340px at 18% 35%,rgba(212,54,48,.34),transparent 70%);"></span>
       <!-- pessoa apontando para o preço/infos à esquerda -->
@@ -588,6 +588,8 @@ class Component extends DCLogic {
       faturamento:   this.enxugar(faturamento),
       // Cards de valor: mantêm "Nada consta"/"Sem débito"/"não informado"
       restricoes, debitos, alertas,
+      // Esconde o banner "Libere as informações" quando já pago
+      ctaDisplay: this.state.pago ? 'none' : 'block',
       fipe, onCopy, onPrint, copyLabel: this.state.copyLabel
     };
   }
