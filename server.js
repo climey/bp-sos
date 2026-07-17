@@ -721,6 +721,16 @@ app.post('/api/consulta/leilao', async (req, res) => {
   }
 });
 
+// TEMPORARIO (debug): IP de saida do servidor — util p/ whitelist de APIs (ex.: BrasilCredit)
+app.get('/api/meu-ip', async (req, res) => {
+  try {
+    const d = await httpGet('https://api.ipify.org?format=json');
+    res.json(d);
+  } catch (err) {
+    res.status(500).json({ erro: 'Erro ao obter IP', msg: err.message });
+  }
+});
+
 // Health check
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
