@@ -250,7 +250,7 @@ class Component extends DCLogic {
     const base = 12.99;
     const bumpDefs = [
       { headline: '96% dos compradores também levaram', was: 'R$ 14,99', price: 'R$ 9,99', amount: 9.99, title: 'Débitos Veiculares', desc: 'Descubra se o veículo tem débitos de IPVA, Licenciamento e multas.' },
-      { headline: '89% dos compradores também levaram', was: 'R$ 29,99', price: 'R$ 24,99', amount: 24.99, title: 'Leilão', desc: 'Descubra se o veículo já teve passagem por leilões.' },
+      { headline: '89% dos compradores também levaram', was: 'R$ 29,99', price: 'R$ 0,99', amount: 0.99, title: 'Leilão', desc: 'Descubra se o veículo já teve passagem por leilões.' }, // TESTE: era R$ 24,99 (amount 24.99)
     ];
 
     const extras = bumpDefs.reduce((s, b, i) => s + (this.state.bumps[i] ? b.amount : 0), 0);
