@@ -108,7 +108,7 @@
             <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
               <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
               <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="Checkout.dc.html" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
-              <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:#46506b;text-align:right;">{{ row.value }}</span></sc-if>
+              <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:{{ row.color }};text-align:right;white-space:pre-line;">{{ row.value }}</span></sc-if>
             </div>
           </sc-for>
         </div>
@@ -123,7 +123,7 @@
             <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
               <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
               <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="Checkout.dc.html" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
-              <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:#46506b;text-align:right;">{{ row.value }}</span></sc-if>
+              <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:{{ row.color }};text-align:right;white-space:pre-line;">{{ row.value }}</span></sc-if>
             </div>
           </sc-for>
         </div>
@@ -138,7 +138,7 @@
             <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
               <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
               <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="Checkout.dc.html" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
-              <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:#46506b;text-align:right;">{{ row.value }}</span></sc-if>
+              <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:{{ row.color }};text-align:right;white-space:pre-line;">{{ row.value }}</span></sc-if>
             </div>
           </sc-for>
         </div>
@@ -153,7 +153,7 @@
             <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
               <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
               <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="Checkout.dc.html" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
-              <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:#46506b;text-align:right;">{{ row.value }}</span></sc-if>
+              <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:{{ row.color }};text-align:right;white-space:pre-line;">{{ row.value }}</span></sc-if>
             </div>
           </sc-for>
         </div>
@@ -168,7 +168,7 @@
             <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
               <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
               <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="Checkout.dc.html" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
-              <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:#46506b;text-align:right;">{{ row.value }}</span></sc-if>
+              <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:{{ row.color }};text-align:right;white-space:pre-line;">{{ row.value }}</span></sc-if>
             </div>
           </sc-for>
         </div>
@@ -183,7 +183,7 @@
             <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
               <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
               <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="Checkout.dc.html" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
-              <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:#46506b;text-align:right;">{{ row.value }}</span></sc-if>
+              <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:{{ row.color }};text-align:right;white-space:pre-line;">{{ row.value }}</span></sc-if>
             </div>
           </sc-for>
         </div>
@@ -198,7 +198,7 @@
             <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
               <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
               <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="Checkout.dc.html" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
-              <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:#46506b;text-align:right;">{{ row.value }}</span></sc-if>
+              <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:{{ row.color }};text-align:right;white-space:pre-line;">{{ row.value }}</span></sc-if>
             </div>
           </sc-for>
         </div>
@@ -392,19 +392,78 @@ class Component extends DCLogic {
 
   componentWillUnmount() { if (this._ct) clearTimeout(this._ct); }
 
+  // Normaliza texto: sem acentos, maiúsculo, espaços colapsados (para comparação).
+  _norm(s) {
+    return String(s == null ? '' : s).normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .toUpperCase().replace(/\s+/g, ' ').trim();
+  }
+
+  // Cor por criticidade conforme o campo (label) e o valor.
+  corDe(label, value) {
+    const NEUTRO = '#46506b', VERDE = '#22c55e', VERMELHO = '#ef4444', AMARELO = '#f59e0b';
+    if (value == null) return AMARELO;
+    const V = this._norm(value), L = this._norm(label);
+    if (V === '') return AMARELO;
+
+    // Amarelo — não informado / alienação fiduciária / info não encontrada
+    if (V === 'NAO INFORMADO' || V === '-' || V === '—') return AMARELO;
+    if (V.includes('ALIENACAO FIDUCIARIA')) return AMARELO;
+    if (V.includes('INFORMACAO NAO ENCONTRADA')) return AMARELO;
+
+    // Vermelho — roubo/furto em qualquer campo
+    if (V.includes('ROUBADO') || V.includes('FURTADO')) return VERMELHO;
+
+    // Débitos — vermelho se valor monetário > 0
+    if (L.includes('IPVA') || L.includes('MULTA') || L.includes('LICENCIAMENTO') || L.includes('DPVAT')) {
+      if (V.includes('SEM DEBITO')) return VERDE;
+      const m = V.match(/R\$\s*([\d.]+,\d{2}|\d+)/);
+      if (m) return parseFloat(m[1].replace(/\./g, '').replace(',', '.')) > 0 ? VERMELHO : VERDE;
+      return NEUTRO;
+    }
+
+    // Alertas / restrições por rótulo
+    if (L.includes('LEILAO') || L.includes('SINISTRO')) return V === 'NADA CONSTA' ? VERDE : VERMELHO;
+    if (L.includes('RECALL')) return V.includes('SEM RECALL') ? VERDE : VERMELHO;
+    if (L.includes('RESTRICOES CADASTRAIS')) return V === 'NADA CONSTA' ? VERDE : VERMELHO;
+    if (L.includes('RENAJUD')) {
+      const resto = V.replace(/BLOQUEIO[- ]?ATIVO NADA CONSTA/g, '').replace(/NADA CONSTA/g, '');
+      return /BLOQUEIO|PENHORA|RESTRIC/.test(resto) ? VERMELHO : VERDE;
+    }
+    if (L.includes('COMUNICADO DE VENDA')) {
+      if (V === 'SIM') return VERMELHO;
+      if (V === 'NAO') return VERDE;
+      return NEUTRO;
+    }
+    if (L.includes('RISCO')) {
+      if (/ALTO/.test(V)) return VERMELHO;
+      if (/MEDIO/.test(V)) return AMARELO;
+      if (/BAIXO/.test(V)) return VERDE;
+      return NEUTRO;
+    }
+    if (L.includes('GRAVAME')) return (V === 'NADA CONSTA' || V.includes('SEM RESTRIC')) ? VERDE : VERMELHO;
+
+    // Verde genérico (valores "limpos")
+    if (V === 'NADA CONSTA' || V.includes('SEM RESTRIC') || V.includes('SEM DEBITO') ||
+        V.includes('SEM RECALL') || V === 'NORMAL' || V === 'EM CIRCULACAO' ||
+        V.includes('NAO INDICA OCORRENCIA')) return VERDE;
+
+    return NEUTRO;
+  }
+
   row(label, value, premium = false) {
-    // Normaliza vazios/"-"/"N/A" para nulo -> exibe "não informado" quando liberado.
-    // Campos premium ficam travados (CTA) sem pagamento.
+    // Normaliza vazios/"-"/"N/A" e frases de "não encontrado" -> exibe "Não informado".
     let v = value;
     if (v != null) {
-      const s = String(v).trim();
-      const up = s.toUpperCase();
-      if (s === '' || up === '-' || up === 'N/A' || up === 'NA' ||
-          up === 'NAO INFORMADO' || up === 'NÃO INFORMADO' ||
-          up === 'NULL' || up === 'UNDEFINED') v = null;
+      const up = this._norm(v);
+      if (up === '' || up === '-' || up === 'N/A' || up === 'NA' ||
+          up === 'NAO INFORMADO' || up === 'NULL' || up === 'UNDEFINED' ||
+          up === 'INFORMACAO NAO ENCONTRADA NAS BASES CONSULTADAS' ||
+          up === 'NAO CONSTAM INFORMACOES NA BASE CONSULTADA' ||
+          up === 'NAO CONSTAM INFORMACOES') v = null;
     }
     const locked = !this.state.pago && (premium || v == null);
-    return { label, value: v == null ? 'não informado' : v, locked, unlocked: !locked };
+    const display = v == null ? 'Não informado' : v;
+    return { label, value: display, locked, unlocked: !locked, color: this.corDe(label, display) };
   }
 
   // "0"/"0,00"/vazio -> nulo (para campos numéricos onde 0 significa não informado)
@@ -426,7 +485,7 @@ class Component extends DCLogic {
   // Enxuga cards técnicos: remove linhas já liberadas que ficaram "não informado".
   // Mantém linhas travadas (CTA de upsell) e as que têm valor real.
   enxugar(rows) {
-    return rows.filter(r => !(r.unlocked && r.value === 'não informado'));
+    return rows.filter(r => !(r.unlocked && r.value === 'Não informado'));
   }
 
   renderVals() {
@@ -498,7 +557,8 @@ class Component extends DCLogic {
       .concat(Array.isArray(pr.outras_restricoes) ? pr.outras_restricoes : [])
       .filter(meaningful)
       .map(x => String(x).trim());
-    const restricoesResumo = listaRestr.length ? listaRestr.join(' • ') : 'Nada consta';
+    // Múltiplas restrições em linhas separadas (renderizadas com white-space:pre-line).
+    const restricoesResumo = listaRestr.length ? listaRestr.join('\n') : 'Nada consta';
 
     // Gravame / financiamento
     const temGravame = meaningful(pr.restricao_financeira) || meaningful(pr.restricao_nome_agente) || meaningful(pr.restricao_financiado);
@@ -535,22 +595,13 @@ class Component extends DCLogic {
     const lei = pr.leilao || {};
     const sin = pr.sinistro || {};
     const rec = pr.recall || {};
-    const alerta = (label, ruim, txtRuim, txtOk) => {
-      const r = this.row(label, ruim ? txtRuim : txtOk, true);
-      r.color = ruim ? '#D43630' : '#27c06b';
-      return r;
-    };
-    const risco = lei.parecer_risco || null;
-    const riscoColor = risco && /ALTO/i.test(risco) ? '#D43630'
-      : (risco && /M[EÉ]DIO/i.test(risco) ? '#e08a00' : '#27c06b');
+    const alerta = (label, ruim, txtRuim, txtOk) => this.row(label, ruim ? txtRuim : txtOk, true);
     const alertas = [
       alerta('Passagem por Leilão', !!lei.consta, 'Consta' + (Number(lei.quantidade) ? ' (' + lei.quantidade + 'x)' : ''), 'Nada consta'),
       alerta('Indício de Sinistro', !!sin.consta, 'Consta indício', 'Nada consta'),
       alerta('Recall Pendente', !!rec.possui, 'Possui recall', 'Sem recall'),
+      this.row('Parecer de Risco', lei.parecer_risco || null, true),
     ];
-    const rRisco = this.row('Parecer de Risco', risco, true);
-    rRisco.color = risco ? riscoColor : '#46506b';
-    alertas.push(rRisco);
 
     const f = d.fipe;
     const fipe = f ? [{
