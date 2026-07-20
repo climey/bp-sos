@@ -185,7 +185,21 @@ async function consultarVipCar(placa) {
 
 // Monta a consulta premium unificada (wdapi2 básico + FutureData), usada tanto
 // pela rota POST /api/consulta/premium quanto pelo fluxo de pagamento aprovado.
-const _premiumCache = new Map(); // pagamento_id -> resultado premium (em memória)
+const _premiumCache = new Map();   // pagamento_id -> resultado premium (em memória)
+const _premiumPending = new Map();  // pagamento_id -> promise em andamento (premium)
+const _leilaoPending = new Map();   // pagamento_id -> promise em andamento (leilão)
+
+// Dispara uma computação em background e cacheia o resultado. Retorna o valor
+// se já estiver pronto, ou null enquanto processa (NÃO bloqueia o request).
+function bgCache(cache, pending, id, fn) {
+  if (cache.has(id)) return cache.get(id);
+  if (!pending.has(id)) {
+    pending.set(id, Promise.resolve().then(fn)
+      .then(r => { cache.set(id, r); pending.delete(id); return r; })
+      .catch(e => { pending.delete(id); console.error('[bgCache]', e.message); return null; }));
+  }
+  return null; // ainda processando
+}
 
 async function montarConsultaPremium(placa) {
   const [wdapi, futuredata] = await Promise.allSettled([
@@ -548,35 +562,19 @@ app.get('/api/pagamento/status/:id', async (req, res) => {
     if (d.status === 'approved' && d.metadata?.placa) {
       const id = String(d.id);
       const placa = d.metadata.placa.toUpperCase().replace(/[^A-Z0-9]/g, '');
-      let premium = _premiumCache.get(id);
-      if (!premium) {
-        try {
-          premium = await montarConsultaPremium(placa);
-          _premiumCache.set(id, premium); // cache p/ não reconsultar a cada polling
-        } catch (e) {
-          console.error('[status/premium]', e.message);
-          premium = null;
-        }
-      }
-      // Indexa por placa+email para a rota /recuperar
+
+      // FutureData dispara em BACKGROUND (não bloqueia a resposta do status).
+      // Retorna null enquanto processa; quando pronto, out.premium já vem preenchido
+      // — é assim que o frontend sabe que o relatório está pronto p/ redirecionar.
+      const premium = bgCache(_premiumCache, _premiumPending, id, () => montarConsultaPremium(placa));
       if (premium && d.payer?.email) {
-        _consultasPorChave.set(chaveConsulta(placa, d.payer.email), premium);
+        _consultasPorChave.set(chaveConsulta(placa, d.payer.email), premium); // indexa p/ /recuperar
       }
       out.premium = premium;
 
-      // Upsell de Leilão (BrasilCredit) — só se foi comprado (metadata.leilao === '1')
+      // Upsell de Leilão (BrasilCredit) — também em background, só se foi comprado
       if (d.metadata?.leilao === '1') {
-        let leilao = _leilaoCache.get(id);
-        if (!leilao) {
-          try {
-            leilao = await consultarLeilao(placa);
-            _leilaoCache.set(id, leilao);
-          } catch (e) {
-            console.error('[status/leilao]', e.message);
-            leilao = null;
-          }
-        }
-        out.leilao = leilao;
+        out.leilao = bgCache(_leilaoCache, _leilaoPending, id, () => consultarLeilao(placa));
       }
     }
 
@@ -629,23 +627,18 @@ app.get('/api/consulta/completa/:placa/:pagamento_id', async (req, res) => {
     if (pag.metadata?.placa?.toUpperCase() !== placa.toUpperCase())
       return res.status(403).json({ erro: 'Placa não corresponde ao pagamento.' });
 
-    // 2. Consultas em paralelo (wdapi2 + FutureData)
-    const [wdapi, futuredata] = await Promise.allSettled([
-      httpGet(`https://wdapi2.com.br/consulta/${placa}/${process.env.WDAPI_TOKEN}`),
-      consultarFutureData(placa)
-    ]);
-
-    const d  = wdapi.status === 'fulfilled' ? wdapi.value : {};
-    const fd = futuredata.status === 'fulfilled'
-      ? mapearFutureData(futuredata.value)
-      : null;
-
-    if (futuredata.status === 'rejected') {
-      console.error('[FutureData]', futuredata.reason?.message);
+    // 2. Reaproveita o resultado já disparado no pós-pagamento (evita reconsultar
+    //    wdapi2 + FutureData). Se ainda estiver processando, espera a MESMA promise.
+    const key = String(pagamento_id);
+    let resultado = _premiumCache.get(key);
+    if (!resultado && _premiumPending.get(key)) resultado = await _premiumPending.get(key);
+    if (!resultado) {
+      resultado = await montarConsultaPremium(placa);
+      _premiumCache.set(key, resultado);
     }
 
-    // 3. Retorna tudo junto (mesmo formato usado pela /recuperar)
-    res.json(formatarCompleta(d, futuredata.status === 'fulfilled' ? futuredata.value : null, placa));
+    // 3. Retorna no formato /completa (mesmo usado pela /recuperar)
+    res.json(formatarCompleta(resultado.basico, resultado.futuredata, placa));
 
   } catch (err) {
     console.error('[completa]', err.message);
