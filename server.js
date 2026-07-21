@@ -11,6 +11,7 @@ app.use(cors({
   origin: [
     'https://bp-sos.vercel.app',
     'https://sospc.vercel.app',
+    'https://busca.sosbuscasonline.com.br',
     'http://localhost:3000',
     'http://localhost:5173'
   ],
