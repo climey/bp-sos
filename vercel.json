@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "routes": [
+    {
+      "src": "/",
+      "dest": "/SOS%20Buscas%20Landing.dc.html"
+    },
+    {
+      "src": "/resultado",
+      "dest": "/Resultado%20da%20Consulta.dc.html"
+    },
+    {
+      "src": "/checkout",
+      "dest": "/Checkout.dc.html"
+    },
+    {
+      "src": "/pagamento",
+      "dest": "/Pagamento%20PIX.dc.html"
+    }
+  ]
+}
