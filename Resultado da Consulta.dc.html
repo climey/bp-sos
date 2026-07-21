@@ -32,17 +32,17 @@
   <!-- ============ HEADER ============ -->
   <header data-screen-label="Header" style="position:fixed;top:0;left:0;right:0;z-index:50;backdrop-filter:blur(14px);background:rgba(21,10,9,.78);border-bottom:1px solid rgba(255,255,255,.07);">
     <div style="max-width:1240px;margin:0 auto;padding:0 32px;height:74px;display:flex;align-items:center;justify-content:space-between;gap:24px;">
-      <a href="SOS Buscas Landing.dc.html" style="display:flex;align-items:center;gap:11px;text-decoration:none;color:#fff;">
+      <a href="/" style="display:flex;align-items:center;gap:11px;text-decoration:none;color:#fff;">
         <img src="images/logo-sos.svg" alt="SOS Buscas" style="height:42px;width:auto;display:block;">
       </a>
       <nav class="sos-nav-m" style="display:flex;align-items:center;gap:34px;">
-        <a href="SOS Buscas Landing.dc.html#consultar" style="color:#c4c5c9;text-decoration:none;font-weight:600;font-size:15px;">Consultar</a>
-        <a href="SOS Buscas Landing.dc.html#sobre" style="color:#B8BABE;text-decoration:none;font-weight:600;font-size:15px;">Sobre Nós</a>
-        <a href="SOS Buscas Landing.dc.html#faq" style="color:#B8BABE;text-decoration:none;font-weight:600;font-size:15px;">FAQ</a>
-        <a href="SOS Buscas Landing.dc.html#contato" style="color:#B8BABE;text-decoration:none;font-weight:600;font-size:15px;">Contato</a>
+        <a href="/#consultar" style="color:#c4c5c9;text-decoration:none;font-weight:600;font-size:15px;">Consultar</a>
+        <a href="/#sobre" style="color:#B8BABE;text-decoration:none;font-weight:600;font-size:15px;">Sobre Nós</a>
+        <a href="/#faq" style="color:#B8BABE;text-decoration:none;font-weight:600;font-size:15px;">FAQ</a>
+        <a href="/#contato" style="color:#B8BABE;text-decoration:none;font-weight:600;font-size:15px;">Contato</a>
         <a href="#" style="color:#B8BABE;text-decoration:none;font-weight:600;font-size:15px;">Já paguei</a>
       </nav>
-      <a href="Checkout.dc.html" style="text-decoration:none;background:var(--ac,#D43630);color:#fff;font-weight:700;font-size:15px;padding:12px 26px;border-radius:9999px;box-shadow:0 8px 22px rgba(212,54,48,.32);transition:background .2s,transform .2s;" style-hover="background:var(--ah,#B02E28);transform:translateY(-2px);">Liberar informações</a>
+      <a href="/checkout" style="text-decoration:none;background:var(--ac,#D43630);color:#fff;font-weight:700;font-size:15px;padding:12px 26px;border-radius:9999px;box-shadow:0 8px 22px rgba(212,54,48,.32);transition:background .2s,transform .2s;" style-hover="background:var(--ah,#B02E28);transform:translateY(-2px);">Liberar informações</a>
     </div>
   </header>
 
@@ -78,7 +78,7 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="7"></rect></svg>
           Imprimir
         </button>
-        <a href="Checkout.dc.html" style="display:flex;align-items:center;gap:8px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-weight:700;font-size:14px;padding:11px 22px;border-radius:10px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);">
+        <a href="/checkout" style="display:flex;align-items:center;gap:8px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-weight:700;font-size:14px;padding:11px 22px;border-radius:10px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0"></path></svg>
           Liberar informações
         </a>
@@ -107,7 +107,7 @@
           <sc-for list="{{ principais }}" as="row" hint-placeholder-count="8">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
               <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
-              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="Checkout.dc.html" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
+              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="/checkout" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
               <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:{{ row.color }};text-align:right;white-space:pre-line;">{{ row.value }}</span></sc-if>
             </div>
           </sc-for>
@@ -122,7 +122,7 @@
           <sc-for list="{{ identificacao }}" as="row" hint-placeholder-count="6">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
               <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
-              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="Checkout.dc.html" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
+              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="/checkout" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
               <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:{{ row.color }};text-align:right;white-space:pre-line;">{{ row.value }}</span></sc-if>
             </div>
           </sc-for>
@@ -137,7 +137,7 @@
           <sc-for list="{{ proprietario }}" as="row" hint-placeholder-count="5">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
               <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
-              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="Checkout.dc.html" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
+              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="/checkout" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
               <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:{{ row.color }};text-align:right;white-space:pre-line;">{{ row.value }}</span></sc-if>
             </div>
           </sc-for>
@@ -152,7 +152,7 @@
           <sc-for list="{{ outros }}" as="row" hint-placeholder-count="5">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
               <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
-              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="Checkout.dc.html" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
+              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="/checkout" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
               <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:{{ row.color }};text-align:right;white-space:pre-line;">{{ row.value }}</span></sc-if>
             </div>
           </sc-for>
@@ -167,7 +167,7 @@
           <sc-for list="{{ restricoes }}" as="row" hint-placeholder-count="6">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
               <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
-              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="Checkout.dc.html" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
+              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="/checkout" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
               <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:{{ row.color }};text-align:right;white-space:pre-line;">{{ row.value }}</span></sc-if>
             </div>
           </sc-for>
@@ -182,7 +182,7 @@
           <sc-for list="{{ faturamento }}" as="row" hint-placeholder-count="6">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
               <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
-              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="Checkout.dc.html" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
+              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="/checkout" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
               <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:{{ row.color }};text-align:right;white-space:pre-line;">{{ row.value }}</span></sc-if>
             </div>
           </sc-for>
@@ -197,7 +197,7 @@
           <sc-for list="{{ debitos }}" as="row" hint-placeholder-count="4">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
               <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
-              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="Checkout.dc.html" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
+              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="/checkout" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
               <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:{{ row.color }};text-align:right;white-space:pre-line;">{{ row.value }}</span></sc-if>
             </div>
           </sc-for>
@@ -212,7 +212,7 @@
           <sc-for list="{{ alertas }}" as="row" hint-placeholder-count="4">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
               <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
-              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="Checkout.dc.html" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
+              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="/checkout" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
               <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:{{ row.color }};text-align:right;">{{ row.value }}</span></sc-if>
             </div>
           </sc-for>
@@ -273,7 +273,7 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#27c06b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>
           + de 1 milhão de clientes confiam na SOS Buscas.
         </div>
-        <a href="Checkout.dc.html" style="position:relative;display:inline-flex;align-items:center;gap:11px;margin-top:30px;overflow:hidden;text-decoration:none;background:var(--ac,#D43630);color:#fff;font-weight:800;font-size:18px;padding:18px 38px;border-radius:9999px;box-shadow:0 14px 34px rgba(212,54,48,.42);animation:pulseGlow 2.4s ease-in-out infinite;transition:transform .2s;" style-hover="transform:translateY(-2px);">
+        <a href="/checkout" style="position:relative;display:inline-flex;align-items:center;gap:11px;margin-top:30px;overflow:hidden;text-decoration:none;background:var(--ac,#D43630);color:#fff;font-weight:800;font-size:18px;padding:18px 38px;border-radius:9999px;box-shadow:0 14px 34px rgba(212,54,48,.42);animation:pulseGlow 2.4s ease-in-out infinite;transition:transform .2s;" style-hover="transform:translateY(-2px);">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0"></path></svg>
           Liberar agora por R$ 12,99
         </a>

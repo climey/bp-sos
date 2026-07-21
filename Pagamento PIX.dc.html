@@ -34,17 +34,17 @@
   <!-- ============ HEADER ============ -->
   <header data-screen-label="Header" style="position:fixed;top:0;left:0;right:0;z-index:50;backdrop-filter:blur(14px);background:rgba(21,10,9,.78);border-bottom:1px solid rgba(255,255,255,.07);">
     <div style="max-width:1240px;margin:0 auto;padding:0 32px;height:74px;display:flex;align-items:center;justify-content:space-between;gap:24px;">
-      <a href="SOS Buscas Landing.dc.html" style="display:flex;align-items:center;gap:11px;text-decoration:none;color:#fff;">
+      <a href="/" style="display:flex;align-items:center;gap:11px;text-decoration:none;color:#fff;">
         <img src="images/logo-sos.svg" alt="SOS Buscas" style="height:42px;width:auto;display:block;">
       </a>
       <nav class="sos-nav-m" style="display:flex;align-items:center;gap:34px;">
-        <a href="SOS Buscas Landing.dc.html#consultar" style="color:#c4c5c9;text-decoration:none;font-weight:600;font-size:15px;">Consultar</a>
-        <a href="SOS Buscas Landing.dc.html#sobre" style="color:#B8BABE;text-decoration:none;font-weight:600;font-size:15px;">Sobre Nós</a>
-        <a href="SOS Buscas Landing.dc.html#faq" style="color:#B8BABE;text-decoration:none;font-weight:600;font-size:15px;">FAQ</a>
-        <a href="SOS Buscas Landing.dc.html#contato" style="color:#B8BABE;text-decoration:none;font-weight:600;font-size:15px;">Contato</a>
+        <a href="/#consultar" style="color:#c4c5c9;text-decoration:none;font-weight:600;font-size:15px;">Consultar</a>
+        <a href="/#sobre" style="color:#B8BABE;text-decoration:none;font-weight:600;font-size:15px;">Sobre Nós</a>
+        <a href="/#faq" style="color:#B8BABE;text-decoration:none;font-weight:600;font-size:15px;">FAQ</a>
+        <a href="/#contato" style="color:#B8BABE;text-decoration:none;font-weight:600;font-size:15px;">Contato</a>
         <a href="#" style="color:#B8BABE;text-decoration:none;font-weight:600;font-size:15px;">Já paguei</a>
       </nav>
-      <a href="Checkout.dc.html" style="text-decoration:none;background:var(--ac,#D43630);color:#fff;font-weight:700;font-size:15px;padding:12px 26px;border-radius:9999px;box-shadow:0 8px 22px rgba(212,54,48,.32);transition:background .2s,transform .2s;" style-hover="background:var(--ah,#B02E28);transform:translateY(-2px);">Voltar ao checkout</a>
+      <a href="/checkout" style="text-decoration:none;background:var(--ac,#D43630);color:#fff;font-weight:700;font-size:15px;padding:12px 26px;border-radius:9999px;box-shadow:0 8px 22px rgba(212,54,48,.32);transition:background .2s,transform .2s;" style-hover="background:var(--ah,#B02E28);transform:translateY(-2px);">Voltar ao checkout</a>
     </div>
   </header>
 
@@ -247,7 +247,7 @@ class Component extends DCLogic {
     if (this._msg) clearInterval(this._msg);
     if (this._to) clearTimeout(this._to);
     sessionStorage.setItem('sos_pago', 'true');
-    window.location.href = 'Resultado da Consulta.dc.html';
+    window.location.href = '/resultado';
   }
 
   componentWillUnmount() { clearInterval(this._t); if (this._poll) clearInterval(this._poll); if (this._msg) clearInterval(this._msg); if (this._ct) clearTimeout(this._ct); if (this._to) clearTimeout(this._to); }

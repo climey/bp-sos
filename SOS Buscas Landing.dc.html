@@ -449,7 +449,7 @@ class Component extends DCLogic {
         sessionStorage.setItem('sos_dados', JSON.stringify(data.dados || data));
         sessionStorage.setItem('sos_placa', placa);
         sessionStorage.setItem('sos_pago', 'true');
-        window.location.href = 'Resultado da Consulta.dc.html';
+        window.location.href = '/resultado';
       } else {
         this.setState({ recoverStatus: 'notfound' });
       }
@@ -511,7 +511,7 @@ class Component extends DCLogic {
         sessionStorage.setItem('sos_dados', JSON.stringify(data));
         sessionStorage.setItem('sos_placa', placa);
         sessionStorage.removeItem('sos_pago');
-        window.location.href = 'Resultado da Consulta.dc.html';
+        window.location.href = '/resultado';
       } catch (err) {
         this.setState({ loading: false, error: 'Não foi possível consultar essa placa. Verifique e tente novamente.' });
       }
