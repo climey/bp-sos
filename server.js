@@ -725,6 +725,17 @@ app.get('/api/meu-ip', async (req, res) => {
   }
 });
 
+// TEMPORARIO (debug): retorno cru da BrasilCredit p/ mapear os campos do leilao.
+// REMOVER apos finalizar o mapeamento (inclui o _raw da consultarLeilao).
+app.get('/api/teste/leilao/:placa', async (req, res) => {
+  try {
+    const resultado = await consultarLeilao(req.params.placa);
+    res.json(resultado);
+  } catch (e) {
+    res.status(500).json({ erro: e.message });
+  }
+});
+
 // Health check
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
