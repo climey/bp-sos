@@ -239,23 +239,48 @@ async function consultarLeilao(placa) {
   const xml = await httpGetText(url);
   const parsed = await xml2js.parseStringPromise(xml, { explicitArray: false, trim: true, ignoreAttrs: true });
 
-  // A raiz costuma ser um unico elemento envolvendo a resposta.
-  const root = parsed && typeof parsed === 'object' ? (Object.values(parsed)[0] || {}) : {};
-
-  // <mensagem>1</mensagem> = veiculo encontrado
-  const mensagem = String(root.mensagem ?? root.Mensagem ?? '').trim();
-  const encontrado = mensagem === '1';
+  // Estrutura real (doc BrasilCredit): <consulta> { <cabecalho>, <resposta> }.
+  const root = (parsed && parsed.consulta) || {};
+  const cab  = root.cabecalho || {};
 
   const arr = (v) => (Array.isArray(v) ? v : (v == null || v === '' ? [] : [v]));
+  const obj = (v) => (v && typeof v === 'object' ? v : {}); // <tag/> vazia vira '' -> {}
+
+  // cabecalho.status: "0" = requisicao ok; qualquer outro (ex.: "99") = erro
+  // (credencial invalida, servico fora etc.). Nesse caso nao ha <resposta>.
+  const statusReq = String(cab.status ?? '').trim();
+  if (statusReq !== '0') {
+    return {
+      erro: true,
+      status: statusReq || 'sem_status',
+      mensagem: String(cab.mensagem ?? cab.mensagem_status ?? 'Erro na consulta BrasilCredit').trim(),
+      encontrado: false,
+      leiloes: [], remarketing: [], score: {}, analise_risco: {}, checklist: {}
+    };
+  }
+
+  const resp  = obj(root.resposta);
+  const solic = obj(resp.solicitacao);
+  const risco = obj(resp.avaliacao_risco);
+
+  // solicitacao.mensagem: "1" = veiculo localizado na base, "0" = nao encontrado.
+  const encontrado = String(solic.mensagem ?? '').trim() === '1';
 
   return {
     encontrado,
-    leiloes:       arr(root.leiloes ?? root.leilao ?? root.Leiloes),
-    remarketing:   arr(root.remarketing ?? root.Remarketing),
-    score:         root.score ?? root.Score ?? {},
-    analise_risco: root.avaliacao_risco ?? root.analise_risco ?? root.parecer ?? {},
-    checklist:     root.checklist ?? root.Checklist ?? {},
-    // _raw: temporario, ajuda a mapear os campos reais do XML; remover apos ajuste.
+    descricao:            String(solic.descricao_mensagem ?? '').trim(),
+    veiculo:              obj(resp.dados_veiculo),
+    leiloes:              arr(obj(resp.leiloes).registro),
+    remarketing:          arr(obj(resp.remarketing).registro),
+    score:                obj(risco.score),                         // { score, descricao_score }
+    analise_risco:        obj(risco.analise_risco),                 // { parecer, indice }
+    probabilidade_seguro: obj(risco.probabilidade_seguro),          // { aceita_seguro, descricao }
+    probabilidade_fipe:   obj(risco.probabilidade_fipe_parcial),    // { percentual_referencia, descricao }
+    vistoria_especial:    obj(risco.probabilidade_vistoria_especial),
+    inspecao:             obj(resp.inspecao_veiculo),               // { data_inspecao, link_1, garantia }
+    checklist:            obj(resp.checklist),                      // { motor, frente, ..., obs }
+    // _raw: temporario (fase de debug — auth ainda pendente). Remover junto com as
+    // rotas /api/teste/leilao e /api/meu-ip apos a 1a consulta real bem-sucedida.
     _raw: root
   };
 }
