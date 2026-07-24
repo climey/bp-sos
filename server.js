@@ -279,9 +279,9 @@ async function consultarLeilao(placa) {
     vistoria_especial:    obj(risco.probabilidade_vistoria_especial),
     inspecao:             obj(resp.inspecao_veiculo),               // { data_inspecao, link_1, garantia }
     checklist:            obj(resp.checklist),                      // { motor, frente, ..., obs }
-    // _raw: temporario (fase de debug — auth ainda pendente). Remover junto com as
-    // rotas /api/teste/leilao e /api/meu-ip apos a 1a consulta real bem-sucedida.
-    _raw: root
+    // fotos: campo nao documentado presente na resposta real. Estrutura interna
+    // (quando preenchido) ainda a confirmar — passthrouh cru; null quando vazio.
+    fotos:                (resp.fotos && typeof resp.fotos === 'object') ? resp.fotos : null,
   };
 }
 
@@ -738,62 +738,6 @@ app.post('/api/consulta/leilao', async (req, res) => {
     console.error('[leilao]', err.message);
     res.status(500).json({ erro: true, msg: 'Erro ao consultar leilão.' });
   }
-});
-
-// TEMPORARIO (debug): IP de saida do servidor — util p/ whitelist de APIs (ex.: BrasilCredit)
-app.get('/api/meu-ip', async (req, res) => {
-  try {
-    const d = await httpGet('https://api.ipify.org?format=json');
-    res.json(d);
-  } catch (err) {
-    res.status(500).json({ erro: 'Erro ao obter IP', msg: err.message });
-  }
-});
-
-// TEMPORARIO (debug): retorno cru da BrasilCredit p/ mapear os campos do leilao.
-// REMOVER apos finalizar o mapeamento (inclui o _raw da consultarLeilao).
-app.get('/api/teste/leilao/:placa', async (req, res) => {
-  try {
-    const resultado = await consultarLeilao(req.params.placa);
-    res.json(resultado);
-  } catch (e) {
-    res.status(500).json({ erro: e.message });
-  }
-});
-
-// TEMPORARIO (debug): testa a auth da BrasilCredit em ordens diferentes p/ achar
-// a combinacao correta de login/senha (sem expor os valores). REMOVER apos resolver.
-app.get('/api/teste/leilao-diag', async (req, res) => {
-  const base  = process.env.BRASIL_CREDIT_API_BASE_URL;
-  const u     = process.env.BRASIL_CREDIT_API_USERNAME || '';
-  const p     = process.env.BRASIL_CREDIT_API_PASSWORD || '';
-  const c     = process.env.BRASIL_CREDIT_CONSULTA_ID  || '';
-  const placa = 'AAA1111';
-
-  async function tentar(login, senha) {
-    try {
-      const url = `${base}/consulta?login=${encodeURIComponent(login)}` +
-                  `&senha=${encodeURIComponent(senha)}` +
-                  `&consulta=${encodeURIComponent(c)}&placa=${placa}`;
-      const xml = await httpGetText(url);
-      const parsed = await xml2js.parseStringPromise(xml, { explicitArray: false, trim: true, ignoreAttrs: true });
-      const cab = (parsed && parsed.consulta && parsed.consulta.cabecalho) || {};
-      return { status: String(cab.status ?? ''), mensagem: String(cab.mensagem ?? '') };
-    } catch (e) { return { erro: e.message }; }
-  }
-
-  res.json({
-    config: {
-      base,
-      consulta_id_set: !!c,
-      username_len: u.length,
-      password_len: p.length,
-      username_tem_espaco: u !== u.trim(),
-      password_tem_espaco: p !== p.trim(),
-    },
-    ordem_normal:  await tentar(u.trim(), p.trim()),   // login=USERNAME, senha=PASSWORD
-    ordem_trocada: await tentar(p.trim(), u.trim()),   // login=PASSWORD, senha=USERNAME
-  });
 });
 
 // Health check
