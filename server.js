@@ -761,6 +761,41 @@ app.get('/api/teste/leilao/:placa', async (req, res) => {
   }
 });
 
+// TEMPORARIO (debug): testa a auth da BrasilCredit em ordens diferentes p/ achar
+// a combinacao correta de login/senha (sem expor os valores). REMOVER apos resolver.
+app.get('/api/teste/leilao-diag', async (req, res) => {
+  const base  = process.env.BRASIL_CREDIT_API_BASE_URL;
+  const u     = process.env.BRASIL_CREDIT_API_USERNAME || '';
+  const p     = process.env.BRASIL_CREDIT_API_PASSWORD || '';
+  const c     = process.env.BRASIL_CREDIT_CONSULTA_ID  || '';
+  const placa = 'AAA1111';
+
+  async function tentar(login, senha) {
+    try {
+      const url = `${base}/consulta?login=${encodeURIComponent(login)}` +
+                  `&senha=${encodeURIComponent(senha)}` +
+                  `&consulta=${encodeURIComponent(c)}&placa=${placa}`;
+      const xml = await httpGetText(url);
+      const parsed = await xml2js.parseStringPromise(xml, { explicitArray: false, trim: true, ignoreAttrs: true });
+      const cab = (parsed && parsed.consulta && parsed.consulta.cabecalho) || {};
+      return { status: String(cab.status ?? ''), mensagem: String(cab.mensagem ?? '') };
+    } catch (e) { return { erro: e.message }; }
+  }
+
+  res.json({
+    config: {
+      base,
+      consulta_id_set: !!c,
+      username_len: u.length,
+      password_len: p.length,
+      username_tem_espaco: u !== u.trim(),
+      password_tem_espaco: p !== p.trim(),
+    },
+    ordem_normal:  await tentar(u.trim(), p.trim()),   // login=USERNAME, senha=PASSWORD
+    ordem_trocada: await tentar(p.trim(), u.trim()),   // login=PASSWORD, senha=USERNAME
+  });
+});
+
 // Health check
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
