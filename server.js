@@ -417,14 +417,15 @@ function mapearFutureData(dados) {
 // Índice em memória p/ recuperação de consulta paga (chave: "PLACA|email").
 // ⚠️ Volátil: zera a cada restart/deploy. Para persistir de verdade, usar um DB.
 const _consultasPorChave = new Map();
+const _leilaoPorChave = new Map(); // "PLACA|email" -> leilão BrasilCredit (p/ /recuperar)
 function chaveConsulta(placa, email) {
   return String(placa || '').toUpperCase().replace(/[^A-Z0-9]/g, '') +
          '|' + String(email || '').trim().toLowerCase();
 }
 
-// Formata a resposta "completa" (wdapi2 básico + FutureData premium).
-// Usado pela rota /completa e pela /recuperar.
-function formatarCompleta(d, futuredataDados, placa) {
+// Formata a resposta "completa" (wdapi2 básico + FutureData premium + leilão BrasilCredit).
+// Usado pela rota /completa e pela /recuperar. `leilao` é opcional (só quem comprou o upsell).
+function formatarCompleta(d, futuredataDados, placa, leilao) {
   d = d || {};
   return {
     marca:            d.MARCA        || null,
@@ -452,7 +453,8 @@ function formatarCompleta(d, futuredataDados, placa) {
     peso_bruto_total: d.extra?.peso_bruto_total || null,
     nacionalidade:    d.extra?.nacionalidade    || null,
     fipe:             melhorFipe(d),
-    premium:          futuredataDados ? mapearFutureData(futuredataDados) : null
+    premium:          futuredataDados ? mapearFutureData(futuredataDados) : null,
+    leilao:           leilao || null   // relatório BrasilCredit (upsell); null se não comprado
   };
 }
 
@@ -600,7 +602,9 @@ app.get('/api/pagamento/status/:id', async (req, res) => {
 
       // Upsell de Leilão (BrasilCredit) — também em background, só se foi comprado
       if (d.metadata?.leilao === '1') {
-        out.leilao = bgCache(_leilaoCache, _leilaoPending, id, () => consultarLeilao(placa));
+        const leilao = bgCache(_leilaoCache, _leilaoPending, id, () => consultarLeilao(placa));
+        if (leilao && d.payer?.email) _leilaoPorChave.set(chaveConsulta(placa, d.payer.email), leilao);
+        out.leilao = leilao;
       }
     }
 
@@ -663,8 +667,17 @@ app.get('/api/consulta/completa/:placa/:pagamento_id', async (req, res) => {
       _premiumCache.set(key, resultado);
     }
 
-    // 3. Retorna no formato /completa (mesmo usado pela /recuperar)
-    res.json(formatarCompleta(resultado.basico, resultado.futuredata, placa));
+    // 3. Leilão (BrasilCredit) — só se o upsell foi comprado (metadata.leilao === '1').
+    //    Reaproveita o cache do pós-pagamento; senão consulta e cacheia.
+    let leilao = null;
+    if (pag.metadata?.leilao === '1') {
+      leilao = _leilaoCache.get(key);
+      if (!leilao && _leilaoPending.get(key)) leilao = await _leilaoPending.get(key);
+      if (!leilao) { leilao = await consultarLeilao(placa); _leilaoCache.set(key, leilao); }
+    }
+
+    // 4. Retorna no formato /completa (mesmo usado pela /recuperar)
+    res.json(formatarCompleta(resultado.basico, resultado.futuredata, placa, leilao));
 
   } catch (err) {
     console.error('[completa]', err.message);
@@ -703,8 +716,10 @@ app.get('/api/consulta/recuperar', async (req, res) => {
       }
     }
 
-    // 3. Retorna os dados unificados (mesmo formato da /completa)
-    const dados = formatarCompleta(resultado.basico, resultado.futuredata, placaU);
+    // 3. Retorna os dados unificados (mesmo formato da /completa), incluindo o
+    //    leilão se o upsell foi comprado (indexado por placa+email no status).
+    const leilao = _leilaoPorChave.get(chave) || null;
+    const dados = formatarCompleta(resultado.basico, resultado.futuredata, placaU, leilao);
     return res.json({ found: true, dados });
 
   } catch (err) {

@@ -246,6 +246,105 @@
           </sc-for>
         </div>
       </div>
+
+      <!-- ===== RELATÓRIO DE LEILÃO E RISCO (BrasilCredit) ===== -->
+      <div style="display:{{ temLeilaoDisplay }};margin-top:44px;">
+        <div style="display:flex;align-items:center;gap:13px;margin-bottom:4px;">
+          <span style="flex:none;width:46px;height:46px;border-radius:13px;background:rgba(212,54,48,.12);display:flex;align-items:center;justify-content:center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V10l7-5 7 5v11M9 21v-6h6v6"></path></svg></span>
+          <h2 style="font-size:clamp(22px,3vw,28px);font-weight:900;color:#18120f;letter-spacing:-.6px;">Relatório de Leilão e Risco</h2>
+        </div>
+        <p style="font-size:14px;color:#6b6560;margin:0 0 22px 59px;">Histórico de leilão, remarketing, checklist de avarias e análise de risco de comercialização.</p>
+
+        <div class="sos-stack" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+          <!-- Análise de Risco -->
+          <div style="display:{{ leilaoRiscoDisplay }};background:#ffffff;border:1px solid #e7e2dd;border-radius:18px;padding:30px 32px;">
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+              <span style="flex:none;width:46px;height:46px;border-radius:50%;border:2px solid rgba(212,54,48,.4);display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0z"></path><path d="M12 8v4l3 2"></path></svg></span>
+              <div><h3 style="font-size:21px;font-weight:800;color:#18120f;">Análise de Risco</h3><p style="font-size:13.5px;color:#B8BABE;margin-top:1px;">Parecer, score de avarias e seguro</p></div>
+            </div>
+            <sc-for list="{{ leilaoRisco }}" as="row" hint-placeholder-count="6">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
+                <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
+                <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="/checkout" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
+                <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:{{ row.color }};text-align:right;white-space:pre-line;">{{ row.value }}</span></sc-if>
+              </div>
+            </sc-for>
+          </div>
+
+          <!-- Inspeção -->
+          <div style="display:{{ inspecaoDisplay }};background:#ffffff;border:1px solid #e7e2dd;border-radius:18px;padding:30px 32px;">
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+              <span style="flex:none;width:46px;height:46px;border-radius:50%;border:2px solid rgba(212,54,48,.4);display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg></span>
+              <div><h3 style="font-size:21px;font-weight:800;color:#18120f;">Inspeção</h3><p style="font-size:13.5px;color:#B8BABE;margin-top:1px;">Laudo e garantia</p></div>
+            </div>
+            <sc-for list="{{ inspecao }}" as="row" hint-placeholder-count="3">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
+                <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
+                <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="/checkout" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
+                <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:{{ row.color }};text-align:right;white-space:pre-line;">{{ row.value }}</span></sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- Checklist de Avarias -->
+        <div style="display:{{ checklistDisplay }};background:#ffffff;border:1px solid #e7e2dd;border-radius:18px;padding:30px 32px;margin-top:24px;">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;">
+            <span style="flex:none;width:46px;height:46px;border-radius:50%;border:2px solid rgba(212,54,48,.4);display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg></span>
+            <div><h3 style="font-size:21px;font-weight:800;color:#18120f;">Checklist de Avarias</h3><p style="font-size:13.5px;color:#B8BABE;margin-top:1px;">Estado das partes do veículo</p></div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;">
+            <sc-for list="{{ checklistItens }}" as="c" hint-placeholder-count="8">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 13px;background:#faf8f7;border:1px solid #ececec;border-radius:9px;">
+                <span style="font-size:13px;font-weight:600;color:#3a3b3f;">{{ c.parte }}</span>
+                <span style="font-size:13px;font-weight:800;color:{{ c.color }};text-align:right;">{{ c.cond }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <p style="display:{{ checklistObsDisplay }};margin-top:16px;font-size:13.5px;color:#6b6560;"><b style="color:#3a3b3f;">Observações:</b> {{ checklistObs }}</p>
+        </div>
+
+        <!-- Registros de Leilão -->
+        <div style="display:{{ leiloesDisplay }};background:#ffffff;border:1px solid #e7e2dd;border-radius:18px;padding:30px 32px;margin-top:24px;">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;">
+            <span style="flex:none;width:46px;height:46px;border-radius:50%;border:2px solid rgba(212,54,48,.4);display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M12 3l9 6H3l9-6zM6 9v9M18 9v9M10 9v9M14 9v9"></path></svg></span>
+            <div><h3 style="font-size:21px;font-weight:800;color:#18120f;">Registros de Leilão</h3><p style="font-size:13.5px;color:#B8BABE;margin-top:1px;">Passagens do veículo por leilão</p></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <sc-for list="{{ leiloesRegistros }}" as="reg" hint-placeholder-count="2">
+              <div style="background:#faf8f7;border:1px solid #ececec;border-radius:12px;padding:16px 20px;">
+                <div style="font-size:15px;font-weight:800;color:#18120f;margin-bottom:12px;">{{ reg.title }}</div>
+                <div class="sos-stack" style="display:grid;grid-template-columns:1fr 1fr;gap:9px;">
+                  <sc-for list="{{ reg.fields }}" as="f" hint-placeholder-count="4">
+                    <div style="font-size:14px;color:#B8BABE;">{{ f.k }}: <span style="color:#3a3b3f;font-weight:700;">{{ f.v }}</span></div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- Remarketing -->
+        <div style="display:{{ remarketingDisplay }};background:#ffffff;border:1px solid #e7e2dd;border-radius:18px;padding:30px 32px;margin-top:24px;">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;">
+            <span style="flex:none;width:46px;height:46px;border-radius:50%;border:2px solid rgba(212,54,48,.4);display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><path d="M7 14l4-4 3 3 5-6"></path></svg></span>
+            <div><h3 style="font-size:21px;font-weight:800;color:#18120f;">Remarketing</h3><p style="font-size:13.5px;color:#B8BABE;margin-top:1px;">Eventos de venda não oficiais</p></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <sc-for list="{{ remarketingRegistros }}" as="reg" hint-placeholder-count="2">
+              <div style="background:#faf8f7;border:1px solid #ececec;border-radius:12px;padding:16px 20px;">
+                <div style="font-size:15px;font-weight:800;color:#18120f;margin-bottom:12px;">{{ reg.title }}</div>
+                <div class="sos-stack" style="display:grid;grid-template-columns:1fr 1fr;gap:9px;">
+                  <sc-for list="{{ reg.fields }}" as="f" hint-placeholder-count="4">
+                    <div style="font-size:14px;color:#B8BABE;">{{ f.k }}: <span style="color:#3a3b3f;font-weight:700;">{{ f.v }}</span></div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
       </div>
     </div>
   </section>
@@ -387,6 +486,8 @@ class Component extends DCLogic {
 
     // Guarda o objeto premium cru para os cards de Restrições/Gravame e Faturamento.
     merged._premium = p;
+    // Relatório de Leilão (BrasilCredit) — vem no topo do /completa, não no premium.
+    merged._leilao = (full && full.leilao) || dados._leilao || null;
     return merged;
   }
 
@@ -569,15 +670,19 @@ class Component extends DCLogic {
       this.row('Restrição Judicial (Renajud)', this.simNao(pr.restricao_renajud), true),
       this.row('Restrições Cadastrais', restricoesResumo, true),
       this.row('Gravame / Financiamento', gravameResumo, true),
+      this.row('Status do Gravame', pr.gravame_status, true),
       this.row('Agente Financeiro', pr.restricao_nome_agente, true),
+      this.row('Financiado / Arrendatário', pr.restricao_financiado, true),
       this.row('Data de Inclusão (Gravame)', pr.restricao_data_inclusao, true),
     ];
 
     const faturamento = [
       this.row('Tipo Doc. Faturado', pr.tipo_doc_faturado, true),
+      this.row('Doc. Faturado (Parcial)', pr.cpf_cnpj_faturado, true),
       this.row('UF de Faturamento', pr.uf_faturado, true),
       this.row('Número do Motor', pr.motor || pr.numero_motor, true),
       this.row('Potência (cv)', this.nzNum(pr.potencia), true),
+      this.row('Capacidade de Carga', this.nzNum(pr.capacidade_carga), true),
       this.row('Categoria', pr.categoria, true),
       this.row('Última Atualização', pr.ultima_atualizacao, true),
     ];
@@ -620,6 +725,71 @@ class Component extends DCLogic {
       onToggle: () => this.setState(s => ({ fipeOpen: s.fipeOpen === 0 ? -1 : 0 })),
     }] : [];
 
+    // ── Relatório de Leilão e Risco (BrasilCredit) ───────────────────────────
+    const lz = d._leilao || {};
+    // Normaliza os "NAO CONSTAM INFORMACOES" / "N/I" da BrasilCredit -> nulo.
+    const val = (x) => {
+      if (x == null) return null;
+      const up = this._norm(x);
+      if (up === '' || up === 'N/I' || up.includes('NAO CONSTAM INFORMACOES') ||
+          up.includes('NAO CONSTA INFORMACOES') || up.includes('INFORMACAO NAO ENCONTRADA')) return null;
+      return x;
+    };
+
+    const sc = lz.score || {}, arisco = lz.analise_risco || {}, pseg = lz.probabilidade_seguro || {},
+          pfipe = lz.probabilidade_fipe || {}, pvist = lz.vistoria_especial || {};
+    const scoreTxt = val(sc.descricao_score)
+      ? (val(sc.score) ? sc.score + ' — ' + sc.descricao_score : sc.descricao_score)
+      : (val(sc.score) || null);
+    const leilaoRisco = this.enxugar([
+      this.row('Parecer de Risco', val(arisco.parecer), true),
+      this.row('Índice de Risco', val(arisco.indice), true),
+      this.row('Score de Avarias', scoreTxt, true),
+      this.row('Aceitação em Seguradoras', val(pseg.aceita_seguro) ? pseg.aceita_seguro + '%' : null, true),
+      this.row('% da Tabela FIPE (Seguro)', val(pfipe.percentual_referencia) ? pfipe.percentual_referencia + '%' : null, true),
+      this.row('Vistoria Especial', val(pvist.vistoria_especial), true),
+    ]);
+
+    const insp = lz.inspecao || {};
+    const inspecao = this.enxugar([
+      this.row('Data da Inspeção', val(insp.data_inspecao), true),
+      this.row('Garantia', val(insp.garantia), true),
+      this.row('Link do Laudo', val(insp.link_1), true),
+    ]);
+
+    // Cada registro de leilão / remarketing vira um card com seus campos preenchidos.
+    const mkRegistro = (r, i, prefixo, dataKey) => ({
+      title: prefixo + ' ' + (i + 1) + (val(r[dataKey]) ? ' — ' + r[dataKey] : ''),
+      fields: [
+        ['Comitente', r.comitente], ['Organizador', r.organizador], ['Vendedor', r.vendedor],
+        ['Leiloeiro', r.leiloeiro], ['Lote', r.lote], ['Item', r.item], ['Pátio', r.patio],
+        ['Condição do Veículo', r.condicao_veiculo], ['Situação do Chassi', r.situacao_chassi],
+        ['Condição do Motor', r.condicao_motor], ['Condição do Câmbio', r.condicao_cambio],
+        ['Condição Mecânica', r.condicao_mecanica], ['Observações', r.obs],
+      ].map(([k, v]) => ({ k, v: val(v) })).filter(f => f.v != null),
+    });
+    const leiloesRegistros = (Array.isArray(lz.leiloes) ? lz.leiloes : []).map((r, i) => mkRegistro(r, i, 'Registro', 'data_leilao'));
+    const remarketingRegistros = (Array.isArray(lz.remarketing) ? lz.remarketing : []).map((r, i) => mkRegistro(r, i, 'Evento', 'data_evento'));
+
+    // Checklist de avarias — cor por condição da peça.
+    const corAvaria = (v) => {
+      const V = this._norm(v);
+      if (V === '') return '#46506b';
+      if (/RUIM|DANIFICAD|AVARIAD|QUEBRAD|AMASSAD|TROCAR|PESSIMO|NAO FUNCIONA|FALTA/.test(V)) return '#ef4444';
+      if (/REGULAR|MEDIO|RISCAD|DESGAST|ARRANH/.test(V)) return '#f59e0b';
+      if (/BOM|OK|OTIMO|NOVO|PERFEIT|FUNCIONA|ORIGINAL|INTACT/.test(V)) return '#22c55e';
+      return '#46506b';
+    };
+    const rotulo = (k) => String(k).replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    let checklistObs = null;
+    const checklistItens = Object.keys(lz.checklist || {}).filter(k => {
+      if (k.toLowerCase() === 'obs') { if (val(lz.checklist[k])) checklistObs = lz.checklist[k]; return false; }
+      return val(lz.checklist[k]) != null;
+    }).map(k => ({ parte: rotulo(k), cond: lz.checklist[k], color: corAvaria(lz.checklist[k]) }));
+
+    const temLeilao = !!(leilaoRisco.length || inspecao.length || leiloesRegistros.length ||
+                         remarketingRegistros.length || checklistItens.length);
+
     const onCopy = () => {
       const txt = placaRaw || '';
       try { navigator.clipboard && navigator.clipboard.writeText(txt); } catch (e) {}
@@ -639,6 +809,14 @@ class Component extends DCLogic {
       faturamento:   this.enxugar(faturamento),
       // Cards de valor: mantêm "Nada consta"/"Sem débito"/"não informado"
       restricoes, debitos, alertas,
+      // Relatório de Leilão e Risco (BrasilCredit) — só aparece quem comprou o upsell
+      temLeilaoDisplay:      temLeilao ? 'block' : 'none',
+      leilaoRisco,           leilaoRiscoDisplay:  leilaoRisco.length ? 'block' : 'none',
+      inspecao,              inspecaoDisplay:     inspecao.length ? 'block' : 'none',
+      leiloesRegistros,      leiloesDisplay:      leiloesRegistros.length ? 'block' : 'none',
+      remarketingRegistros,  remarketingDisplay:  remarketingRegistros.length ? 'block' : 'none',
+      checklistItens,        checklistDisplay:    checklistItens.length ? 'block' : 'none',
+      checklistObs,          checklistObsDisplay: checklistObs ? 'block' : 'none',
       // Esconde o banner "Libere as informações" quando já pago
       ctaDisplay: this.state.pago ? 'none' : 'block',
       fipe, onCopy, onPrint, copyLabel: this.state.copyLabel
