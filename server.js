@@ -414,6 +414,17 @@ function mapearFutureData(dados) {
 // ROTAS
 // ─────────────────────────────────────────────────────────────────────────────
 
+// TEMPORARIO (debug): retorno cru da BrasilCredit p/ inspecionar um veiculo real
+// (checklist/fotos preenchidos). REMOVER apos ajustar o layout.
+app.get('/api/teste/leilao/:placa', async (req, res) => {
+  try {
+    const resultado = await consultarLeilao(req.params.placa);
+    res.json(resultado);
+  } catch (e) {
+    res.status(500).json({ erro: e.message });
+  }
+});
+
 // Índice em memória p/ recuperação de consulta paga (chave: "PLACA|email").
 // ⚠️ Volátil: zera a cada restart/deploy. Para persistir de verdade, usar um DB.
 const _consultasPorChave = new Map();
