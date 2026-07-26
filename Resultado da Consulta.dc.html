@@ -574,6 +574,11 @@ class Component extends DCLogic {
       return NEUTRO;
     }
     if (L.includes('GRAVAME')) return (V === 'NADA CONSTA' || V.includes('SEM RESTRIC')) ? VERDE : VERMELHO;
+    if (L.includes('SITUACAO DO CHASSI') || L.includes('SITUACAO CHASSI')) {
+      if (V.includes('REMARCAD')) return VERMELHO;
+      if (V.includes('NORMAL')) return VERDE;
+      return NEUTRO;
+    }
 
     // Verde genérico (valores "limpos")
     if (V === 'NADA CONSTA' || V.includes('SEM RESTRIC') || V.includes('SEM DEBITO') ||
@@ -612,6 +617,24 @@ class Component extends DCLogic {
     const s = v == null ? '' : String(v).trim().toUpperCase();
     if (s === 'SIM' || s === 'S' || s === 'TRUE' || s === '1') return 'Sim';
     if (s === 'NAO' || s === 'NÃO' || s === 'N' || s === 'FALSE') return 'Não';
+    return v;
+  }
+
+  // Situação do chassi (BIN/SENATRAN): N = numeração original de fábrica; R = remarcado.
+  mapChassi(v) {
+    if (v == null) return v;
+    const s = String(v).trim().toUpperCase();
+    if (s === 'N') return 'Normal (original)';
+    if (s === 'R') return 'Remarcado';
+    return v; // já veio textual
+  }
+
+  // Tipo de montagem (BIN/SENATRAN): 1 = completa (monobloco pronto); 2 = incompleta (chassi/cabine).
+  mapMontagem(v) {
+    if (v == null) return v;
+    const s = String(v).trim();
+    if (s === '1') return 'Completa';
+    if (s === '2') return 'Incompleta';
     return v;
   }
 
@@ -663,12 +686,12 @@ class Component extends DCLogic {
     ];
     const outros = [
       this.row('Situação Roubo/Furto', d.roubo_furto),
-      this.row('Situação do Chassi', d.situacao_chassi, true),
+      this.row('Situação do Chassi', this.mapChassi(d.situacao_chassi), true),
       this.row('Situação do Veículo', d.situacao_veiculo, true),
       this.row('Segmento', d.segmento),
       this.row('Sub Segmento', d.sub_segmento, true),
       this.row('Carroceria', d.tipo_carroceria, true),
-      this.row('Montagem', d.tipo_montagem),
+      this.row('Montagem', this.mapMontagem(d.tipo_montagem)),
       this.row('Passageiros', this.nzNum(d.quantidade_passageiro)),
       this.row('Peso Bruto Total', this.nzNum(d.peso_bruto_total), true),
       this.row('Cap. Máx. Tração', this.nzNum(d.cap_maxima_tracao), true),
@@ -844,7 +867,7 @@ class Component extends DCLogic {
       this.row('Espécie', val(vlz.especie), true),
       this.row('Carroceria', val(vlz.carroceria), true),
       this.row('Tipo de Carroceria', val(vlz.tipo_carroceria), true),
-      this.row('Montagem', val(vlz.tipo_montagem), true),
+      this.row('Montagem', val(this.mapMontagem(vlz.tipo_montagem)), true),
       this.row('Nº de Eixos', val(this.nzNum(vlz.quantidade_eixos)), true),
       this.row('Passageiros', val(this.nzNum(vlz.quantidade_passageiros)), true),
       this.row('Peso Bruto Total', val(this.nzNum(vlz.peso_bruto_total)), true),
@@ -857,7 +880,7 @@ class Component extends DCLogic {
       this.row('UF', val(vlz.uf), true),
       this.row('Emplacamento', val(vlz.emplacamento), true),
       this.row('Procedência', val(vlz.procedencia), true),
-      this.row('Situação do Chassi', val(vlz.situacao_chassi), true),
+      this.row('Situação do Chassi', val(this.mapChassi(vlz.situacao_chassi)), true),
       this.row('Quilometragem', val(this.nzNum(vlz.quilometragem)), true),
       this.row('Última Atualização', val(vlz.data_atualizacao), true),
     ]);
