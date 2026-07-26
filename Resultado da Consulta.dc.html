@@ -912,11 +912,15 @@ class Component extends DCLogic {
     const _outros = this.enxugar(outros);
     const _faturamento = this.enxugar(faturamento);
     const disp = (arr) => arr.length ? 'block' : 'none';
+    // Identificação: oculta quando >= 4 campos vazios (não só quando 100% vazia),
+    // para não exibir um card quase vazio, mas mantendo-o quando há dado parcial.
+    const idVazios = identificacao.length - _identificacao.length;
+    const identificacaoDisplay = idVazios >= 4 ? 'none' : 'block';
 
     return {
       accent, accentHover, veiculoNome, placaFmt,
       principais:    _principais,    principaisDisplay:    disp(_principais),
-      identificacao: _identificacao, identificacaoDisplay: disp(_identificacao),
+      identificacao: _identificacao, identificacaoDisplay,
       proprietario:  _proprietario,  proprietarioDisplay:  disp(_proprietario),
       outros:        _outros,        outrosDisplay:        disp(_outros),
       faturamento:   _faturamento,   faturamentoDisplay:   disp(_faturamento),
