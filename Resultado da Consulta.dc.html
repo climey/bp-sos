@@ -99,7 +99,7 @@
 
       <div class="sos-stack" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
         <!-- Principais -->
-        <div style="background:#ffffff;border:1px solid #e7e2dd;border-radius:18px;padding:30px 32px;">
+        <div style="display:{{ principaisDisplay }};background:#ffffff;border:1px solid #e7e2dd;border-radius:18px;padding:30px 32px;">
           <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
             <span style="flex:none;width:46px;height:46px;border-radius:50%;border:2px solid rgba(212,54,48,.4);display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13l2-5.5A2 2 0 0 1 6.9 6h10.2a2 2 0 0 1 1.9 1.5L21 13v5a1 1 0 0 1-1 1h-1.5a1 1 0 0 1-1-1v-1H6.5v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"></path><circle cx="7" cy="15.5" r="1"></circle><circle cx="17" cy="15.5" r="1"></circle></svg></span>
             <div><h3 style="font-size:21px;font-weight:800;color:#18120f;">Principais</h3><p style="font-size:13.5px;color:#B8BABE;margin-top:1px;">Principais dados do veículo</p></div>
@@ -114,7 +114,7 @@
         </div>
 
         <!-- Identificação -->
-        <div style="background:#ffffff;border:1px solid #e7e2dd;border-radius:18px;padding:30px 32px;">
+        <div style="display:{{ identificacaoDisplay }};background:#ffffff;border:1px solid #e7e2dd;border-radius:18px;padding:30px 32px;">
           <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
             <span style="flex:none;width:46px;height:46px;border-radius:50%;border:2px solid rgba(212,54,48,.4);display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="3.2"></circle><path d="M12 3v3M12 18v3M3 12h3M18 12h3"></path></svg></span>
             <div><h3 style="font-size:21px;font-weight:800;color:#18120f;">Identificação</h3><p style="font-size:13.5px;color:#B8BABE;margin-top:1px;">Dados de identificação do veículo</p></div>
@@ -129,7 +129,7 @@
         </div>
 
         <!-- Proprietário -->
-        <div style="background:#ffffff;border:1px solid #e7e2dd;border-radius:18px;padding:30px 32px;">
+        <div style="display:{{ proprietarioDisplay }};background:#ffffff;border:1px solid #e7e2dd;border-radius:18px;padding:30px 32px;">
           <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
             <span style="flex:none;width:46px;height:46px;border-radius:50%;border:2px solid rgba(212,54,48,.4);display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"></path></svg></span>
             <div><h3 style="font-size:21px;font-weight:800;color:#18120f;">Proprietário</h3><p style="font-size:13.5px;color:#B8BABE;margin-top:1px;">Dados sobre o proprietário</p></div>
@@ -144,7 +144,7 @@
         </div>
 
         <!-- Outros -->
-        <div style="background:#ffffff;border:1px solid #e7e2dd;border-radius:18px;padding:30px 32px;">
+        <div style="display:{{ outrosDisplay }};background:#ffffff;border:1px solid #e7e2dd;border-radius:18px;padding:30px 32px;">
           <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
             <span style="flex:none;width:46px;height:46px;border-radius:50%;border:2px solid rgba(212,54,48,.4);display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"></path></svg></span>
             <div><h3 style="font-size:21px;font-weight:800;color:#18120f;">Outros</h3><p style="font-size:13.5px;color:#B8BABE;margin-top:1px;">Outras informações do veículo</p></div>
@@ -174,7 +174,7 @@
         </div>
 
         <!-- Faturamento e Motor -->
-        <div style="background:#ffffff;border:1px solid #e7e2dd;border-radius:18px;padding:30px 32px;">
+        <div style="display:{{ faturamentoDisplay }};background:#ffffff;border:1px solid #e7e2dd;border-radius:18px;padding:30px 32px;">
           <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
             <span style="flex:none;width:46px;height:46px;border-radius:50%;border:2px solid rgba(212,54,48,.4);display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h7l5 5v11a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"></path><path d="M14 4v5h5M9 13h6M9 17h4"></path></svg></span>
             <div><h3 style="font-size:21px;font-weight:800;color:#18120f;">Faturamento e Motor</h3><p style="font-size:13.5px;color:#B8BABE;margin-top:1px;">Dados de faturamento e mecânica</p></div>
@@ -875,14 +875,21 @@ class Component extends DCLogic {
     };
     const onPrint = () => { try { window.print(); } catch (e) {} };
 
+    // Cards técnicos: enxutos (sem linhas vazias). Card sem nenhuma linha é ocultado.
+    const _principais = this.enxugar(principais);
+    const _identificacao = this.enxugar(identificacao);
+    const _proprietario = this.enxugar(proprietario);
+    const _outros = this.enxugar(outros);
+    const _faturamento = this.enxugar(faturamento);
+    const disp = (arr) => arr.length ? 'block' : 'none';
+
     return {
       accent, accentHover, veiculoNome, placaFmt,
-      // Cards técnicos: enxutos (sem linhas vazias)
-      principais:    this.enxugar(principais),
-      identificacao: this.enxugar(identificacao),
-      proprietario:  this.enxugar(proprietario),
-      outros:        this.enxugar(outros),
-      faturamento:   this.enxugar(faturamento),
+      principais:    _principais,    principaisDisplay:    disp(_principais),
+      identificacao: _identificacao, identificacaoDisplay: disp(_identificacao),
+      proprietario:  _proprietario,  proprietarioDisplay:  disp(_proprietario),
+      outros:        _outros,        outrosDisplay:        disp(_outros),
+      faturamento:   _faturamento,   faturamentoDisplay:   disp(_faturamento),
       // Cards de valor: mantêm "Nada consta"/"Sem débito"/"não informado"
       restricoes, debitos, alertas,
       // Relatório de Leilão e Risco (BrasilCredit) — só aparece quem comprou o upsell
