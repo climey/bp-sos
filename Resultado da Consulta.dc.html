@@ -866,6 +866,13 @@ class Component extends DCLogic {
     // mesmo que o veículo esteja "limpo" — "Nada consta" também é resposta.
     const temLeilao = !!(lz && !lz.erro && (lz.encontrado !== undefined || Object.keys(lz).length > 0));
 
+    // Evita contradição: havendo o relatório BrasilCredit (fonte especializada),
+    // o card Alertas não repete "Passagem por Leilão"/"Parecer de Risco" — o bloco
+    // dedicado é a fonte da verdade (o FutureData às vezes não acha o leilão).
+    const alertasFinal = temLeilao
+      ? alertas.filter(a => { const L = this._norm(a.label); return !(L.includes('LEILAO') || L.includes('PARECER DE RISCO')); })
+      : alertas;
+
     const onCopy = () => {
       const txt = placaRaw || '';
       try { navigator.clipboard && navigator.clipboard.writeText(txt); } catch (e) {}
@@ -891,7 +898,7 @@ class Component extends DCLogic {
       outros:        _outros,        outrosDisplay:        disp(_outros),
       faturamento:   _faturamento,   faturamentoDisplay:   disp(_faturamento),
       // Cards de valor: mantêm "Nada consta"/"Sem débito"/"não informado"
-      restricoes, debitos, alertas,
+      restricoes, debitos, alertas: alertasFinal,
       // Relatório de Leilão e Risco (BrasilCredit) — só aparece quem comprou o upsell
       temLeilaoDisplay:      temLeilao ? 'block' : 'none',
       resumoLeilao,          // veredito — sempre presente quando comprado
