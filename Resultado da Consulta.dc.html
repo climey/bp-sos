@@ -23,6 +23,19 @@
     .sos-stack{grid-template-columns:1fr !important;}
     .sos-cta-img{display:none !important;}
   }
+  @media print{
+    @page{margin:12mm;}
+    html,body{background:#fff !important;color:#111 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    /* Esconde navegação, rodapé, CTAs, botões de ação e o WhatsApp */
+    header,footer,#liberar,.sos-noprint{display:none !important;}
+    /* Remove os fundos escuros das seções (viravam retângulos pretos) */
+    section{background:#fff !important;padding:8px 0 !important;}
+    /* Hero: fundo claro e texto escuro (era branco sobre escuro) */
+    .sos-hero{background:#f4f1ee !important;border:1px solid #ddd !important;box-shadow:none !important;}
+    .sos-hero h1,.sos-hero p{color:#18120f !important;}
+    /* Não corta um card no meio da página */
+    section [style*="border-radius:18px"]{break-inside:avoid;page-break-inside:avoid;}
+  }
 </style>
 <script src="api.js"></script>
 </helmet>
@@ -49,7 +62,7 @@
   <!-- ============ RESULT HERO ============ -->
   <section data-screen-label="Resultado" style="padding:122px 32px 40px;background:radial-gradient(1100px 460px at 50% -10%,rgba(212,54,48,.16),transparent 60%),#1a1a1a;">
     <div style="max-width:1180px;margin:0 auto;">
-      <div class="sos-stack" style="background:#26282d;border:1px solid #3d4042;border-radius:24px;padding:48px;display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;">
+      <div class="sos-stack sos-hero" style="background:#26282d;border:1px solid #3d4042;border-radius:24px;padding:48px;display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;">
         <div>
           <h1 style="font-size:clamp(34px,4.4vw,54px);line-height:1.02;font-weight:900;letter-spacing:-1.6px;">Resultado da<br>sua consulta!</h1>
           <p style="margin-top:20px;font-size:13px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#B8BABE;">Você consultou um: <span style="color:var(--ac,#D43630);">{{ veiculoNome }}</span></p>
@@ -69,7 +82,7 @@
       </div>
 
       <!-- actions -->
-      <div style="display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap;margin-top:24px;">
+      <div class="sos-noprint" style="display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap;margin-top:24px;">
         <button onClick="{{ onCopy }}" style="display:flex;align-items:center;gap:8px;background:#26282d;border:1px solid #3d4042;color:#c4c5c9;font-family:'Figtree';font-weight:700;font-size:14px;padding:11px 20px;border-radius:10px;cursor:pointer;transition:border-color .2s,color .2s;" style-hover="border-color:#5a5b5f;color:#fff;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V5a2 2 0 0 1 2-2h10"></path></svg>
           {{ copyLabel }}
@@ -92,7 +105,7 @@
       <!-- decorative dotted texture -->
       <div style="position:absolute;left:-8px;right:-8px;top:48px;bottom:48px;z-index:0;pointer-events:none;background-image:radial-gradient(rgba(26,20,18,.05) 1.2px,transparent 1.2px);background-size:22px 22px;mask-image:radial-gradient(680px 420px at 50% 50%,#000,transparent 78%);-webkit-mask-image:radial-gradient(680px 420px at 50% 50%,#000,transparent 78%);"></div>
       <div style="position:relative;z-index:1;">
-      <div style="display:inline-flex;align-items:center;gap:9px;background:#ffffff;border:1px solid #e7e2dd;border-radius:9999px;padding:8px 16px;margin-bottom:24px;">
+      <div class="sos-noprint" style="display:inline-flex;align-items:center;gap:9px;background:#ffffff;border:1px solid #e7e2dd;border-radius:9999px;padding:8px 16px;margin-bottom:24px;">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>
         <span style="font-size:13.5px;font-weight:600;color:#3a3b3f;">Pré-visualização — alguns dados estão bloqueados. Libere o relatório completo.</span>
       </div>
@@ -426,7 +439,7 @@
   </footer>
 
   <!-- ============ WHATSAPP FAB ============ -->
-  <a href="https://wa.me/5500000000000" target="_blank" rel="noopener" aria-label="Fale conosco no WhatsApp" style="position:fixed;right:24px;bottom:24px;z-index:90;width:60px;height:60px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px rgba(37,211,102,.45);transition:transform .2s;" style-hover="transform:scale(1.08);">
+  <a class="sos-noprint" href="https://wa.me/5500000000000" target="_blank" rel="noopener" aria-label="Fale conosco no WhatsApp" style="position:fixed;right:24px;bottom:24px;z-index:90;width:60px;height:60px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px rgba(37,211,102,.45);transition:transform .2s;" style-hover="transform:scale(1.08);">
     <svg width="32" height="32" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 1 1 12 20zm4.4-5.6c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.7.9-.3.2-.5.1a6.6 6.6 0 0 1-3.2-2.8c-.2-.4.2-.4.6-1.2.1-.2 0-.3 0-.5l-.7-1.6c-.2-.4-.4-.4-.5-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.7 11.7 0 0 0 4.5 4c2 .8 2 .6 2.4.5a2.5 2.5 0 0 0 1.6-1.2 2 2 0 0 0 .1-1.2c0-.1-.2-.2-.4-.3z"></path></svg>
   </a>
 
