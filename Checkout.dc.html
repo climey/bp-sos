@@ -62,8 +62,8 @@
         </div>
 
         <!-- order bumps -->
-        <sc-for list="{{ bumps }}" as="bump" hint-placeholder-count="2">
-          <div onClick="{{ bump.onToggle }}" style="background:#1e1e1e;border:1px solid {{ bump.borderColor }};border-radius:20px;overflow:hidden;cursor:pointer;transition:border-color .25s;">
+        <sc-for list="{{ bumps }}" as="bump" hint-placeholder-count="4">
+          <div onClick="{{ bump.onToggle }}" style="background:#1e1e1e;border:1px solid {{ bump.borderColor }};border-radius:20px;overflow:hidden;cursor:{{ bump.cursor }};opacity:{{ bump.opacity }};transition:border-color .25s,opacity .2s;">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 22px;background:{{ bump.headerBg }};border-bottom:1px solid #3d4042;transition:background .25s;">
               <div style="display:flex;align-items:center;gap:11px;">
                 <span style="flex:none;width:30px;height:30px;border-radius:50%;border:2px solid rgba(212,54,48,.45);display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2.4" stroke-linecap="round"><path d="M19 5L5 19M9 6.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0zM20 17.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"></path></svg></span>
@@ -84,6 +84,20 @@
             </div>
           </div>
         </sc-for>
+
+        <!-- combo -->
+        <div style="position:relative;margin-top:8px;background:#1e1e1e;border:2px solid {{ comboBorder }};border-radius:20px;padding:26px 24px 22px;transition:border-color .2s;">
+          <span style="position:absolute;top:-12px;left:24px;background:var(--ac,#D43630);color:#fff;font-size:11px;font-weight:900;letter-spacing:1.2px;padding:5px 14px;border-radius:9999px;box-shadow:0 6px 16px rgba(212,54,48,.4);">MAIS POPULAR</span>
+          <div style="font-size:18px;font-weight:900;color:#fff;">🔥 Leve tudo e economize</div>
+          <div style="font-size:14px;color:#B8BABE;margin-top:14px;">Se adicionado separado: <span style="text-decoration:line-through;">R$ 43,77</span></div>
+          <div style="font-size:14px;color:#c4c5c9;margin-top:2px;">Relatório Completo por apenas:</div>
+          <div style="display:flex;align-items:baseline;gap:12px;margin-top:8px;flex-wrap:wrap;">
+            <span style="font-size:40px;font-weight:900;color:#fff;letter-spacing:-1.5px;line-height:1;">R$ 32,90</span>
+            <span style="font-size:13.5px;font-weight:800;color:#27c06b;">Você economiza R$ 10,87</span>
+          </div>
+          <button onClick="{{ onCombo }}" style="width:100%;margin-top:20px;background:{{ comboBtnBg }};color:#fff;border:none;font-family:'Figtree';font-weight:800;font-size:16px;padding:16px;border-radius:12px;cursor:pointer;transition:background .2s,transform .2s;" style-hover="transform:translateY(-1px);">{{ comboBtnLabel }}</button>
+          <p style="display:{{ comboMsgDisplay }};font-size:13px;font-weight:800;color:#27c06b;margin-top:13px;text-align:center;">✓ Combo aplicado automaticamente! Você economizou R$ 10,87</p>
+        </div>
       </div>
 
       <!-- RIGHT COLUMN — order summary -->
@@ -213,7 +227,8 @@ class Component extends DCLogic {
   state = {
     email: '',
     coupon: '',
-    bumps: [false, false],
+    bumps: [false, false, false, false], // sinistro, leilao, debitos, recall
+    comboSelected: false,                 // combo escolhido pelo botão (trava os checkboxes)
     agreed: false,
     couponApplied: false,
     couponMsg: '',
@@ -247,28 +262,50 @@ class Component extends DCLogic {
     const accent = this.props.accentColor ?? '#D43630';
     const accentHover = this.darken(accent, 0.16);
 
-    const base = 12.99;
+    const base = 14.99;
+    const COMBO = 32.90;
     const bumpDefs = [
-      { headline: '96% dos compradores também levaram', was: 'R$ 14,99', price: 'R$ 9,99', amount: 9.99, title: 'Débitos Veiculares', desc: 'Descubra se o veículo tem débitos de IPVA, Licenciamento e multas.' },
-      { headline: '89% dos compradores também levaram', was: 'R$ 29,99', price: 'R$ 0,99', amount: 0.99, title: 'Leilão', desc: 'Descubra se o veículo já teve passagem por leilões.' }, // TESTE: era R$ 24,99 (amount 24.99)
+      { key: 'sinistro', headline: '87% dos compradores também levaram', was: 'R$ 19,99', price: 'R$ 9,99', amount: 9.99, title: 'Sinistro e Histórico', desc: 'Verifique se o veículo teve acidentes ou sinistros registrados.' },
+      { key: 'leilao',   headline: '82% dos compradores também levaram', was: 'R$ 24,99', price: 'R$ 9,99', amount: 9.99, title: 'Passagem por Leilão', desc: 'Descubra se o veículo passou por leilão oficial ou remarketing.' },
+      { key: 'debitos',  headline: '96% dos compradores também levaram', was: 'R$ 9,99',  price: 'R$ 4,90', amount: 4.90, title: 'Débitos Veiculares', desc: 'IPVA, multas, licenciamento e DPVAT em aberto.' },
+      { key: 'recall',   headline: '74% dos compradores também levaram', was: 'R$ 7,90',  price: 'R$ 3,90', amount: 3.90, title: 'Recall Pendente', desc: 'Verifique se há recall pendente do fabricante.' },
     ];
+    const alaCarteAll  = base + bumpDefs.reduce((s, b) => s + b.amount, 0);  // 43,77
+    const comboSavings = +(alaCarteAll - COMBO).toFixed(2);                  // 10,87
 
-    const extras = bumpDefs.reduce((s, b, i) => s + (this.state.bumps[i] ? b.amount : 0), 0);
-    const discount = this.state.couponOk ? (base + extras) * 0.10 : 0;
-    const total = base + extras - discount;
+    const sel = this.state.bumps;
+    const comboSelected = this.state.comboSelected;   // escolhido pelo botão (trava os checkboxes)
+    const comboActive   = sel.every(Boolean);         // todos os 4 marcados (qualquer via) => preço de combo
+
+    const extras = bumpDefs.reduce((s, b, i) => s + (sel[i] ? b.amount : 0), 0);
+    const comboDiscount  = comboActive ? comboSavings : 0;
+    const preCoupon      = base + extras - comboDiscount;   // 32,90 quando combo
+    const couponDiscount = this.state.couponOk ? +(preCoupon * 0.10).toFixed(2) : 0;
+    const totalDiscount  = +(comboDiscount + couponDiscount).toFixed(2);
+    const total          = +(preCoupon - couponDiscount).toFixed(2);
 
     const bumps = bumpDefs.map((b, i) => {
-      const selected = this.state.bumps[i];
+      const selected = sel[i];
       return {
-        ...b,
+        headline: b.headline, was: b.was, price: b.price, title: b.title, desc: b.desc,
         selected,
-        onToggle: () => this.setState(s => { const arr = s.bumps.slice(); arr[i] = !arr[i]; return { bumps: arr }; }),
+        onToggle: () => {
+          if (this.state.comboSelected) return; // travado pelo combo
+          this.setState(s => { const arr = s.bumps.slice(); arr[i] = !arr[i]; return { bumps: arr }; });
+        },
         borderColor: selected ? accent : 'rgba(255,255,255,0.12)',
         headerBg: selected ? 'rgba(212,54,48,.12)' : '#1f2125',
         radioBorder: selected ? accent : '#5a5b5f',
         radioBg: selected ? accent : 'transparent',
+        opacity: comboSelected ? '.5' : '1',
+        cursor: comboSelected ? 'not-allowed' : 'pointer',
       };
     });
+
+    // Botão do combo: marca/desmarca todos os 4 e (des)trava os checkboxes.
+    const onCombo = () => this.setState(s => s.comboSelected
+      ? { comboSelected: false, bumps: [false, false, false, false] }
+      : { comboSelected: true,  bumps: [true, true, true, true] });
 
     const onEmail = (e) => this.setState({ email: e.target.value });
     const onCoupon = (e) => this.setState({ coupon: e.target.value, couponApplied: false });
@@ -285,7 +322,7 @@ class Component extends DCLogic {
     const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.state.email);
     const canContinue = this.state.agreed && emailOk && !this.state.processing;
 
-    const selecionados = bumpDefs.filter((b, i) => this.state.bumps[i]).map(b => b.title);
+    const selecionados = bumpDefs.filter((b, i) => sel[i]).map(b => b.key);
     const placaRaw = (this.state.placa || (this.state.dados && this.state.dados.placa) || '').toUpperCase();
     const placaFmt = placaRaw ? placaRaw.replace(/^(.{3})(.+)$/, '$1-$2') : '—';
 
@@ -300,7 +337,9 @@ class Component extends DCLogic {
           nome: '',
           cpf: '',
           valor: total,
-          extras: selecionados,
+          extras: selecionados,   // compat: contém 'leilao' quando marcado (backend detecta)
+          upsells: selecionados,  // ['sinistro','leilao','debitos','recall'] — quais APIs chamar
+          combo: comboActive,     // true se levou o combo (todos os 4)
         });
         sessionStorage.setItem('sos_pagamento_id', data.id);
         sessionStorage.setItem('sos_pix', JSON.stringify(data));
@@ -320,9 +359,15 @@ class Component extends DCLogic {
       continueLabel: this.state.processing ? 'Gerando pagamento...' : 'Continuar',
       subtotalStr: this.brl(base),
       extrasStr: '+ ' + this.brl(extras),
-      discountStr: discount > 0 ? '- ' + this.brl(discount) : '- R$ 0,00',
-      discountColor: discount > 0 ? '#27c06b' : '#B8BABE',
+      discountStr: totalDiscount > 0 ? '- ' + this.brl(totalDiscount) : '- R$ 0,00',
+      discountColor: totalDiscount > 0 ? '#27c06b' : '#B8BABE',
       totalStr: this.brl(total),
+      // Combo
+      onCombo,
+      comboBorder:   comboSelected ? '#27c06b' : accent,
+      comboBtnBg:    comboSelected ? '#27c06b' : accent,
+      comboBtnLabel: comboSelected ? '✓ SELECIONADO' : '✓ QUERO O RELATÓRIO COMPLETO',
+      comboMsgDisplay: comboActive ? 'block' : 'none',
       onEmail, onCoupon, onApplyCoupon, onTerms, onContinue,
       agreed: this.state.agreed,
       termsBorder: this.state.agreed ? accent : '#5a5b5f',
