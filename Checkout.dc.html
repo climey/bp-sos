@@ -64,9 +64,15 @@
         <!-- order bumps (compactos, uma linha) -->
         <div style="display:flex;flex-direction:column;gap:10px;">
           <sc-for list="{{ bumps }}" as="bump" hint-placeholder-count="4">
-            <div onClick="{{ bump.onToggle }}" style="display:flex;align-items:center;gap:11px;background:#1e1e1e;border:1px solid {{ bump.borderColor }};border-radius:12px;padding:12px 14px;cursor:{{ bump.cursor }};opacity:{{ bump.opacity }};transition:border-color .2s,opacity .2s;">
+            <div onClick="{{ bump.onToggle }}" style="display:flex;align-items:center;gap:10px;background:#1e1e1e;border:1px solid {{ bump.borderColor }};border-radius:12px;padding:12px 14px;cursor:{{ bump.cursor }};opacity:{{ bump.opacity }};transition:border-color .2s,opacity .2s;">
               <span style="flex:none;width:22px;height:22px;border-radius:50%;border:2px solid {{ bump.radioBorder }};background:{{ bump.radioBg }};display:flex;align-items:center;justify-content:center;transition:all .2s;"><sc-if value="{{ bump.selected }}" hint-placeholder-val="{{ false }}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 6"></path></svg></sc-if></span>
-              <span style="flex:1;min-width:0;font-size:13px;color:#B8BABE;line-height:1.35;"><span style="font-weight:800;color:#fff;">{{ bump.label }}</span> — {{ bump.shortDesc }}</span>
+              <span style="flex:none;display:flex;align-items:center;color:var(--ac,#D43630);">
+                <sc-if value="{{ bump.icoSinistro }}" hint-placeholder-val="{{ false }}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.35-4.35"></path></svg></sc-if>
+                <sc-if value="{{ bump.icoLeilao }}" hint-placeholder-val="{{ false }}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"></path><path d="M4 10v11M9 10v11M15 10v11M20 10v11"></path><path d="M2 10l10-6 10 6z"></path></svg></sc-if>
+                <sc-if value="{{ bump.icoDebitos }}" hint-placeholder-val="{{ false }}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2.5"></circle><path d="M5.5 12h.01M18.5 12h.01"></path></svg></sc-if>
+                <sc-if value="{{ bump.icoRecall }}" hint-placeholder-val="{{ false }}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"></path><path d="M21 3v5h-5"></path></svg></sc-if>
+              </span>
+              <span style="flex:1;min-width:0;font-size:13px;color:#B8BABE;line-height:1.35;"><span style="font-weight:800;color:#fff;">{{ bump.title }}</span> — {{ bump.shortDesc }}</span>
               <span style="flex:none;font-size:9.5px;font-weight:800;letter-spacing:.5px;color:#27c06b;background:rgba(39,192,107,.12);border:1px solid rgba(39,192,107,.3);padding:3px 8px;border-radius:9999px;">OFERTA</span>
               <span style="flex:none;font-size:14px;font-weight:900;color:#27c06b;">{{ bump.priceStr }}</span>
             </div>
@@ -253,10 +259,10 @@ class Component extends DCLogic {
     const base = 14.99;
     const COMBO = 32.90;
     const bumpDefs = [
-      { key: 'sinistro', emoji: '🔍', title: 'Sinistro e Histórico', shortDesc: 'Acidentes e sinistros registrados', amount: 9.99 },
-      { key: 'leilao',   emoji: '🏛️', title: 'Passagem por Leilão',   shortDesc: 'Leilão oficial e remarketing',      amount: 9.99 },
-      { key: 'debitos',  emoji: '📋', title: 'Débitos Veiculares',    shortDesc: 'IPVA, multas e licenciamento',       amount: 4.90 },
-      { key: 'recall',   emoji: '🔄', title: 'Recall Pendente',       shortDesc: 'Recall pendente do fabricante',       amount: 3.90 },
+      { key: 'sinistro', title: 'Sinistro e Histórico', shortDesc: 'Acidentes e sinistros registrados', amount: 9.99 },
+      { key: 'leilao',   title: 'Passagem por Leilão',   shortDesc: 'Leilão oficial e remarketing',      amount: 9.99 },
+      { key: 'debitos',  title: 'Débitos Veiculares',    shortDesc: 'IPVA, multas e licenciamento',       amount: 4.90 },
+      { key: 'recall',   title: 'Recall Pendente',       shortDesc: 'Recall pendente do fabricante',       amount: 3.90 },
     ];
     const alaCarteAll  = base + bumpDefs.reduce((s, b) => s + b.amount, 0);  // 43,77
     const comboSavings = +(alaCarteAll - COMBO).toFixed(2);                  // 10,87
@@ -275,9 +281,13 @@ class Component extends DCLogic {
     const bumps = bumpDefs.map((b, i) => {
       const selected = sel[i];
       return {
-        label: b.emoji + ' ' + b.title,
+        title: b.title,
         shortDesc: b.shortDesc,
         priceStr: '+ ' + this.brl(b.amount),
+        icoSinistro: b.key === 'sinistro',
+        icoLeilao:   b.key === 'leilao',
+        icoDebitos:  b.key === 'debitos',
+        icoRecall:   b.key === 'recall',
         selected,
         onToggle: () => {
           if (this.state.comboSelected) return; // travado pelo combo
