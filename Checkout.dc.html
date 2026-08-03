@@ -61,32 +61,20 @@
           <p style="font-size:13.5px;color:#B8BABE;margin-top:12px;">Neste e-mail enviaremos seu relatório. Por favor, informe um e-mail válido.</p>
         </div>
 
-        <!-- order bumps -->
-        <sc-for list="{{ bumps }}" as="bump" hint-placeholder-count="4">
-          <div onClick="{{ bump.onToggle }}" style="background:#1e1e1e;border:1px solid {{ bump.borderColor }};border-radius:20px;overflow:hidden;cursor:{{ bump.cursor }};opacity:{{ bump.opacity }};transition:border-color .25s,opacity .2s;">
-            <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 22px;background:{{ bump.headerBg }};border-bottom:1px solid #3d4042;transition:background .25s;">
-              <div style="display:flex;align-items:center;gap:11px;">
-                <span style="flex:none;width:30px;height:30px;border-radius:50%;border:2px solid rgba(212,54,48,.45);display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2.4" stroke-linecap="round"><path d="M19 5L5 19M9 6.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0zM20 17.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"></path></svg></span>
-                <span style="font-size:14.5px;font-weight:800;color:#fff;">{{ bump.headline }}</span>
-              </div>
-              <span style="flex:none;width:24px;height:24px;border-radius:50%;border:2px solid {{ bump.radioBorder }};background:{{ bump.radioBg }};display:flex;align-items:center;justify-content:center;transition:all .2s;"><sc-if value="{{ bump.selected }}" hint-placeholder-val="{{ false }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 6"></path></svg></sc-if></span>
+        <!-- order bumps (compactos, uma linha) -->
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <sc-for list="{{ bumps }}" as="bump" hint-placeholder-count="4">
+            <div onClick="{{ bump.onToggle }}" style="display:flex;align-items:center;gap:11px;background:#1e1e1e;border:1px solid {{ bump.borderColor }};border-radius:12px;padding:12px 14px;cursor:{{ bump.cursor }};opacity:{{ bump.opacity }};transition:border-color .2s,opacity .2s;">
+              <span style="flex:none;width:22px;height:22px;border-radius:50%;border:2px solid {{ bump.radioBorder }};background:{{ bump.radioBg }};display:flex;align-items:center;justify-content:center;transition:all .2s;"><sc-if value="{{ bump.selected }}" hint-placeholder-val="{{ false }}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 6"></path></svg></sc-if></span>
+              <span style="flex:1;min-width:0;font-size:13px;color:#B8BABE;line-height:1.35;"><span style="font-weight:800;color:#fff;">{{ bump.label }}</span> — {{ bump.shortDesc }}</span>
+              <span style="flex:none;font-size:9.5px;font-weight:800;letter-spacing:.5px;color:#27c06b;background:rgba(39,192,107,.12);border:1px solid rgba(39,192,107,.3);padding:3px 8px;border-radius:9999px;">OFERTA</span>
+              <span style="flex:none;font-size:14px;font-weight:900;color:#27c06b;">{{ bump.priceStr }}</span>
             </div>
-            <div style="padding:20px 22px 22px;">
-              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;">
-                <div>
-                  <div style="font-size:14px;color:#B8BABE;margin-bottom:2px;">de <span style="text-decoration:line-through;">{{ bump.was }}</span> por</div>
-                  <div style="font-size:28px;font-weight:900;color:#fff;letter-spacing:-.5px;">{{ bump.price }}</div>
-                </div>
-                <span style="font-size:12px;font-weight:800;letter-spacing:1px;color:#27c06b;background:rgba(39,192,107,.12);border:1px solid rgba(39,192,107,.3);padding:5px 11px;border-radius:9999px;">OFERTA</span>
-              </div>
-              <div style="font-size:18px;font-weight:800;color:var(--ac,#D43630);margin-top:12px;">{{ bump.title }}</div>
-              <p style="font-size:14.5px;color:#B8BABE;margin-top:5px;line-height:1.5;">{{ bump.desc }}</p>
-            </div>
-          </div>
-        </sc-for>
+          </sc-for>
+        </div>
 
-        <!-- combo -->
-        <div style="position:relative;margin-top:8px;background:#1e1e1e;border:2px solid {{ comboBorder }};border-radius:20px;padding:26px 24px 22px;transition:border-color .2s;">
+        <!-- combo (destaque) -->
+        <div style="position:relative;background:#1e1e1e;border:2px solid {{ comboBorder }};border-radius:20px;padding:26px 24px 22px;box-shadow:0 14px 40px rgba(212,54,48,.22);transition:border-color .2s;">
           <span style="position:absolute;top:-12px;left:24px;background:var(--ac,#D43630);color:#fff;font-size:11px;font-weight:900;letter-spacing:1.2px;padding:5px 14px;border-radius:9999px;box-shadow:0 6px 16px rgba(212,54,48,.4);">MAIS POPULAR</span>
           <div style="font-size:18px;font-weight:900;color:#fff;">🔥 Leve tudo e economize</div>
           <div style="font-size:14px;color:#B8BABE;margin-top:14px;">Se adicionado separado: <span style="text-decoration:line-through;">R$ 43,77</span></div>
@@ -265,10 +253,10 @@ class Component extends DCLogic {
     const base = 14.99;
     const COMBO = 32.90;
     const bumpDefs = [
-      { key: 'sinistro', headline: '87% dos compradores também levaram', was: 'R$ 19,99', price: 'R$ 9,99', amount: 9.99, title: 'Sinistro e Histórico', desc: 'Verifique se o veículo teve acidentes ou sinistros registrados.' },
-      { key: 'leilao',   headline: '82% dos compradores também levaram', was: 'R$ 24,99', price: 'R$ 9,99', amount: 9.99, title: 'Passagem por Leilão', desc: 'Descubra se o veículo passou por leilão oficial ou remarketing.' },
-      { key: 'debitos',  headline: '96% dos compradores também levaram', was: 'R$ 9,99',  price: 'R$ 4,90', amount: 4.90, title: 'Débitos Veiculares', desc: 'IPVA, multas, licenciamento e DPVAT em aberto.' },
-      { key: 'recall',   headline: '74% dos compradores também levaram', was: 'R$ 7,90',  price: 'R$ 3,90', amount: 3.90, title: 'Recall Pendente', desc: 'Verifique se há recall pendente do fabricante.' },
+      { key: 'sinistro', emoji: '🔍', title: 'Sinistro e Histórico', shortDesc: 'Acidentes e sinistros registrados', amount: 9.99 },
+      { key: 'leilao',   emoji: '🏛️', title: 'Passagem por Leilão',   shortDesc: 'Leilão oficial e remarketing',      amount: 9.99 },
+      { key: 'debitos',  emoji: '📋', title: 'Débitos Veiculares',    shortDesc: 'IPVA, multas e licenciamento',       amount: 4.90 },
+      { key: 'recall',   emoji: '🔄', title: 'Recall Pendente',       shortDesc: 'Recall pendente do fabricante',       amount: 3.90 },
     ];
     const alaCarteAll  = base + bumpDefs.reduce((s, b) => s + b.amount, 0);  // 43,77
     const comboSavings = +(alaCarteAll - COMBO).toFixed(2);                  // 10,87
@@ -287,14 +275,15 @@ class Component extends DCLogic {
     const bumps = bumpDefs.map((b, i) => {
       const selected = sel[i];
       return {
-        headline: b.headline, was: b.was, price: b.price, title: b.title, desc: b.desc,
+        label: b.emoji + ' ' + b.title,
+        shortDesc: b.shortDesc,
+        priceStr: '+ ' + this.brl(b.amount),
         selected,
         onToggle: () => {
           if (this.state.comboSelected) return; // travado pelo combo
           this.setState(s => { const arr = s.bumps.slice(); arr[i] = !arr[i]; return { bumps: arr }; });
         },
         borderColor: selected ? accent : 'rgba(255,255,255,0.12)',
-        headerBg: selected ? 'rgba(212,54,48,.12)' : '#1f2125',
         radioBorder: selected ? accent : '#5a5b5f',
         radioBg: selected ? accent : 'transparent',
         opacity: comboSelected ? '.5' : '1',
