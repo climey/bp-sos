@@ -240,9 +240,9 @@
         <div style="background:#ffffff;border:1px solid #e7e2dd;border-radius:18px;padding:30px 32px;">
           <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
             <span style="flex:none;width:46px;height:46px;border-radius:50%;border:2px solid rgba(212,54,48,.4);display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20M6 15h4"></path></svg></span>
-            <div><h3 style="font-size:21px;font-weight:800;color:#18120f;">Débitos</h3><p style="font-size:13.5px;color:#B8BABE;margin-top:1px;">IPVA, multas, licenciamento e DPVAT</p></div>
+            <div><h3 style="font-size:21px;font-weight:800;color:#18120f;">Débitos</h3><p style="font-size:13.5px;color:#B8BABE;margin-top:1px;">IPVA, multas, licenciamento, DER e municipais</p></div>
           </div>
-          <sc-for list="{{ debitos }}" as="row" hint-placeholder-count="4">
+          <sc-for list="{{ debitos }}" as="row" hint-placeholder-count="5">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
               <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
               <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;gap:9px;justify-content:flex-end;flex-wrap:wrap;"><span aria-hidden="true" style="width:58px;height:12px;border-radius:6px;background:linear-gradient(90deg,#c9c9cf,#e6e6ea);filter:blur(2.5px);"></span><a href="{{ row.unlockHref }}" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>{{ row.unlockLabel }}</a></span></sc-if>
@@ -854,7 +854,8 @@ class Component extends DCLogic {
       this.row('IPVA', deb.ipva, true, 'debitos'),
       this.row('Multas', deb.multa, true, 'debitos'),
       this.row('Licenciamento', deb.licenciamento, true, 'debitos'),
-      this.row('DPVAT / Seguro', deb.dpvat, true, 'debitos'),
+      this.row('DER', deb.der, true, 'debitos'),
+      this.row('Municipais', deb.municipais, true, 'debitos'),
     ];
 
     // Alertas: Leilão, Sinistro, Recall (verde = ok, vermelho = problema)
