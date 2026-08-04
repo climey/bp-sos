@@ -214,7 +214,7 @@ const BC_RECALL   = () => process.env.BRASIL_CREDIT_CONSULTA_RECALL;
 
 // Monta a consulta premium unificada (wdapi2 básico + fonte premium).
 // FONTE DA BASE premium:
-//  - Se BRASIL_CREDIT_CONSULTA_ESTADUAL estiver setada => Base Estadual 528 (BrasilCredit, R$4,34).
+//  - Se BRASIL_CREDIT_CONSULTA_ESTADUAL estiver setada => Base Estadual 575 (BrasilCredit, R$4,34).
 //  - Senão => FutureData (fallback legado R$26) — mantém produção no ar até a env ser configurada.
 // sinistro/recall são consultas BrasilCredit SEPARADAS, disparadas só quando o
 // respectivo upsell foi comprado (opts.sinistro / opts.recall) — economiza API.
@@ -497,7 +497,7 @@ function fmtDebitoEstadual(reg) {
   return n && n > 0 ? fmtBRL(n) : 'Consta débito';
 }
 
-// Mapeia a Base Estadual (BrasilCredit consulta 528) para o MESMO shape do
+// Mapeia a Base Estadual (BrasilCredit consulta 575) para o MESMO shape do
 // mapearFutureData — assim o frontend não muda. sinistro/recall entram à parte.
 function mapearEstadual(root) {
   if (!root) return null;
@@ -656,7 +656,7 @@ app.get('/api/teste/leilao/:placa', async (req, res) => {
 });
 
 // TEMPORARIO (debug): retorno CRU da BrasilCredit p/ QUALQUER consulta ID.
-// Uso: /api/teste/brasilcredit/<consultaId>/<placa>  (ex.: 528 = Base Estadual).
+// Uso: /api/teste/brasilcredit/<consultaId>/<placa>  (ex.: 575 = Base Estadual).
 // Serve p/ mapear os campos das novas consultas (estadual, sinistro, recall).
 // REMOVER apos concluir o mapeamento — expõe a API paga publicamente.
 app.get('/api/teste/brasilcredit/:id/:placa', async (req, res) => {
