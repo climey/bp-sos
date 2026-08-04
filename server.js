@@ -651,30 +651,6 @@ function mapearRecall(root) {
 // ROTAS
 // ─────────────────────────────────────────────────────────────────────────────
 
-// TEMPORARIO (debug): retorno cru da BrasilCredit p/ inspecionar um veiculo real
-// (checklist/fotos preenchidos). REMOVER apos ajustar o layout.
-app.get('/api/teste/leilao/:placa', async (req, res) => {
-  try {
-    const resultado = await consultarLeilao(req.params.placa);
-    res.json(resultado);
-  } catch (e) {
-    res.status(500).json({ erro: e.message });
-  }
-});
-
-// TEMPORARIO (debug): retorno CRU da BrasilCredit p/ QUALQUER consulta ID.
-// Uso: /api/teste/brasilcredit/<consultaId>/<placa>  (ex.: 575 = Base Estadual).
-// Serve p/ mapear os campos das novas consultas (estadual, sinistro, recall).
-// REMOVER apos concluir o mapeamento — expõe a API paga publicamente.
-app.get('/api/teste/brasilcredit/:id/:placa', async (req, res) => {
-  try {
-    const root = await fetchBrasilCredit(req.params.placa, req.params.id);
-    res.json(root);
-  } catch (e) {
-    res.status(500).json({ erro: e.message });
-  }
-});
-
 // Índice em memória p/ recuperação de consulta paga (chave: "PLACA|email").
 // ⚠️ Volátil: zera a cada restart/deploy. Para persistir de verdade, usar um DB.
 const _consultasPorChave = new Map();
