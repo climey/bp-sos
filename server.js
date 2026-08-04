@@ -457,13 +457,44 @@ function limpaProprietario(s) {
   return String(s).replace(/^\s*[\d.\-\/]{6,}\s+/, '').trim() || null;
 }
 
-// Débito estadual: registro { tipo, status, valor } -> "R$ x,xx" | "Sem débito".
+// Normaliza valores monetários que a BrasilCredit devolve em formatos MISTOS
+// (BR "2.296,51", US "1106.35", "911,12"...) para um Number.
+function parseValorBR(raw) {
+  let s = String(raw == null ? '' : raw).trim().replace(/[^\d.,]/g, '');
+  if (!s) return null;
+  const hasC = s.includes(','), hasD = s.includes('.');
+  let num;
+  if (hasC && hasD) {
+    // o ÚLTIMO separador é o decimal; o outro é separador de milhar
+    num = s.lastIndexOf(',') > s.lastIndexOf('.')
+      ? s.replace(/\./g, '').replace(',', '.')   // BR: 2.296,51
+      : s.replace(/,/g, '');                       // US: 1,106.35
+  } else if (hasC) {
+    num = s.replace(',', '.');                      // 911,12 -> decimal
+  } else if (hasD) {
+    // só ponto: 2 casas depois = decimal (1106.35); 3 = milhar (1.106)
+    num = s.split('.').pop().length === 2 ? s : s.replace(/\./g, '');
+  } else {
+    num = s;
+  }
+  const n = parseFloat(num);
+  return Number.isFinite(n) ? n : null;
+}
+
+// Formata Number -> "R$ 1.106,35" (padrão brasileiro).
+function fmtBRL(n) {
+  const [int, dec] = Number(n).toFixed(2).split('.');
+  return 'R$ ' + int.replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ',' + dec;
+}
+
+// Débito estadual: registro { tipo, status, valor } -> "R$ x.xxx,xx" | "Sem débito".
 function fmtDebitoEstadual(reg) {
   if (!reg) return 'Sem débito';
   const status = String(reg.status || '').toUpperCase();
-  const valor  = String(reg.valor || '').trim();
   const tem = status.includes('EXISTE') && !status.includes('NAO') && !status.includes('NÃO');
-  return tem && valor ? ('R$ ' + valor) : 'Sem débito';
+  if (!tem) return 'Sem débito';
+  const n = parseValorBR(reg.valor);
+  return n && n > 0 ? fmtBRL(n) : 'Consta débito';
 }
 
 // Mapeia a Base Estadual (BrasilCredit consulta 528) para o MESMO shape do
@@ -834,6 +865,18 @@ app.post('/api/pagamento/criar', async (req, res) => {
     console.warn(`[criar] valor divergente — frontend=${valorCliente} servidor=${valorCobrar} (cobrando o do servidor)`);
   }
   if (!(valorCobrar > 0)) return res.status(400).json({ erro: 'Valor inválido.' });
+
+  // ── MODO TESTE (produção): e-mail específico paga valor simbólico. ──
+  // Ative com as envs TEST_EMAIL (seu e-mail) e opcional TEST_PRICE (padrão 0.01).
+  // Os upsells/combo do metadata continuam REAIS → o relatório sai idêntico ao de
+  // produção; só o valor do PIX muda. Clientes com outro e-mail pagam normal.
+  // REMOVER a env TEST_EMAIL após testar.
+  if (process.env.TEST_EMAIL &&
+      String(email || '').trim().toLowerCase() === process.env.TEST_EMAIL.trim().toLowerCase()) {
+    const testPrice = Number(process.env.TEST_PRICE || 0.01);
+    console.warn(`[criar] MODO TESTE p/ ${email}: cobrando R$${testPrice} (real seria R$${valorCobrar})`);
+    valorCobrar = testPrice;
+  }
 
   try {
     const idempotencyKey = `${placa}-${plano}-${Date.now()}`;
