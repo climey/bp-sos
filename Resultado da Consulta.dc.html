@@ -155,7 +155,7 @@
           <sc-for list="{{ principais }}" as="row" hint-placeholder-count="8">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
               <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
-              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="/checkout" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
+              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;gap:9px;justify-content:flex-end;flex-wrap:wrap;"><span aria-hidden="true" style="width:58px;height:12px;border-radius:6px;background:linear-gradient(90deg,#c9c9cf,#e6e6ea);filter:blur(2.5px);"></span><a href="{{ row.unlockHref }}" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>{{ row.unlockLabel }}</a></span></sc-if>
               <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:{{ row.color }};text-align:right;white-space:pre-line;">{{ row.value }}</span></sc-if>
             </div>
           </sc-for>
@@ -170,7 +170,7 @@
           <sc-for list="{{ identificacao }}" as="row" hint-placeholder-count="6">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
               <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
-              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="/checkout" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
+              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;gap:9px;justify-content:flex-end;flex-wrap:wrap;"><span aria-hidden="true" style="width:58px;height:12px;border-radius:6px;background:linear-gradient(90deg,#c9c9cf,#e6e6ea);filter:blur(2.5px);"></span><a href="{{ row.unlockHref }}" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>{{ row.unlockLabel }}</a></span></sc-if>
               <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:{{ row.color }};text-align:right;white-space:pre-line;">{{ row.value }}</span></sc-if>
             </div>
           </sc-for>
@@ -185,7 +185,7 @@
           <sc-for list="{{ proprietario }}" as="row" hint-placeholder-count="5">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
               <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
-              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="/checkout" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
+              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;gap:9px;justify-content:flex-end;flex-wrap:wrap;"><span aria-hidden="true" style="width:58px;height:12px;border-radius:6px;background:linear-gradient(90deg,#c9c9cf,#e6e6ea);filter:blur(2.5px);"></span><a href="{{ row.unlockHref }}" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>{{ row.unlockLabel }}</a></span></sc-if>
               <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:{{ row.color }};text-align:right;white-space:pre-line;">{{ row.value }}</span></sc-if>
             </div>
           </sc-for>
@@ -200,7 +200,7 @@
           <sc-for list="{{ outros }}" as="row" hint-placeholder-count="5">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
               <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
-              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="/checkout" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
+              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;gap:9px;justify-content:flex-end;flex-wrap:wrap;"><span aria-hidden="true" style="width:58px;height:12px;border-radius:6px;background:linear-gradient(90deg,#c9c9cf,#e6e6ea);filter:blur(2.5px);"></span><a href="{{ row.unlockHref }}" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>{{ row.unlockLabel }}</a></span></sc-if>
               <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:{{ row.color }};text-align:right;white-space:pre-line;">{{ row.value }}</span></sc-if>
             </div>
           </sc-for>
@@ -215,7 +215,7 @@
           <sc-for list="{{ restricoes }}" as="row" hint-placeholder-count="6">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
               <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
-              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="/checkout" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
+              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;gap:9px;justify-content:flex-end;flex-wrap:wrap;"><span aria-hidden="true" style="width:58px;height:12px;border-radius:6px;background:linear-gradient(90deg,#c9c9cf,#e6e6ea);filter:blur(2.5px);"></span><a href="{{ row.unlockHref }}" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>{{ row.unlockLabel }}</a></span></sc-if>
               <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:{{ row.color }};text-align:right;white-space:pre-line;">{{ row.value }}</span></sc-if>
             </div>
           </sc-for>
@@ -230,7 +230,7 @@
           <sc-for list="{{ faturamento }}" as="row" hint-placeholder-count="6">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
               <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
-              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="/checkout" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
+              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;gap:9px;justify-content:flex-end;flex-wrap:wrap;"><span aria-hidden="true" style="width:58px;height:12px;border-radius:6px;background:linear-gradient(90deg,#c9c9cf,#e6e6ea);filter:blur(2.5px);"></span><a href="{{ row.unlockHref }}" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>{{ row.unlockLabel }}</a></span></sc-if>
               <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:{{ row.color }};text-align:right;white-space:pre-line;">{{ row.value }}</span></sc-if>
             </div>
           </sc-for>
@@ -245,7 +245,7 @@
           <sc-for list="{{ debitos }}" as="row" hint-placeholder-count="4">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
               <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
-              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="/checkout" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
+              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;gap:9px;justify-content:flex-end;flex-wrap:wrap;"><span aria-hidden="true" style="width:58px;height:12px;border-radius:6px;background:linear-gradient(90deg,#c9c9cf,#e6e6ea);filter:blur(2.5px);"></span><a href="{{ row.unlockHref }}" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>{{ row.unlockLabel }}</a></span></sc-if>
               <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:{{ row.color }};text-align:right;white-space:pre-line;">{{ row.value }}</span></sc-if>
             </div>
           </sc-for>
@@ -260,7 +260,7 @@
           <sc-for list="{{ alertas }}" as="row" hint-placeholder-count="4">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
               <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
-              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="/checkout" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
+              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;gap:9px;justify-content:flex-end;flex-wrap:wrap;"><span aria-hidden="true" style="width:58px;height:12px;border-radius:6px;background:linear-gradient(90deg,#c9c9cf,#e6e6ea);filter:blur(2.5px);"></span><a href="{{ row.unlockHref }}" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>{{ row.unlockLabel }}</a></span></sc-if>
               <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:{{ row.color }};text-align:right;">{{ row.value }}</span></sc-if>
             </div>
           </sc-for>
@@ -295,6 +295,28 @@
         </div>
       </div>
 
+      <!-- ===== RELATÓRIO DE LEILÃO E RISCO — bloqueado (upsell não comprado) ===== -->
+      <div style="display:{{ leilaoLockDisplay }};margin-top:44px;">
+        <div style="display:flex;align-items:center;gap:13px;margin-bottom:4px;">
+          <span style="flex:none;width:46px;height:46px;border-radius:13px;background:rgba(212,54,48,.12);display:flex;align-items:center;justify-content:center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V10l7-5 7 5v11M9 21v-6h6v6"></path></svg></span>
+          <h2 style="font-size:clamp(22px,3vw,28px);font-weight:900;color:#18120f;letter-spacing:-.6px;">Relatório de Leilão e Risco</h2>
+        </div>
+        <p style="font-size:14px;color:#6b6560;margin:0 0 22px 59px;">Histórico de leilão, remarketing, checklist de avarias e análise de risco de comercialização.</p>
+        <div style="position:relative;background:#ffffff;border:1px solid #e7e2dd;border-radius:18px;padding:34px 32px;overflow:hidden;">
+          <div aria-hidden="true" style="filter:blur(6px);opacity:.55;pointer-events:none;user-select:none;display:flex;flex-direction:column;gap:16px;">
+            <div style="display:flex;justify-content:space-between;gap:16px;"><span style="height:13px;width:150px;border-radius:6px;background:#d5d5da;"></span><span style="height:13px;width:90px;border-radius:6px;background:#c9c9cf;"></span></div>
+            <div style="display:flex;justify-content:space-between;gap:16px;"><span style="height:13px;width:120px;border-radius:6px;background:#d5d5da;"></span><span style="height:13px;width:70px;border-radius:6px;background:#c9c9cf;"></span></div>
+            <div style="display:flex;justify-content:space-between;gap:16px;"><span style="height:13px;width:170px;border-radius:6px;background:#d5d5da;"></span><span style="height:13px;width:110px;border-radius:6px;background:#c9c9cf;"></span></div>
+            <div style="display:flex;justify-content:space-between;gap:16px;"><span style="height:13px;width:130px;border-radius:6px;background:#d5d5da;"></span><span style="height:13px;width:80px;border-radius:6px;background:#c9c9cf;"></span></div>
+          </div>
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px;background:linear-gradient(180deg,rgba(255,255,255,.4),rgba(255,255,255,.82));">
+            <span style="flex:none;width:56px;height:56px;border-radius:50%;background:rgba(212,54,48,.12);display:flex;align-items:center;justify-content:center;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg></span>
+            <div><h3 style="font-size:19px;font-weight:900;color:#18120f;">Relatório de Leilão bloqueado</h3><p style="font-size:13.5px;color:#6b6560;margin-top:4px;max-width:360px;">Passagem por leilão, remarketing, checklist de avarias e score de risco de comercialização.</p></div>
+            <a href="{{ leilaoUnlockHref }}" style="display:inline-flex;align-items:center;gap:8px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:15px;font-weight:800;padding:13px 26px;border-radius:10px;box-shadow:0 8px 22px rgba(212,54,48,.32);transition:background .2s,transform .2s;" style-hover="background:var(--ah,#B02E28);transform:translateY(-2px);"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Desbloquear por R$ 9,99</a>
+          </div>
+        </div>
+      </div>
+
       <!-- ===== RELATÓRIO DE LEILÃO E RISCO (BrasilCredit) ===== -->
       <div style="display:{{ temLeilaoDisplay }};margin-top:44px;">
         <div style="display:flex;align-items:center;gap:13px;margin-bottom:4px;">
@@ -312,7 +334,7 @@
           <sc-for list="{{ resumoLeilao }}" as="row" hint-placeholder-count="3">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
               <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
-              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="/checkout" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
+              <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;gap:9px;justify-content:flex-end;flex-wrap:wrap;"><span aria-hidden="true" style="width:58px;height:12px;border-radius:6px;background:linear-gradient(90deg,#c9c9cf,#e6e6ea);filter:blur(2.5px);"></span><a href="{{ row.unlockHref }}" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>{{ row.unlockLabel }}</a></span></sc-if>
               <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:{{ row.color }};text-align:right;white-space:pre-line;">{{ row.value }}</span></sc-if>
             </div>
           </sc-for>
@@ -328,7 +350,7 @@
             <sc-for list="{{ veiculoLeilao }}" as="row" hint-placeholder-count="10">
               <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid #ececec;">
                 <span style="font-size:14px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
-                <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="/checkout" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar</a></sc-if>
+                <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;gap:9px;justify-content:flex-end;flex-wrap:wrap;"><span aria-hidden="true" style="width:58px;height:12px;border-radius:6px;background:linear-gradient(90deg,#c9c9cf,#e6e6ea);filter:blur(2.5px);"></span><a href="{{ row.unlockHref }}" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>{{ row.unlockLabel }}</a></span></sc-if>
                 <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14px;font-weight:700;color:{{ row.color }};text-align:right;white-space:pre-line;">{{ row.value }}</span></sc-if>
               </div>
             </sc-for>
@@ -345,7 +367,7 @@
             <sc-for list="{{ leilaoRisco }}" as="row" hint-placeholder-count="6">
               <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
                 <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
-                <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="/checkout" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
+                <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;gap:9px;justify-content:flex-end;flex-wrap:wrap;"><span aria-hidden="true" style="width:58px;height:12px;border-radius:6px;background:linear-gradient(90deg,#c9c9cf,#e6e6ea);filter:blur(2.5px);"></span><a href="{{ row.unlockHref }}" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>{{ row.unlockLabel }}</a></span></sc-if>
                 <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:{{ row.color }};text-align:right;white-space:pre-line;">{{ row.value }}</span></sc-if>
               </div>
             </sc-for>
@@ -360,7 +382,7 @@
             <sc-for list="{{ inspecao }}" as="row" hint-placeholder-count="3">
               <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid #ececec;">
                 <span style="font-size:14.5px;font-weight:700;color:#1f2937;">{{ row.label }}</span>
-                <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><a href="/checkout" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Liberar informação!</a></sc-if>
+                <sc-if value="{{ row.locked }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;gap:9px;justify-content:flex-end;flex-wrap:wrap;"><span aria-hidden="true" style="width:58px;height:12px;border-radius:6px;background:linear-gradient(90deg,#c9c9cf,#e6e6ea);filter:blur(2.5px);"></span><a href="{{ row.unlockHref }}" style="display:inline-flex;align-items:center;gap:6px;background:var(--ac,#D43630);color:#fff;text-decoration:none;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:8px;transition:background .2s;" style-hover="background:var(--ah,#B02E28);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>{{ row.unlockLabel }}</a></span></sc-if>
                 <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:{{ row.color }};text-align:right;white-space:pre-line;">{{ row.value }}</span></sc-if>
               </div>
             </sc-for>
@@ -483,6 +505,29 @@
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:860},&quot;accentColor&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#D43630&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
 class Component extends DCLogic {
   state = { fipeOpen: 0, copyLabel: 'Copiar', dados: {}, placa: '', pago: false };
+
+  // Preços dos upsells (espelham o Checkout.dc.html) — usados nos botões "Desbloquear".
+  UPSELL_PRECOS = { debitos: '4,90', sinistro: '9,99', recall: '3,90', leilao: '9,99' };
+
+  // Quais upsells o cliente comprou. Fonte: sessionStorage gravado pelo Checkout
+  // (sos_upsells = lista separada por vírgula; sos_combo = '1'). Se a chave nunca
+  // foi gravada (fluxo "Recuperar consulta" / legado), libera tudo para não
+  // esconder o que já foi pago.
+  _lerComprou() {
+    const ss = (typeof sessionStorage !== 'undefined') ? sessionStorage : null;
+    const raw = ss ? ss.getItem('sos_upsells') : null;
+    const d = this.state.dados || {};
+    if (raw == null) return { debitos: true, sinistro: true, recall: true, leilao: true };
+    const combo = ss && (ss.getItem('sos_combo') === '1' || ss.getItem('sos_combo') === 'true');
+    const set = raw.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+    const has = k => !!combo || set.includes(k);
+    return {
+      debitos:  has('debitos'),
+      sinistro: has('sinistro'),
+      recall:   has('recall'),
+      leilao:   has('leilao') || !!d._leilao,   // dado da BrasilCredit presente => comprado
+    };
+  }
 
   darken(hex, amt) {
     const h = (hex || '#D43630').replace('#', '');
@@ -636,7 +681,9 @@ class Component extends DCLogic {
     return NEUTRO;
   }
 
-  row(label, value, premium = false) {
+  // `upsell` (opcional): 'debitos' | 'sinistro' | 'recall' | 'leilao'. Marca o campo
+  // como pertencente a um upsell — pós-pagamento, fica travado se o cliente não comprou.
+  row(label, value, premium = false, upsell = null) {
     // Normaliza vazios/"-"/"N/A" e frases de "não encontrado" -> exibe "Não informado".
     let v = value;
     if (v != null) {
@@ -647,9 +694,19 @@ class Component extends DCLogic {
           up === 'NAO CONSTAM INFORMACOES NA BASE CONSULTADA' ||
           up === 'NAO CONSTAM INFORMACOES') v = null;
     }
-    const locked = !this.state.pago && (premium || v == null);
+    const comprou = this._comprou || {};
+    // Pré-pagamento: trava todo campo premium (comportamento atual, CTA global).
+    // Pós-pagamento: só trava o que é de um upsell que o cliente NÃO comprou.
+    const locked = this.state.pago
+      ? !!(upsell && !comprou[upsell])
+      : (premium || v == null);
     const display = v == null ? 'Não informado' : v;
-    return { label, value: display, locked, unlocked: !locked, color: this.corDe(label, display) };
+    const preco = upsell ? this.UPSELL_PRECOS[upsell] : null;
+    return {
+      label, value: display, locked, unlocked: !locked, color: this.corDe(label, display),
+      unlockLabel: preco ? ('Desbloquear por R$ ' + preco) : 'Liberar informação!',
+      unlockHref:  upsell ? ('/checkout?upsell=' + upsell) : '/checkout'
+    };
   }
 
   // "0"/"0,00"/vazio -> nulo (para campos numéricos onde 0 significa não informado)
@@ -696,6 +753,7 @@ class Component extends DCLogic {
     const accent = this.props.accentColor ?? '#D43630';
     const accentHover = this.darken(accent, 0.16);
     const d = this.state.dados || {};
+    this._comprou = this._lerComprou();   // upsells comprados (usado por row())
 
     const placaRaw = (this.state.placa || d.placa || '').toUpperCase();
     const placaFmt = placaRaw ? placaRaw.replace(/^(.{3})(.+)$/, '$1 $2') : '—';
@@ -793,22 +851,22 @@ class Component extends DCLogic {
     // Débitos (já vêm formatados do backend: "Sem débito" ou "R$ x,xx")
     const deb = pr.debitos || {};
     const debitos = [
-      this.row('IPVA', deb.ipva, true),
-      this.row('Multas', deb.multa, true),
-      this.row('Licenciamento', deb.licenciamento, true),
-      this.row('DPVAT / Seguro', deb.dpvat, true),
+      this.row('IPVA', deb.ipva, true, 'debitos'),
+      this.row('Multas', deb.multa, true, 'debitos'),
+      this.row('Licenciamento', deb.licenciamento, true, 'debitos'),
+      this.row('DPVAT / Seguro', deb.dpvat, true, 'debitos'),
     ];
 
     // Alertas: Leilão, Sinistro, Recall (verde = ok, vermelho = problema)
     const lei = pr.leilao || {};
     const sin = pr.sinistro || {};
     const rec = pr.recall || {};
-    const alerta = (label, ruim, txtRuim, txtOk) => this.row(label, ruim ? txtRuim : txtOk, true);
+    const alerta = (label, ruim, txtRuim, txtOk, up) => this.row(label, ruim ? txtRuim : txtOk, true, up);
     const alertas = [
-      alerta('Passagem por Leilão', !!lei.consta, 'Consta' + (Number(lei.quantidade) ? ' (' + lei.quantidade + 'x)' : ''), 'Nada consta'),
-      alerta('Indício de Sinistro', !!sin.consta, 'Consta indício', 'Nada consta'),
-      alerta('Recall Pendente', !!rec.possui, 'Possui recall', 'Sem recall'),
-      this.row('Parecer de Risco', lei.parecer_risco || null, true),
+      alerta('Passagem por Leilão', !!lei.consta, 'Consta' + (Number(lei.quantidade) ? ' (' + lei.quantidade + 'x)' : ''), 'Nada consta', 'leilao'),
+      alerta('Indício de Sinistro', !!sin.consta, 'Consta indício', 'Nada consta', 'sinistro'),
+      alerta('Recall Pendente', !!rec.possui, 'Possui recall', 'Sem recall', 'recall'),
+      this.row('Parecer de Risco', lei.parecer_risco || null, true, 'leilao'),
     ];
 
     const f = d.fipe;
@@ -975,8 +1033,11 @@ class Component extends DCLogic {
       faturamento:   _faturamento,   faturamentoDisplay:   disp(_faturamento),
       // Cards de valor: mantêm "Nada consta"/"Sem débito"/"não informado"
       restricoes, debitos, alertas: alertasFinal,
-      // Relatório de Leilão e Risco (BrasilCredit) — só aparece quem comprou o upsell
-      temLeilaoDisplay:      temLeilao ? 'block' : 'none',
+      // Relatório de Leilão e Risco (BrasilCredit) — bloco real só p/ quem comprou o upsell.
+      temLeilaoDisplay:      (temLeilao && this._comprou.leilao) ? 'block' : 'none',
+      // Teaser bloqueado do mesmo bloco (pago, mas sem o upsell de leilão).
+      leilaoLockDisplay:     (this.state.pago && !this._comprou.leilao) ? 'block' : 'none',
+      leilaoUnlockHref:      '/checkout?upsell=leilao',
       resumoLeilao,          // veredito — sempre presente quando comprado
       veiculoLeilao,         veiculoLeilaoDisplay: veiculoLeilao.length ? 'block' : 'none',
       leilaoRisco,           leilaoRiscoDisplay:  leilaoRisco.length ? 'block' : 'none',

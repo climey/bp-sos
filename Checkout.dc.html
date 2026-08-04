@@ -283,6 +283,19 @@ class Component extends DCLogic {
     // Placa vem do sessionStorage (sos_placa), com fallback para os dados da consulta.
     const placa = (sessionStorage.getItem('sos_placa') || (dados && dados.placa) || '').toUpperCase();
     this.setState({ dados, placa });
+
+    // Pré-seleciona upsells vindos do Resultado via ?upsell=chave[,chave...]
+    // (botões "Desbloquear"). Ordem dos bumps: [sinistro, leilao, debitos, recall].
+    try {
+      const pre = new URLSearchParams(window.location.search).get('upsell');
+      if (pre) {
+        const ordem = ['sinistro', 'leilao', 'debitos', 'recall'];
+        const chaves = pre.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+        const arr = this.state.bumps.slice();
+        chaves.forEach(k => { const i = ordem.indexOf(k); if (i >= 0) arr[i] = true; });
+        this.setState({ bumps: arr });
+      }
+    } catch (e) {}
   }
 
   brl(n) { return 'R$ ' + n.toFixed(2).replace('.', ','); }
@@ -377,6 +390,9 @@ class Component extends DCLogic {
         });
         sessionStorage.setItem('sos_pagamento_id', data.id);
         sessionStorage.setItem('sos_pix', JSON.stringify(data));
+        // Guarda os upsells comprados p/ o gating de exibição no Resultado.
+        sessionStorage.setItem('sos_upsells', selecionados.join(','));
+        sessionStorage.setItem('sos_combo', comboActive ? '1' : '0');
         window.location.href = '/pagamento';
       } catch (e) {
         this.setState({ processing: false, payError: 'Não foi possível gerar o pagamento. Tente novamente.' });
