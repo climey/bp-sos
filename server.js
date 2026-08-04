@@ -525,18 +525,58 @@ function blindarPorUpsells(dados, upsells, combo) {
   return dados;
 }
 
+// ── Proteção da consulta GRÁTIS (protege o saldo da wdapi2) ──
+// 1) Cache curto por placa: repetir a mesma placa não gasta wdapi2 de novo.
+// 2) Limite por IP (janela fixa): trava spam de placas diferentes. Só conta no
+//    cache MISS (chamada real). Tudo configurável por env.
+const _basicaCache = new Map();  // placa -> { data, exp }
+const _rlBasica    = new Map();  // ip -> { count, resetAt }
+const BASICA_TTL_MS  = Number(process.env.BASICA_CACHE_MS   || 15 * 60 * 1000); // 15 min
+const RL_MAX         = Number(process.env.RATE_LIMIT_MAX    || 15);             // consultas/janela
+const RL_WINDOW_MS   = Number(process.env.RATE_LIMIT_WINDOW_MS || 10 * 60 * 1000); // 10 min
+
+// Consume 1 do limite do IP. Retorna null se ok, ou os segundos p/ tentar de novo.
+function consumirRate(ip) {
+  const now = Date.now();
+  let e = _rlBasica.get(ip);
+  if (!e || now >= e.resetAt) { e = { count: 0, resetAt: now + RL_WINDOW_MS }; _rlBasica.set(ip, e); }
+  if (e.count >= RL_MAX) return Math.ceil((e.resetAt - now) / 1000);
+  e.count++;
+  return null;
+}
+// Limpeza periódica das janelas expiradas (evita crescimento infinito do Map).
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, e] of _rlBasica) if (now >= e.resetAt) _rlBasica.delete(ip);
+  for (const [placa, c] of _basicaCache) if (now >= c.exp) _basicaCache.delete(placa);
+}, 5 * 60 * 1000).unref();
+
 // Consulta básica — wdapi2 (gratuita, antes do pagamento)
 app.get('/api/consulta/basica/:placa', async (req, res) => {
   const placa = req.params.placa.toUpperCase().replace(/[^A-Z0-9]/g, '');
   if (!placaValida(placa))
     return res.status(400).json({ erro: 'Formato de placa inválido.' });
 
+  // 1) Cache por placa — não gasta wdapi2 nem consome o limite do IP.
+  const cached = _basicaCache.get(placa);
+  if (cached && Date.now() < cached.exp) return res.json(cached.data);
+
+  // 2) Limite por IP — só nas chamadas reais (cache miss).
+  const retry = consumirRate(req.ip || 'unknown');
+  if (retry != null) {
+    res.set('Retry-After', String(retry));
+    return res.status(429).json({
+      erro: 'Você fez muitas consultas em pouco tempo. Aguarde alguns minutos e tente novamente.',
+      retry_after_s: retry
+    });
+  }
+
   try {
     const d = await httpGet(
       `https://wdapi2.com.br/consulta/${placa}/${process.env.WDAPI_TOKEN}`
     );
 
-    res.json({
+    const payload = {
       marca:            d.MARCA        || null,
       modelo:           d.MODELO       || null,
       submodelo:        d.SUBMODELO    || null,
@@ -574,7 +614,10 @@ app.get('/api/consulta/basica/:placa', async (req, res) => {
       placa_modelo_novo:  d.extra?.placa_modelo_novo  || null,
       placa_modelo_antigo: d.extra?.placa_modelo_antigo || null,
       fipe: melhorFipe(d)
-    });
+    };
+
+    _basicaCache.set(placa, { data: payload, exp: Date.now() + BASICA_TTL_MS });
+    res.json(payload);
   } catch (err) {
     console.error('[basica]', err.message);
     res.status(500).json({ erro: 'Erro ao consultar. Tente novamente.' });

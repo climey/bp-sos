@@ -513,7 +513,11 @@ class Component extends DCLogic {
         sessionStorage.removeItem('sos_pago');
         window.location.href = '/resultado';
       } catch (err) {
-        this.setState({ loading: false, error: 'Não foi possível consultar essa placa. Verifique e tente novamente.' });
+        // 429 = limite de consultas por IP → mostra a mensagem do servidor.
+        const msg = (err && err.status === 429 && err.message)
+          ? err.message
+          : 'Não foi possível consultar essa placa. Verifique e tente novamente.';
+        this.setState({ loading: false, error: msg });
       }
     };
 

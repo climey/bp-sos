@@ -9,7 +9,11 @@
 
   async function consultarPlaca(placa) {
     const r = await fetch(`${window.SOS_API}/api/consulta/basica/${placa}`);
-    if (!r.ok) throw new Error('Erro na consulta');
+    if (!r.ok) {
+      let msg = 'Erro na consulta';
+      try { const j = await r.json(); if (j && j.erro) msg = j.erro; } catch (e) {}
+      const err = new Error(msg); err.status = r.status; throw err;
+    }
     return r.json();
   }
 
