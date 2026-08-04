@@ -619,7 +619,14 @@ function mapearSinistro(root) {
   if (String(solic.mensagem ?? '').trim() !== '1')
     return { consta: false, msg: 'Veículo não localizado na base de sinistro' };
   const ind = obj(resp.indicio);
-  return { consta: String(ind.codigo ?? '').trim() === '1', msg: pick(ind.mensagem) };
+  const codigo = String(ind.codigo ?? '').trim();
+  const msg    = String(ind.mensagem ?? '').trim();
+  // O `codigo` às vezes vem VAZIO na resposta real — então também olho o prefixo
+  // da mensagem ("1-EXISTE..." = tem / "0-NENHUM..." = não tem). Evita falso negativo.
+  const consta = codigo === '1'
+    || /^\s*1\s*[-–]/.test(msg)
+    || (/EXISTE\s+SINISTRO/i.test(msg) && !/NENHUM|N[AÃ]O/i.test(msg));
+  return { consta, msg: pick(msg) };
 }
 
 // Recall (BrasilCredit) -> { possui, itens[] }.
