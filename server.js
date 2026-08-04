@@ -539,24 +539,59 @@ app.get('/api/logo', (req, res) => {
 
 // Criar pagamento PIX
 app.post('/api/pagamento/criar', async (req, res) => {
-  const { plano, placa, email, nome, cpf, extras } = req.body;
-  // Marca se o upsell de Leilão foi selecionado (para disparar a BrasilCredit no pós-pagamento).
-  const querLeilao = Array.isArray(extras) && extras.some(x => String(x).toLowerCase().includes('leil'));
-  const planos = {
-    basico:   { valor: 19.90, descricao: 'Consulta Veicular Básica'   },
-    simples:  { valor: 29.90, descricao: 'Consulta Veicular Simples'  },
-    completo: { valor: 1.99, descricao: 'Consulta Veicular Completa' } // TESTE: era 49.90
+  const { plano, placa, email, nome, cpf, extras, upsells, combo } = req.body;
+
+  // ─── Preços: fonte da verdade no SERVIDOR (devem espelhar o Checkout.dc.html) ───
+  // SEGURANÇA: nunca confiar no `valor` enviado pelo frontend — o total é sempre
+  // recomputado aqui a partir dos upsells/combo. O `valor` do cliente só é comparado
+  // para log de divergência.
+  const CHECKOUT_BASE = 14.99;                                              // relatório base
+  const UPSELL_PRECO  = { sinistro: 9.99, leilao: 9.99, debitos: 4.90, recall: 3.90 };
+  const COMBO_TOTAL   = 32.90;                                              // base + 4 upsells c/ desconto
+
+  // Normaliza a lista de upsells comprados (aceita `upsells`; cai p/ o legado `extras`).
+  const brutos = Array.isArray(upsells) ? upsells : (Array.isArray(extras) ? extras : []);
+  const setUpsells = [...new Set(
+    brutos.map(x => String(x).toLowerCase().trim())
+          .filter(k => Object.prototype.hasOwnProperty.call(UPSELL_PRECO, k))
+  )];
+  const comboAtivo   = combo === true || combo === '1' || setUpsells.length === 4;
+  const upsellsFinal = comboAtivo ? Object.keys(UPSELL_PRECO) : setUpsells; // combo = leva os 4
+  const querLeilao   = upsellsFinal.includes('leilao');                     // dispara BrasilCredit
+
+  const planosFixos = {
+    basico:  { valor: 19.90, descricao: 'Consulta Veicular Básica'  },
+    simples: { valor: 29.90, descricao: 'Consulta Veicular Simples' }
   };
-  const p = planos[plano];
-  if (!p) return res.status(400).json({ erro: 'Plano inválido.' });
+
+  // Calcula o valor autoritativo a cobrar.
+  let valorCobrar, descricao;
+  if (plano === 'completo') {
+    valorCobrar = comboAtivo
+      ? COMBO_TOTAL
+      : +(CHECKOUT_BASE + upsellsFinal.reduce((s, k) => s + UPSELL_PRECO[k], 0)).toFixed(2);
+    descricao = comboAtivo ? 'Consulta Veicular Completa (Combo)' : 'Consulta Veicular Completa';
+  } else if (planosFixos[plano]) {
+    valorCobrar = planosFixos[plano].valor;
+    descricao   = planosFixos[plano].descricao;
+  } else {
+    return res.status(400).json({ erro: 'Plano inválido.' });
+  }
+
+  // Sanidade: compara com o valor que o frontend calculou (só loga se divergir).
+  const valorCliente = Number(req.body.valor);
+  if (!Number.isNaN(valorCliente) && Math.abs(valorCliente - valorCobrar) > 0.01) {
+    console.warn(`[criar] valor divergente — frontend=${valorCliente} servidor=${valorCobrar} (cobrando o do servidor)`);
+  }
+  if (!(valorCobrar > 0)) return res.status(400).json({ erro: 'Valor inválido.' });
 
   try {
     const idempotencyKey = `${placa}-${plano}-${Date.now()}`;
     const pagamento = await httpPost(
       'https://api.mercadopago.com/v1/payments',
       {
-        transaction_amount: p.valor,
-        description: `${p.descricao} — Placa ${placa}`,
+        transaction_amount: valorCobrar,
+        description: `${descricao} — Placa ${placa}`,
         payment_method_id: 'pix',
         payer: {
           email: email || 'cliente@sosbuscasonline.com.br',
@@ -564,7 +599,12 @@ app.post('/api/pagamento/criar', async (req, res) => {
           last_name:  nome?.split(' ').slice(1).join(' ') || 'SOS',
           identification: { type: 'CPF', number: cpf?.replace(/\D/g,'') || '00000000000' }
         },
-        metadata: { placa, plano, leilao: querLeilao ? '1' : '0' }
+        metadata: {
+          placa, plano,
+          leilao:  querLeilao ? '1' : '0',           // gate da BrasilCredit no pós-pagamento
+          upsells: upsellsFinal.join(',') || 'nenhum', // upsells comprados (p/ liberar seções)
+          combo:   comboAtivo ? '1' : '0'
+        }
       },
       {
         'Authorization':    `Bearer ${process.env.MP_ACCESS_TOKEN}`,
@@ -582,8 +622,8 @@ app.post('/api/pagamento/criar', async (req, res) => {
       status:         pagamento.status,
       qr_code:        pagamento.point_of_interaction?.transaction_data?.qr_code        || null,
       qr_code_base64: pagamento.point_of_interaction?.transaction_data?.qr_code_base64 || null,
-      valor:          p.valor,
-      descricao:      p.descricao
+      valor:          valorCobrar,
+      descricao:      descricao
     });
   } catch (err) {
     console.error('[criar pagamento]', err.message);
