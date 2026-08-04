@@ -24,6 +24,26 @@
     .sos-nav-m{display:none !important;}
     .sos-stack{grid-template-columns:1fr !important;}
   }
+  /* ============ BARRA DE PROGRESSO DO FUNIL ============ */
+  .sos-steps{position:fixed;top:74px;left:0;right:0;z-index:49;height:56px;background:#150a09;border-bottom:1px solid rgba(255,255,255,.07);}
+  .sos-steps-inner{max-width:720px;margin:0 auto;height:100%;padding:0 22px;display:flex;align-items:center;justify-content:space-between;}
+  .sos-step{display:flex;align-items:center;gap:9px;flex:none;}
+  .sos-step-line{flex:1;height:2px;min-width:10px;margin:0 6px;background:#3a2321;transition:background .25s;}
+  .sos-step-dot{position:relative;width:26px;height:26px;flex:none;border-radius:50%;border:2px solid #4a4b4f;background:transparent;color:#8a8b8f;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;transition:all .25s;}
+  .sos-step-ck{display:none;width:13px;height:13px;}
+  .sos-step-lbl{font-size:13px;font-weight:700;color:#8a8b8f;white-space:nowrap;transition:color .25s;}
+  .sos-steps.step1 .s1 .sos-step-dot,.sos-steps.step2 .s2 .sos-step-dot,.sos-steps.step3 .s3 .sos-step-dot,.sos-steps.step4 .s4 .sos-step-dot,.sos-steps.step5 .s5 .sos-step-dot{background:#D43630;border-color:#D43630;color:#fff;box-shadow:0 0 0 4px rgba(212,54,48,.16);}
+  .sos-steps.step1 .s1 .sos-step-lbl,.sos-steps.step2 .s2 .sos-step-lbl,.sos-steps.step3 .s3 .sos-step-lbl,.sos-steps.step4 .s4 .sos-step-lbl,.sos-steps.step5 .s5 .sos-step-lbl{color:#fff;}
+  .sos-steps.step2 .s1 .sos-step-dot,.sos-steps.step3 .s1 .sos-step-dot,.sos-steps.step3 .s2 .sos-step-dot,.sos-steps.step4 .s1 .sos-step-dot,.sos-steps.step4 .s2 .sos-step-dot,.sos-steps.step4 .s3 .sos-step-dot,.sos-steps.step5 .s1 .sos-step-dot,.sos-steps.step5 .s2 .sos-step-dot,.sos-steps.step5 .s3 .sos-step-dot,.sos-steps.step5 .s4 .sos-step-dot{background:#D43630;border-color:#D43630;color:#fff;}
+  .sos-steps.step2 .s1 .sos-step-num,.sos-steps.step3 .s1 .sos-step-num,.sos-steps.step3 .s2 .sos-step-num,.sos-steps.step4 .s1 .sos-step-num,.sos-steps.step4 .s2 .sos-step-num,.sos-steps.step4 .s3 .sos-step-num,.sos-steps.step5 .s1 .sos-step-num,.sos-steps.step5 .s2 .sos-step-num,.sos-steps.step5 .s3 .sos-step-num,.sos-steps.step5 .s4 .sos-step-num{display:none;}
+  .sos-steps.step2 .s1 .sos-step-ck,.sos-steps.step3 .s1 .sos-step-ck,.sos-steps.step3 .s2 .sos-step-ck,.sos-steps.step4 .s1 .sos-step-ck,.sos-steps.step4 .s2 .sos-step-ck,.sos-steps.step4 .s3 .sos-step-ck,.sos-steps.step5 .s1 .sos-step-ck,.sos-steps.step5 .s2 .sos-step-ck,.sos-steps.step5 .s3 .sos-step-ck,.sos-steps.step5 .s4 .sos-step-ck{display:block;}
+  .sos-steps.step2 .s1 .sos-step-lbl,.sos-steps.step3 .s1 .sos-step-lbl,.sos-steps.step3 .s2 .sos-step-lbl,.sos-steps.step4 .s1 .sos-step-lbl,.sos-steps.step4 .s2 .sos-step-lbl,.sos-steps.step4 .s3 .sos-step-lbl,.sos-steps.step5 .s1 .sos-step-lbl,.sos-steps.step5 .s2 .sos-step-lbl,.sos-steps.step5 .s3 .sos-step-lbl,.sos-steps.step5 .s4 .sos-step-lbl{color:#9a7472;}
+  .sos-steps.step2 .l1,.sos-steps.step3 .l1,.sos-steps.step3 .l2,.sos-steps.step4 .l1,.sos-steps.step4 .l2,.sos-steps.step4 .l3,.sos-steps.step5 .l1,.sos-steps.step5 .l2,.sos-steps.step5 .l3,.sos-steps.step5 .l4{background:#D43630;}
+  @media (max-width:768px){
+    .sos-steps-inner{max-width:100%;padding:0 16px;}
+    .sos-step-lbl{display:none;}
+    .sos-steps.step1 .s1 .sos-step-lbl,.sos-steps.step2 .s2 .sos-step-lbl,.sos-steps.step3 .s3 .sos-step-lbl,.sos-steps.step4 .s4 .sos-step-lbl,.sos-steps.step5 .s5 .sos-step-lbl{display:inline;}
+  }
 </style>
 <script src="image-slot.js"></script>
 <script src="api.js"></script>
@@ -48,8 +68,23 @@
     </div>
   </header>
 
+  <!-- ============ BARRA DE PROGRESSO ============ -->
+  <div class="sos-steps step4" data-screen-label="Progresso">
+    <div class="sos-steps-inner">
+      <div class="sos-step s1"><span class="sos-step-dot"><span class="sos-step-num">1</span><svg class="sos-step-ck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 6"></path></svg></span><span class="sos-step-lbl">Consulta</span></div>
+      <div class="sos-step-line l1"></div>
+      <div class="sos-step s2"><span class="sos-step-dot"><span class="sos-step-num">2</span><svg class="sos-step-ck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 6"></path></svg></span><span class="sos-step-lbl">Resultado</span></div>
+      <div class="sos-step-line l2"></div>
+      <div class="sos-step s3"><span class="sos-step-dot"><span class="sos-step-num">3</span><svg class="sos-step-ck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 6"></path></svg></span><span class="sos-step-lbl">Checkout</span></div>
+      <div class="sos-step-line l3"></div>
+      <div class="sos-step s4"><span class="sos-step-dot"><span class="sos-step-num">4</span><svg class="sos-step-ck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 6"></path></svg></span><span class="sos-step-lbl">Pagamento</span></div>
+      <div class="sos-step-line l4"></div>
+      <div class="sos-step s5"><span class="sos-step-dot"><span class="sos-step-num">5</span><svg class="sos-step-ck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 6"></path></svg></span><span class="sos-step-lbl">Relatório</span></div>
+    </div>
+  </div>
+
   <!-- ============ PIX ============ -->
-  <section data-screen-label="Pagamento PIX" style="padding:110px 32px 64px;background:radial-gradient(1100px 460px at 50% -12%,rgba(212,54,48,.13),transparent 60%),#1a1a1a;">
+  <section data-screen-label="Pagamento PIX" style="padding:166px 32px 64px;background:radial-gradient(1100px 460px at 50% -12%,rgba(212,54,48,.13),transparent 60%),#1a1a1a;">
     <div class="sos-stack" style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.25fr .85fr;gap:28px;align-items:start;">
 
       <!-- LEFT — payment -->
