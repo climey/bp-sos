@@ -225,11 +225,13 @@ async function montarConsultaPremium(placa) {
 // ─────────────────────────────────────────────────────────────────────────────
 const _leilaoCache = new Map(); // pagamento_id -> resultado do leilao (em memória)
 
-async function consultarLeilao(placa) {
-  const base       = process.env.BRASIL_CREDIT_API_BASE_URL;
-  const login      = process.env.BRASIL_CREDIT_API_USERNAME;
-  const senha      = process.env.BRASIL_CREDIT_API_PASSWORD;
-  const consultaId = process.env.BRASIL_CREDIT_CONSULTA_ID; // <-- ID_CONSULTA configuravel
+// Chamada genérica à BrasilCredit para qualquer consulta ID (leilão, base estadual,
+// sinistro, recall...). Retorna a raiz <consulta> já parseada (com cabecalho/resposta).
+// Credenciais e IP whitelist: ver [[brasilcredit-leilao-setup]].
+async function fetchBrasilCredit(placa, consultaId) {
+  const base  = process.env.BRASIL_CREDIT_API_BASE_URL;
+  const login = process.env.BRASIL_CREDIT_API_USERNAME;
+  const senha = process.env.BRASIL_CREDIT_API_PASSWORD;
 
   const url = `${base}/consulta?login=${encodeURIComponent(login)}` +
               `&senha=${encodeURIComponent(senha)}` +
@@ -238,9 +240,14 @@ async function consultarLeilao(placa) {
 
   const xml = await httpGetText(url);
   const parsed = await xml2js.parseStringPromise(xml, { explicitArray: false, trim: true, ignoreAttrs: true });
+  return (parsed && parsed.consulta) || {};  // <consulta> { <cabecalho>, <resposta> }
+}
+
+async function consultarLeilao(placa) {
+  const consultaId = process.env.BRASIL_CREDIT_CONSULTA_ID; // <-- ID_CONSULTA de Leilão (578)
 
   // Estrutura real (doc BrasilCredit): <consulta> { <cabecalho>, <resposta> }.
-  const root = (parsed && parsed.consulta) || {};
+  const root = await fetchBrasilCredit(placa, consultaId);
   const cab  = root.cabecalho || {};
 
   const arr = (v) => (Array.isArray(v) ? v : (v == null || v === '' ? [] : [v]));
@@ -420,6 +427,19 @@ app.get('/api/teste/leilao/:placa', async (req, res) => {
   try {
     const resultado = await consultarLeilao(req.params.placa);
     res.json(resultado);
+  } catch (e) {
+    res.status(500).json({ erro: e.message });
+  }
+});
+
+// TEMPORARIO (debug): retorno CRU da BrasilCredit p/ QUALQUER consulta ID.
+// Uso: /api/teste/brasilcredit/<consultaId>/<placa>  (ex.: 528 = Base Estadual).
+// Serve p/ mapear os campos das novas consultas (estadual, sinistro, recall).
+// REMOVER apos concluir o mapeamento — expõe a API paga publicamente.
+app.get('/api/teste/brasilcredit/:id/:placa', async (req, res) => {
+  try {
+    const root = await fetchBrasilCredit(req.params.placa, req.params.id);
+    res.json(root);
   } catch (e) {
     res.status(500).json({ erro: e.message });
   }
