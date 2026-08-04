@@ -469,6 +469,43 @@ function formatarCompleta(d, futuredataDados, placa, leilao) {
   };
 }
 
+// Lê os upsells comprados do metadata do pagamento (gravado no criarPagamento).
+// Retorna { upsells: string[] | null, combo: bool }.
+//  - upsells === null  => metadata SEM a chave `upsells` = pagamento legado (antes da
+//    blindagem) ou fluxo sem metadata => o chamador deve liberar tudo.
+//  - upsells === []    => compra nova só da base (metadata.upsells === 'nenhum') => blinda tudo.
+function lerUpsellsMeta(metadata) {
+  const combo = !!(metadata && (metadata.combo === '1' || metadata.combo === true));
+  const raw = metadata ? metadata.upsells : undefined;
+  if (raw == null) return { upsells: null, combo };   // legado / sem info => libera tudo
+  const upsells = String(raw).split(',').map(s => s.trim().toLowerCase())
+    .filter(s => s && s !== 'nenhum');
+  return { upsells, combo };
+}
+
+// Blindagem: remove do payload /completa os campos de upsell que o cliente NÃO comprou.
+// `dados` é a saída de formatarCompleta (objeto fresco a cada request — seguro mutar).
+//  - combo === true            => retorna tudo.
+//  - upsells === null          => legado/recuperar => retorna tudo (não quebra fluxos antigos).
+//  - upsells === [] ou lista   => nula os campos ausentes (base-only blinda os 4).
+function blindarPorUpsells(dados, upsells, combo) {
+  if (combo || upsells == null) return dados;   // libera tudo
+  const tem = k => upsells.includes(k);
+  const p = dados && dados.premium;
+  if (p) {
+    if (!tem('debitos') && p.debitos)
+      p.debitos = { ipva: null, multa: null, licenciamento: null, dpvat: null };
+    if (!tem('sinistro') && p.sinistro)
+      p.sinistro = { consta: null, msg: null };
+    if (!tem('recall') && p.recall)
+      p.recall = { possui: null, itens: [] };
+    if (!tem('leilao') && p.leilao)
+      p.leilao = { consta: null, quantidade: null, parecer_risco: null, registros: [] };
+  }
+  if (dados && !tem('leilao')) dados.leilao = null;   // bloco BrasilCredit
+  return dados;
+}
+
 // Consulta básica — wdapi2 (gratuita, antes do pagamento)
 app.get('/api/consulta/basica/:placa', async (req, res) => {
   const placa = req.params.placa.toUpperCase().replace(/[^A-Z0-9]/g, '');
@@ -643,19 +680,21 @@ app.get('/api/pagamento/status/:id', async (req, res) => {
       const placa = d.metadata.placa.toUpperCase().replace(/[^A-Z0-9]/g, '');
 
       // FutureData dispara em BACKGROUND (não bloqueia a resposta do status).
-      // Retorna null enquanto processa; quando pronto, out.premium já vem preenchido
-      // — é assim que o frontend sabe que o relatório está pronto p/ redirecionar.
+      // BLINDAGEM: NÃO devolvemos o conteúdo premium aqui — só um flag de "pronto".
+      // O relatório real (já blindado por upsell) é buscado depois via /completa.
+      // Assim os dados não vazam pela rota de status. O objeto completo continua
+      // guardado em memória (_consultasPorChave) para a /recuperar.
       const premium = bgCache(_premiumCache, _premiumPending, id, () => montarConsultaPremium(placa));
       if (premium && d.payer?.email) {
         _consultasPorChave.set(chaveConsulta(placa, d.payer.email), premium); // indexa p/ /recuperar
       }
-      out.premium = premium;
+      out.premium = premium ? true : null;   // flag de prontidão (não o conteúdo)
 
       // Upsell de Leilão (BrasilCredit) — também em background, só se foi comprado
       if (d.metadata?.leilao === '1') {
         const leilao = bgCache(_leilaoCache, _leilaoPending, id, () => consultarLeilao(placa));
         if (leilao && d.payer?.email) _leilaoPorChave.set(chaveConsulta(placa, d.payer.email), leilao);
-        out.leilao = leilao;
+        out.leilao = leilao ? true : null;   // flag (conteúdo vem só na /completa)
       }
     }
 
@@ -718,7 +757,10 @@ app.get('/api/consulta/completa/:placa/:pagamento_id', async (req, res) => {
       _premiumCache.set(key, resultado);
     }
 
-    // 3. Leilão (BrasilCredit) — só se o upsell foi comprado (metadata.leilao === '1').
+    // 3. Upsells comprados (metadata gravado no criarPagamento) — controla a blindagem.
+    const { upsells, combo } = lerUpsellsMeta(pag.metadata);
+
+    // 4. Leilão (BrasilCredit) — só se o upsell foi comprado (metadata.leilao === '1').
     //    Reaproveita o cache do pós-pagamento; senão consulta e cacheia.
     let leilao = null;
     if (pag.metadata?.leilao === '1') {
@@ -727,8 +769,9 @@ app.get('/api/consulta/completa/:placa/:pagamento_id', async (req, res) => {
       if (!leilao) { leilao = await consultarLeilao(placa); _leilaoCache.set(key, leilao); }
     }
 
-    // 4. Retorna no formato /completa (mesmo usado pela /recuperar)
-    res.json(formatarCompleta(resultado.basico, resultado.futuredata, placa, leilao));
+    // 5. Formata e BLINDA — omite os campos dos upsells não comprados antes de enviar.
+    const dados = formatarCompleta(resultado.basico, resultado.futuredata, placa, leilao);
+    res.json(blindarPorUpsells(dados, upsells, combo));
 
   } catch (err) {
     console.error('[completa]', err.message);
