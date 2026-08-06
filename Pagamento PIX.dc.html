@@ -319,11 +319,16 @@ class Component extends DCLogic {
     let resumo = {}, pix = {};
     try { resumo = JSON.parse(sessionStorage.getItem('sos_resumo') || '{}'); } catch (e) {}
     try { pix = JSON.parse(sessionStorage.getItem('sos_pix') || '{}'); } catch (e) {}
-    const subtotal = resumo.subtotal != null ? resumo.subtotal : 14.99;
-    const extras   = resumo.extras   != null ? resumo.extras   : 0;
-    const desconto = resumo.desconto != null ? resumo.desconto : 0;
-    const total    = resumo.total    != null ? resumo.total
-                     : (pix.valor    != null ? pix.valor : subtotal + extras - desconto);
+    // O TOTAL é SEMPRE o valor real do PIX (o que o QR cobra) — fonte da verdade.
+    const total = pix.valor != null ? Number(pix.valor)
+                : (resumo.total != null ? Number(resumo.total) : 14.99);
+    // Só itemiza (subtotal/extras/desconto) quando o resumo do checkout CONFERE com o
+    // total cobrado. Senão (resumo ausente/antigo em cache, ou modo teste), mostra
+    // subtotal = total p/ o painel nunca se contradizer.
+    const resumoOk = resumo.total != null && Math.abs(Number(resumo.total) - total) < 0.01;
+    const subtotal = resumoOk ? Number(resumo.subtotal) : total;
+    const extras   = resumoOk ? Number(resumo.extras)   : 0;
+    const desconto = resumoOk ? Number(resumo.desconto) : 0;
     const subtotalStr = brl(subtotal);
     const extrasStr   = '+ ' + brl(extras);
     const descontoStr = '- ' + brl(desconto);
