@@ -405,6 +405,10 @@ class Component extends DCLogic {
         // Guarda os upsells comprados p/ o gating de exibição no Resultado.
         sessionStorage.setItem('sos_upsells', selecionados.join(','));
         sessionStorage.setItem('sos_combo', comboActive ? '1' : '0');
+        // Guarda o resumo do pedido p/ a página de Pagamento exibir o valor real.
+        sessionStorage.setItem('sos_resumo', JSON.stringify({
+          subtotal: base, extras: extras, desconto: totalDiscount, total: total
+        }));
         window.location.href = '/pagamento';
       } catch (e) {
         this.setState({ processing: false, payError: 'Não foi possível gerar o pagamento. Tente novamente.' });

@@ -162,15 +162,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid #33363b;">
           <span style="font-size:14.5px;color:#c4c5c9;">Subtotal</span>
-          <span style="font-size:14.5px;font-weight:700;color:#fff;">R$ 12,99</span>
+          <span style="font-size:14.5px;font-weight:700;color:#fff;">{{ subtotalStr }}</span>
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid #33363b;">
           <span style="font-size:14.5px;color:#c4c5c9;">Dados extras</span>
-          <span style="font-size:14.5px;font-weight:700;color:#27c06b;">+ R$ 0,00</span>
+          <span style="font-size:14.5px;font-weight:700;color:#27c06b;">{{ extrasStr }}</span>
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid #33363b;">
           <span style="font-size:14.5px;color:#c4c5c9;">Desconto</span>
-          <span style="font-size:14.5px;font-weight:700;color:#B8BABE;">- R$ 0,00</span>
+          <span style="font-size:14.5px;font-weight:700;color:{{ descontoColor }};">{{ descontoStr }}</span>
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid #33363b;">
           <span style="font-size:14.5px;color:#c4c5c9;">Método</span>
@@ -179,7 +179,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 0 4px;">
           <span style="font-size:22px;font-weight:900;color:#fff;">TOTAL</span>
-          <span style="font-size:26px;font-weight:900;color:var(--ac,#D43630);letter-spacing:-.5px;">R$ 12,99</span>
+          <span style="font-size:26px;font-weight:900;color:var(--ac,#D43630);letter-spacing:-.5px;">{{ totalStr }}</span>
         </div>
 
         <div style="display:flex;align-items:center;gap:10px;margin-top:24px;background:rgba(39,192,107,.08);border:1px solid rgba(39,192,107,.25);border-radius:12px;padding:14px 16px;">
@@ -313,6 +313,23 @@ class Component extends DCLogic {
     const placaRaw = (this.state.placa || '').toUpperCase();
     const placaFmt = placaRaw ? placaRaw.replace(/^(.{3})(.+)$/, '$1-$2') : '—';
 
+    // Resumo do pedido — vem do Checkout (sos_resumo). Reflete os order bumps/combo
+    // que o cliente escolheu. Fallbacks p/ não quebrar sessões antigas / acesso direto.
+    const brl = (n) => 'R$ ' + Number(n || 0).toFixed(2).replace('.', ',');
+    let resumo = {}, pix = {};
+    try { resumo = JSON.parse(sessionStorage.getItem('sos_resumo') || '{}'); } catch (e) {}
+    try { pix = JSON.parse(sessionStorage.getItem('sos_pix') || '{}'); } catch (e) {}
+    const subtotal = resumo.subtotal != null ? resumo.subtotal : 14.99;
+    const extras   = resumo.extras   != null ? resumo.extras   : 0;
+    const desconto = resumo.desconto != null ? resumo.desconto : 0;
+    const total    = resumo.total    != null ? resumo.total
+                     : (pix.valor    != null ? pix.valor : subtotal + extras - desconto);
+    const subtotalStr = brl(subtotal);
+    const extrasStr   = '+ ' + brl(extras);
+    const descontoStr = '- ' + brl(desconto);
+    const descontoColor = desconto > 0 ? '#27c06b' : '#B8BABE';
+    const totalStr    = brl(total);
+
     const onCopy = () => {
       const code = this.state.pixCode || '';
       try { navigator.clipboard && navigator.clipboard.writeText(code); } catch (e) {}
@@ -325,7 +342,8 @@ class Component extends DCLogic {
     const fallbackDisplay = this.state.demorou ? 'block' : 'none';
     const statusMsg = this.state.statusMsg;
 
-    return { accent, accentHover, hh, mm, ss, pixCode, placaFmt, onCopy, copyLabel: this.state.copyLabel, overlayDisplay, fallbackDisplay, statusMsg };
+    return { accent, accentHover, hh, mm, ss, pixCode, placaFmt, onCopy, copyLabel: this.state.copyLabel, overlayDisplay, fallbackDisplay, statusMsg,
+      subtotalStr, extrasStr, descontoStr, descontoColor, totalStr };
   }
 }
 </script>
