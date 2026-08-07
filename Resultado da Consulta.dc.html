@@ -68,6 +68,44 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     .sos-step-lbl{display:none;}
     .sos-steps.step1 .s1 .sos-step-lbl,.sos-steps.step2 .s2 .sos-step-lbl,.sos-steps.step3 .s3 .sos-step-lbl,.sos-steps.step4 .s4 .sos-step-lbl,.sos-steps.step5 .s5 .sos-step-lbl{display:inline;}
   }
+  /* ============ VISUALIZAÇÕES DE RISCO / LEILÃO ============ */
+  .sos-verdict{display:flex;align-items:center;gap:16px;border-radius:18px;padding:22px 26px;margin-bottom:20px;box-shadow:0 8px 22px rgba(0,0,0,.06);}
+  .sos-verdict .vbadge{flex:none;width:54px;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;}
+  .sos-verdict h3{font-size:18px;font-weight:900;color:#18120f;}
+  .sos-verdict p{font-size:13px;color:#6b6560;margin-top:3px;}
+  .sos-verdict .vtag{margin-left:auto;flex:none;font-size:11.5px;font-weight:900;letter-spacing:.5px;color:#fff;padding:7px 14px;border-radius:9999px;white-space:nowrap;}
+  .sos-score{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;position:relative;margin-top:36px;}
+  .sos-seg{height:52px;border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;padding:0 6px;color:#fff;transition:all .2s;}
+  .sos-seg b{font-size:20px;font-weight:900;line-height:1;} .sos-seg span{font-size:9.5px;font-weight:800;letter-spacing:.2px;line-height:1.1;text-transform:uppercase;}
+  .sos-score-mark{position:absolute;top:-30px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;transition:left .3s;}
+  .sos-score-mark .lbl{font-size:11px;font-weight:900;color:#18120f;background:#fff;border:1px solid #e7e2dd;padding:2px 8px;border-radius:9999px;white-space:nowrap;box-shadow:0 3px 8px rgba(0,0,0,.1);}
+  .sos-meter{padding:16px 0;border-bottom:1px solid #ececec;}
+  .sos-meter:last-child{border-bottom:none;}
+  .sos-meter-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:4px;}
+  .sos-meter-top .mt-l{font-size:14.5px;font-weight:800;color:#18120f;}
+  .sos-meter-top .mt-l small{display:block;font-size:11.5px;font-weight:600;color:#8a847f;margin-top:1px;}
+  .sos-meter-val{display:flex;align-items:center;gap:9px;}
+  .sos-meter-val b{font-size:26px;font-weight:900;letter-spacing:-.5px;line-height:1;}
+  .sos-meter-val .cap{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;padding:3px 9px;border-radius:9999px;}
+  .sos-track{position:relative;height:13px;border-radius:9999px;background:#ece7e2;margin-top:12px;}
+  .sos-track .fill{position:absolute;inset:0;border-radius:9999px;}
+  .fill-good{background:linear-gradient(90deg,#ef4444 0%,#f59e0b 48%,#22c55e 100%);}
+  .fill-bad{background:linear-gradient(90deg,#22c55e 0%,#f59e0b 52%,#ef4444 100%);}
+  .sos-pin{position:absolute;top:50%;width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid #18120f;transform:translate(-50%,-50%);box-shadow:0 3px 9px rgba(0,0,0,.25);transition:left .3s;}
+  .sos-ends{display:flex;justify-content:space-between;margin-top:8px;font-size:11px;font-weight:700;color:#8a847f;}
+  .sos-selos{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px;}
+  .sos-selo{display:inline-flex;align-items:center;gap:8px;border-radius:9999px;padding:8px 15px;border:1px solid;font-weight:800;}
+  .sos-selo .sl{font-size:11px;font-weight:700;opacity:.75;} .sos-selo .sv{font-size:13px;}
+  .sos-tl{position:relative;padding-left:26px;}
+  .sos-tl::before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:2px;background:#e7d9d7;}
+  .sos-tl-item{position:relative;padding:0 0 18px;}
+  .sos-tl-item:last-child{padding-bottom:0;}
+  .sos-tl-item::before{content:"";position:absolute;left:-23px;top:3px;width:12px;height:12px;border-radius:50%;background:#ef4444;border:2px solid #fff;box-shadow:0 0 0 2px #f4c9c6;}
+  .sos-tl-item .d{font-size:12px;font-weight:800;color:#b91c1c;}
+  .sos-tl-item .t{font-size:14.5px;font-weight:800;color:#18120f;margin-top:1px;}
+  .sos-tl-item .s{font-size:12.5px;color:#6b6560;margin-top:1px;}
+  .sos-debbar-track{position:relative;height:16px;border-radius:9999px;background:#eee9e4;overflow:hidden;margin:14px 0 8px;}
+  .sos-debbar-fill{height:100%;border-radius:9999px;transition:width .4s;}
 </style>
 <script src="api.js"></script>
 </helmet>
@@ -155,6 +193,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="sos-noprint" style="display:{{ previewDisplay }};align-items:center;gap:9px;background:#ffffff;border:1px solid #e7e2dd;border-radius:9999px;padding:8px 16px;margin-bottom:24px;">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>
         <span style="font-size:13.5px;font-weight:600;color:#3a3b3f;">Pré-visualização — alguns dados estão bloqueados. Libere o relatório completo.</span>
+      </div>
+
+      <!-- Selos de verificação (dados da base) -->
+      <div class="sos-selos" style="display:{{ selosDisplay }};">
+        <sc-for list="{{ selos }}" as="s" hint-placeholder-count="3">
+          <span class="sos-selo" style="color:{{ s.color }};background:{{ s.bg }};border-color:{{ s.bd }};">
+            <span style="flex:none;width:7px;height:7px;border-radius:50%;background:{{ s.color }};"></span>
+            <span class="sl">{{ s.label }}</span><span class="sv">{{ s.valor }}</span>
+          </span>
+        </sc-for>
       </div>
 
       <div class="sos-stack" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
@@ -261,6 +309,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               <sc-if value="{{ row.unlocked }}" hint-placeholder-val="{{ true }}"><span style="font-size:14.5px;font-weight:700;color:{{ row.color }};text-align:right;white-space:pre-line;">{{ row.value }}</span></sc-if>
             </div>
           </sc-for>
+          <!-- Barra: dívidas vs valor FIPE -->
+          <div style="display:{{ debitoBarDisplay }};margin-top:16px;padding-top:16px;border-top:1px solid #ececec;">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;">
+              <span style="font-size:13px;font-weight:700;color:#6b6560;">Total em dívidas</span>
+              <span style="font-size:20px;font-weight:900;color:{{ debitoBar.color }};">{{ debitoBar.totalStr }}</span>
+            </div>
+            <div class="sos-debbar-track"><div class="sos-debbar-fill" style="width:{{ debitoBar.pointer }};background:{{ debitoBar.color }};"></div></div>
+            <p style="font-size:12px;color:#8a847f;"><b style="color:{{ debitoBar.color }};">{{ debitoBar.pct }}%</b> do valor FIPE ({{ debitoBar.fipeStr }}) comprometido em dívidas.</p>
+          </div>
         </div>
 
         <!-- Alertas: Leilão, Sinistro e Recall -->
@@ -336,6 +393,57 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <h2 style="font-size:clamp(22px,3vw,28px);font-weight:900;color:#18120f;letter-spacing:-.6px;">Relatório de Leilão e Risco</h2>
         </div>
         <p style="font-size:14px;color:#6b6560;margin:0 0 22px 59px;">Histórico de leilão, remarketing, checklist de avarias e análise de risco de comercialização.</p>
+
+        <!-- ===== ANÁLISE DE RISCO VISUAL ===== -->
+        <div style="display:{{ visRiscoDisplay }};">
+          <!-- Veredito -->
+          <div class="sos-verdict" style="background:{{ veredito.cardBg }};border:1px solid {{ veredito.cardBorder }};">
+            <span class="vbadge" style="background:{{ veredito.iconBg }};"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="{{ veredito.iconColor }}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9.5 16.5H2.5L12 3z"></path><path d="M12 10v4M12 17h.01"></path></svg></span>
+            <div><h3>{{ veredito.titulo }}</h3><p>{{ veredito.sub }}</p></div>
+            <span class="vtag" style="background:{{ veredito.tagBg }};">{{ veredito.tag }}</span>
+          </div>
+
+          <!-- Score de Avarias -->
+          <div style="display:{{ scoreDisplay }};background:#ffffff;border:1px solid #e7e2dd;border-radius:18px;padding:26px 28px;margin-bottom:20px;">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <span style="flex:none;width:40px;height:40px;border-radius:50%;border:2px solid rgba(212,54,48,.35);display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14M6 17l1.5-5h9L18 17M8 12l1-4h6l1 4"></path><circle cx="7.5" cy="17.5" r="1.5"></circle><circle cx="16.5" cy="17.5" r="1.5"></circle></svg></span>
+              <div><h3 style="font-size:17px;font-weight:800;color:#18120f;">Score de Avarias</h3><p style="font-size:12.5px;color:#6b6560;">Nível de dano estimado do veículo</p></div>
+            </div>
+            <div class="sos-score">
+              <div class="sos-score-mark" style="left:{{ scoreMarkerLeft }};"><span class="lbl">Este veículo</span><svg width="16" height="10" viewBox="0 0 16 10" fill="#18120f"><path d="M8 10L0 0h16z"/></svg></div>
+              <sc-for list="{{ scoreSegs }}" as="s" hint-placeholder-count="4">
+                <div class="sos-seg" style="background:{{ s.bg }};opacity:{{ s.opacity }};transform:{{ s.lift }};"><b>{{ s.letra }}</b><span>{{ s.rotulo }}</span></div>
+              </sc-for>
+            </div>
+            <p style="text-align:center;margin-top:18px;font-size:13px;font-weight:700;color:#6b6560;">{{ scoreDescTxt }}</p>
+          </div>
+
+          <!-- Medidores -->
+          <div style="background:#ffffff;border:1px solid #e7e2dd;border-radius:18px;padding:26px 28px;margin-bottom:24px;">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+              <span style="flex:none;width:40px;height:40px;border-radius:50%;border:2px solid rgba(212,54,48,.35);display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z"></path><path d="M9.3 12l2 2 3.4-4"></path></svg></span>
+              <div><h3 style="font-size:17px;font-weight:800;color:#18120f;">Risco de Comercialização</h3><p style="font-size:12.5px;color:#6b6560;">Estimativas para seguro e vistoria</p></div>
+            </div>
+            <!-- Aceitação em seguradoras -->
+            <div class="sos-meter" style="display:{{ aceitDisplay }};">
+              <div class="sos-meter-top"><span class="mt-l">Aceitação em Seguradoras<small>Chance de ser aceito nas principais seguradoras</small></span><span class="sos-meter-val"><b style="color:{{ aceitValColor }};">{{ aceitValStr }}</b><span class="cap" style="background:{{ aceitCapBg }};color:{{ aceitCapColor }};">{{ aceitCapTxt }}</span></span></div>
+              <div class="sos-track"><div class="fill fill-good"></div><div class="sos-pin" style="left:{{ aceitPointer }};"></div></div>
+              <div class="sos-ends"><span>Baixa</span><span>Alta</span></div>
+            </div>
+            <!-- % Tabela FIPE -->
+            <div class="sos-meter" style="display:{{ fipeDisplay }};">
+              <div class="sos-meter-top"><span class="mt-l">% sobre a Tabela FIPE<small>Percentual da FIPE praticado no seguro</small></span><span class="sos-meter-val"><b style="color:{{ fipeValColor }};">{{ fipeValStr }}</b><span class="cap" style="background:{{ fipeCapBg }};color:{{ fipeCapColor }};">{{ fipeCapTxt }}</span></span></div>
+              <div class="sos-track"><div class="fill fill-good"></div><div class="sos-pin" style="left:{{ fipePointer }};"></div></div>
+              <div class="sos-ends"><span>Menor valor</span><span>Valor cheio</span></div>
+            </div>
+            <!-- Vistoria especial -->
+            <div class="sos-meter" style="display:{{ vistDisplay }};">
+              <div class="sos-meter-top"><span class="mt-l">Necessidade de Vistoria Especial<small>Chance de a seguradora exigir vistoria detalhada</small></span><span class="sos-meter-val"><b style="color:{{ vistValColor }};">{{ vistValStr }}</b><span class="cap" style="background:{{ vistCapBg }};color:{{ vistCapColor }};">{{ vistCapTxt }}</span></span></div>
+              <div class="sos-track"><div class="fill fill-bad"></div><div class="sos-pin" style="left:{{ vistPointer }};"></div></div>
+              <div class="sos-ends"><span>Dispensável</span><span>Provável exigência</span></div>
+            </div>
+          </div>
+        </div>
 
         <!-- Situação em Leilão (veredito — sempre presente) -->
         <div style="background:#ffffff;border:1px solid #e7e2dd;border-radius:18px;padding:30px 32px;margin-bottom:24px;">
@@ -423,6 +531,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;">
             <span style="flex:none;width:46px;height:46px;border-radius:50%;border:2px solid rgba(212,54,48,.4);display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D43630" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M12 3l9 6H3l9-6zM6 9v9M18 9v9M10 9v9M14 9v9"></path></svg></span>
             <div><h3 style="font-size:21px;font-weight:800;color:#18120f;">Registros de Leilão</h3><p style="font-size:13.5px;color:#B8BABE;margin-top:1px;">Passagens do veículo por leilão</p></div>
+          </div>
+          <!-- Timeline -->
+          <div class="sos-tl" style="display:{{ timelineDisplay }};margin-bottom:22px;">
+            <sc-for list="{{ timeline }}" as="t" hint-placeholder-count="2">
+              <div class="sos-tl-item"><div class="d">{{ t.data }}</div><div class="t">{{ t.titulo }}</div><div class="s">{{ t.sub }}</div></div>
+            </sc-for>
           </div>
           <div style="display:flex;flex-direction:column;gap:12px;">
             <sc-for list="{{ leiloesRegistros }}" as="reg" hint-placeholder-count="2">
@@ -1015,6 +1129,104 @@ class Component extends DCLogic {
       ? alertas.filter(a => { const L = this._norm(a.label); return !(L.includes('LEILAO') || L.includes('PARECER DE RISCO')); })
       : alertas;
 
+    // ═══════════ VISUALIZAÇÕES (score, medidores, veredito, timeline, selos, débitos) ═══════════
+    const clamp = (n) => Math.max(0, Math.min(100, n));
+    const pctOf = (s) => { const m = String(s == null ? '' : s).match(/\d+(?:[.,]\d+)?/); return m ? clamp(parseFloat(m[0].replace(',', '.'))) : null; };
+
+    // — Score de Avarias (A/B/C/D) —
+    const scoreDescN = this._norm(sc.descricao_score || '');
+    let scoreIdx = parseInt(sc.score, 10);
+    if (!(scoreIdx >= 1 && scoreIdx <= 4)) {
+      scoreIdx = /APAREN|INTEIR/.test(scoreDescN) ? 1 : /PEQUEN/.test(scoreDescN) ? 2
+               : /MEDIO/.test(scoreDescN) ? 3 : /GRANDE|SUCATA|ALAGAD|ENCHENTE|PERDA/.test(scoreDescN) ? 4 : 0;
+    }
+    const scoreOn = scoreIdx >= 1 && scoreIdx <= 4;
+    const scoreSegs = [
+      { letra: 'A', rotulo: 'Aparent. inteiro', bg: '#16a34a' },
+      { letra: 'B', rotulo: 'Pequenos danos',   bg: '#22c55e' },
+      { letra: 'C', rotulo: 'Médios danos',     bg: '#f59e0b' },
+      { letra: 'D', rotulo: 'Grandes / sucata', bg: '#ea580c' },
+    ].map((s, i) => ({ letra: s.letra, rotulo: s.rotulo, bg: s.bg,
+      opacity: (i === scoreIdx - 1) ? '1' : '.3', lift: (i === scoreIdx - 1) ? 'translateY(-2px)' : 'none' }));
+    const scoreMarkerLeft = ((((scoreIdx - 1) + 0.5) / 4) * 100) + '%';
+    const scoreDescTxt = val(sc.descricao_score) || '';
+
+    // — Medidores 0–100 (quanto maior, melhor) —
+    const capAlto = (p) => p >= 70 ? { txt:'Alto', bg:'rgba(22,163,74,.12)', color:'#15803d', val:'#16a34a' }
+                          : p >= 40 ? { txt:'Moderado', bg:'rgba(245,158,11,.14)', color:'#b45309', val:'#f59e0b' }
+                          : { txt:'Baixo', bg:'rgba(239,68,68,.12)', color:'#b91c1c', val:'#ef4444' };
+    const aceitP = pctOf(pseg.aceita_seguro);   const aceitCap = aceitP != null ? capAlto(aceitP) : null;
+    const fipeP  = pctOf(pfipe.percentual_referencia); const fipeCap = fipeP != null ? capAlto(fipeP) : null;
+
+    // — Vistoria especial (qualitativo; maior probabilidade = pior) —
+    const vistN = this._norm(pvist.vistoria_especial || '');
+    const vistHas = vistN !== '' && val(pvist.vistoria_especial) != null;
+    const vistMaior = /MAIOR|ALTA|PROVAVEL|SIM/.test(vistN);
+    const vistMenor = /MENOR|BAIXA|NAO|DISPENS/.test(vistN);
+    const vistPointer = vistMaior ? 84 : (vistMenor ? 16 : 50);
+    const vistCap = vistMaior ? { txt:'Maior probabilidade', bg:'rgba(239,68,68,.12)', color:'#b91c1c', val:'#ef4444', label:'Alta' }
+                  : vistMenor ? { txt:'Menor probabilidade', bg:'rgba(22,163,74,.12)', color:'#15803d', val:'#16a34a', label:'Baixa' }
+                  : { txt:'Moderada', bg:'rgba(245,158,11,.14)', color:'#b45309', val:'#f59e0b', label:'Média' };
+    const temMedidor = aceitP != null || fipeP != null || vistHas || scoreOn;
+
+    // — Veredito (banner de topo) —
+    const condVeic = (Array.isArray(lz.leiloes) ? lz.leiloes : []).map(r => val(r.condicao_veiculo)).find(Boolean) || null;
+    const constaLeilao = nLeiloes > 0 || nRemk > 0;
+    const parecerN = this._norm(arisco.parecer || '') + ' ' + this._norm(condVeic || '');
+    const grave = constaLeilao || /SUCATA|PERDA TOTAL|GRANDE|ALAGAD|ENCHENTE/.test(parecerN) || scoreIdx >= 3;
+    const veredito = {
+      titulo: constaLeilao ? 'Consta passagem por leilão' : (grave ? 'Atenção no histórico' : 'Nada consta em leilão'),
+      sub: constaLeilao
+        ? (nLeiloes + nRemk) + ' registro(s)' + (condVeic ? ' — condição: ' + String(condVeic).toLowerCase() : '') + (val(arisco.parecer) ? ' · ' + arisco.parecer : '')
+        : (val(arisco.parecer) || 'Nenhum registro de leilão ou remarketing encontrado.'),
+      tag: grave ? 'RISCO ALTO' : (constaLeilao ? 'ATENÇÃO' : 'SEM ALERTA'),
+      tagBg: grave ? '#ef4444' : (constaLeilao ? '#f59e0b' : '#16a34a'),
+      iconColor: grave ? '#ef4444' : (constaLeilao ? '#f59e0b' : '#16a34a'),
+      iconBg: grave ? 'rgba(239,68,68,.12)' : (constaLeilao ? 'rgba(245,158,11,.14)' : 'rgba(22,163,74,.12)'),
+      cardBg: grave ? '#fff6f5' : '#ffffff',
+      cardBorder: grave ? '#f2cdc9' : (constaLeilao ? '#f5e2bf' : '#cfe8d6'),
+    };
+
+    // — Timeline dos registros de leilão —
+    const timeline = (Array.isArray(lz.leiloes) ? lz.leiloes : []).map((r) => ({
+      data: val(r.data_leilao) || '—',
+      titulo: val(r.comitente) || val(r.leiloeiro) || 'Leilão',
+      sub: [val(r.lote) ? 'Lote ' + r.lote : null, val(r.condicao_veiculo)].filter(Boolean).join(' · ') || 'Registro de leilão',
+    }));
+
+    // — Selos de verificação (dados da base) —
+    const mkSelo = (label, raw, okRe, badRe) => {
+      const v = val(raw); if (v == null) return null;
+      const V = this._norm(v);
+      const bad = badRe.test(V), ok = !bad && okRe.test(V);
+      const t = bad ? { color:'#b91c1c', bg:'#fdeceb', bd:'#f4c9c6' } : ok ? { color:'#15803d', bg:'#eafaef', bd:'#bfe6cb' } : { color:'#b45309', bg:'#fef6e6', bd:'#f2ddb0' };
+      return { label, valor: v, color: t.color, bg: t.bg, bd: t.bd, ok, bad };
+    };
+    const seloLeilao = (this._comprou && this._comprou.leilao)
+      ? (constaLeilao ? { label:'Leilão', valor:'Consta', color:'#b91c1c', bg:'#fdeceb', bd:'#f4c9c6', ok:false, bad:true }
+                      : { label:'Leilão', valor:'Nada consta', color:'#15803d', bg:'#eafaef', bd:'#bfe6cb', ok:true, bad:false })
+      : null;
+    const selos = [
+      mkSelo('Situação', d.situacao_veiculo, /CIRCULAC|REGULAR|ATIVO|NORMAL/, /BAIXAD|ROUBO|FURTO|SINISTRO|IRREGULAR/),
+      mkSelo('Chassi', this.mapChassi(d.situacao_chassi), /NORMAL|ORIGINAL/, /REMARC|ADULTER/),
+      mkSelo('Roubo/Furto', d.roubo_furto || d.ocorrencia_roubo_furto, /NADA CONSTA|NAO CONSTA|SEM/, /ROUBAD|FURTAD/),
+      seloLeilao,
+    ].filter(Boolean);
+
+    // — Barra de débitos vs valor FIPE —
+    const parseReais = (s) => { const m = String(s == null ? '' : s).match(/[\d.]+,\d{2}|\d[\d.]*/g); if (!m) return 0; const last = m[m.length - 1]; const n = parseFloat(last.replace(/\./g, '').replace(',', '.')); return Number.isFinite(n) ? n : 0; };
+    const debTotal = (this._comprou && this._comprou.debitos && pr.debitos)
+      ? ['ipva','multa','licenciamento','der','municipais'].reduce((acc, k) => acc + parseReais(pr.debitos[k]), 0) : 0;
+    const fipeNum = parseReais(f && f.valor);
+    const debPct = (debTotal > 0 && fipeNum > 0) ? clamp((debTotal / fipeNum) * 100) : 0;
+    const brl = (n) => 'R$ ' + n.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    const debitoBar = {
+      show: debTotal > 0 && fipeNum > 0,
+      totalStr: brl(debTotal), fipeStr: (f && f.valor) ? f.valor : '—',
+      pct: Math.round(debPct), pointer: debPct + '%',
+      color: debPct >= 50 ? '#ef4444' : (debPct >= 20 ? '#f59e0b' : '#16a34a'),
+    };
+
     const onCopy = () => {
       const txt = placaRaw || '';
       try { navigator.clipboard && navigator.clipboard.writeText(txt); } catch (e) {}
@@ -1051,9 +1263,24 @@ class Component extends DCLogic {
       // Teaser bloqueado do mesmo bloco (pago, mas sem o upsell de leilão).
       leilaoLockDisplay:     (this.state.pago && !this._comprou.leilao) ? 'block' : 'none',
       leilaoUnlockHref:      '/checkout?upsell=leilao',
+      // ── Visualizações de risco/leilão ──
+      visRiscoDisplay: (temLeilao && this._comprou.leilao && temMedidor) ? 'block' : 'none',
+      veredito,
+      scoreDisplay: scoreOn ? 'block' : 'none', scoreSegs, scoreMarkerLeft, scoreDescTxt,
+      aceitDisplay: aceitP != null ? 'block' : 'none', aceitValStr: (aceitP != null ? aceitP + '%' : '—'),
+      aceitValColor: aceitCap ? aceitCap.val : '#18120f', aceitCapTxt: aceitCap ? aceitCap.txt : '',
+      aceitCapBg: aceitCap ? aceitCap.bg : 'transparent', aceitCapColor: aceitCap ? aceitCap.color : '#6b6560', aceitPointer: (aceitP != null ? aceitP : 0) + '%',
+      fipeDisplay: fipeP != null ? 'block' : 'none', fipeValStr: (fipeP != null ? fipeP + '%' : '—'),
+      fipeValColor: fipeCap ? fipeCap.val : '#18120f', fipeCapTxt: fipeCap ? fipeCap.txt : '',
+      fipeCapBg: fipeCap ? fipeCap.bg : 'transparent', fipeCapColor: fipeCap ? fipeCap.color : '#6b6560', fipePointer: (fipeP != null ? fipeP : 0) + '%',
+      vistDisplay: vistHas ? 'block' : 'none', vistValStr: vistCap.label, vistValColor: vistCap.val,
+      vistCapTxt: vistCap.txt, vistCapBg: vistCap.bg, vistCapColor: vistCap.color, vistPointer: vistPointer + '%',
+      timeline, timelineDisplay: timeline.length ? 'block' : 'none',
+      selos, selosDisplay: (this.state.pago && selos.length) ? 'flex' : 'none',
+      debitoBar, debitoBarDisplay: debitoBar.show ? 'block' : 'none',
       resumoLeilao,          // veredito — sempre presente quando comprado
       veiculoLeilao,         veiculoLeilaoDisplay: veiculoLeilao.length ? 'block' : 'none',
-      leilaoRisco,           leilaoRiscoDisplay:  leilaoRisco.length ? 'block' : 'none',
+      leilaoRisco,           leilaoRiscoDisplay:  (temLeilao && this._comprou.leilao && temMedidor) ? 'none' : (leilaoRisco.length ? 'block' : 'none'),
       inspecao,              inspecaoDisplay:     inspecao.length ? 'block' : 'none',
       leiloesRegistros,      leiloesDisplay:      leiloesRegistros.length ? 'block' : 'none',
       remarketingRegistros,  remarketingDisplay:  remarketingRegistros.length ? 'block' : 'none',
