@@ -18,6 +18,60 @@ app.use(cors({
   methods: ['GET', 'POST'],
 }));
 
+// ─────────────────────────────────────────────────────────────────────────────
+// BANCO DE DADOS (PostgreSQL) — persiste as consultas pagas p/ o "Já paguei".
+// Só ativa se DATABASE_URL estiver setada (Railway → add PostgreSQL). Sem ela,
+// o backend continua com o índice em memória (não quebra o deploy).
+// Escape hatch de SSL: PGSSL=false se a conexão interna do Railway recusar SSL.
+// ─────────────────────────────────────────────────────────────────────────────
+let _pool = null;
+if (process.env.DATABASE_URL) {
+  try {
+    const { Pool } = require('pg');
+    _pool = new Pool({
+      connectionString: process.env.DATABASE_URL,
+      ssl: process.env.PGSSL === 'false' ? false : { rejectUnauthorized: false },
+      max: 5,
+    });
+    _pool.on('error', (e) => console.error('[db] pool error:', e.message));
+    _pool.query(`CREATE TABLE IF NOT EXISTS consultas (
+      chave TEXT PRIMARY KEY,
+      placa TEXT,
+      email TEXT,
+      pagamento_id TEXT,
+      dados JSONB,
+      atualizado_em TIMESTAMPTZ DEFAULT now()
+    )`).then(() => console.log('[db] tabela consultas pronta'))
+       .catch((e) => console.error('[db] init falhou:', e.message));
+  } catch (e) {
+    console.error('[db] pg indisponível:', e.message);
+    _pool = null;
+  }
+}
+
+// Salva/atualiza a consulta paga (fire-and-forget; erros só logam).
+async function dbSalvar(chave, placa, email, pagamentoId, dados) {
+  if (!_pool || !chave || !dados) return;
+  try {
+    await _pool.query(
+      `INSERT INTO consultas (chave, placa, email, pagamento_id, dados, atualizado_em)
+       VALUES ($1,$2,$3,$4,$5, now())
+       ON CONFLICT (chave) DO UPDATE SET dados = EXCLUDED.dados,
+         pagamento_id = EXCLUDED.pagamento_id, atualizado_em = now()`,
+      [chave, placa || null, email || null, pagamentoId || null, JSON.stringify(dados)]
+    );
+  } catch (e) { console.error('[db] salvar:', e.message); }
+}
+
+// Busca a consulta paga por chave (placa|email). Retorna o `dados` (relatório) ou null.
+async function dbBuscar(chave) {
+  if (!_pool || !chave) return null;
+  try {
+    const r = await _pool.query('SELECT dados FROM consultas WHERE chave = $1', [chave]);
+    return r.rows[0] ? r.rows[0].dados : null;
+  } catch (e) { console.error('[db] buscar:', e.message); return null; }
+}
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // HELPERS
@@ -851,8 +905,17 @@ app.get('/api/consulta/completa/:placa/:pagamento_id', async (req, res) => {
     }
 
     // 5. Formata e BLINDA — omite os campos dos upsells não comprados antes de enviar.
-    const dados = formatarCompleta(resultado.basico, resultado.premium, placa, leilao);
-    res.json(blindarPorUpsells(dados, upsells, combo));
+    const dados = blindarPorUpsells(formatarCompleta(resultado.basico, resultado.premium, placa, leilao), upsells, combo);
+
+    // 6. Persiste p/ o "Já paguei" (durável, sobrevive a deploys). Fire-and-forget.
+    const placaU = placa.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    if (pag.payer?.email) {
+      const chave = chaveConsulta(placaU, pag.payer.email);
+      _consultasPorChave.set(chave, resultado);              // cache em memória (mesma instância)
+      dbSalvar(chave, placaU, pag.payer.email, key, dados);  // persistência no banco
+    }
+
+    res.json(dados);
 
   } catch (err) {
     console.error('[completa]', err.message);
@@ -872,16 +935,19 @@ app.get('/api/consulta/recuperar', async (req, res) => {
   const placaU = String(placa).toUpperCase().replace(/[^A-Z0-9]/g, '');
 
   try {
-    // 2. Buscar no índice de pagamentos aprovados por placa + email
     const chave = chaveConsulta(placaU, email);
-    let resultado = _consultasPorChave.get(chave);
 
-    // 5. Não encontrou nenhum pagamento para essa placa+email
+    // 2. Banco (durável) — relatório já pronto, sobrevive a deploys/reinícios.
+    const salvo = await dbBuscar(chave);
+    if (salvo) return res.json({ found: true, dados: salvo });
+
+    // 3. Fallback: índice em memória (mesma instância) — legado/sem banco.
+    let resultado = _consultasPorChave.get(chave);
     if (!resultado) {
       return res.json({ found: false });
     }
 
-    // 4. Encontrou o pagamento, mas sem os dados premium → gera agora
+    // 4. Tem o pagamento, mas sem os dados premium → gera agora.
     if (!resultado.premium) {
       try {
         resultado = await montarConsultaPremium(placaU);
@@ -891,10 +957,10 @@ app.get('/api/consulta/recuperar', async (req, res) => {
       }
     }
 
-    // 3. Retorna os dados unificados (mesmo formato da /completa), incluindo o
-    //    leilão se o upsell foi comprado (indexado por placa+email no status).
+    // 5. Formata (mesmo formato da /completa) e persiste p/ as próximas vezes.
     const leilao = _leilaoPorChave.get(chave) || null;
     const dados = formatarCompleta(resultado.basico, resultado.premium, placaU, leilao);
+    dbSalvar(chave, placaU, email, null, dados);
     return res.json({ found: true, dados });
 
   } catch (err) {
