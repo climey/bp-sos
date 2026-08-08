@@ -505,6 +505,12 @@ function chaveConsulta(placa, email) {
   return String(placa || '').toUpperCase().replace(/[^A-Z0-9]/g, '') +
          '|' + String(email || '').trim().toLowerCase();
 }
+// E-mail do CLIENTE p/ a chave do "Já paguei": prioriza o metadata (o que ele
+// digitou), pois no PIX o Mercado Pago sobrescreve payer.email com o de quem pagou.
+function emailCliente(pag) {
+  return (pag && pag.metadata && pag.metadata.email) ||
+         (pag && pag.payer && pag.payer.email) || null;
+}
 
 // Formata a resposta "completa" (wdapi2 básico + premium já mapeado + leilão BrasilCredit).
 // `premium` = saída de montarConsultaPremium (mapearEstadual).
@@ -768,7 +774,10 @@ app.post('/api/pagamento/criar', async (req, res) => {
           placa, plano,
           leilao:  querLeilao ? '1' : '0',           // gate da BrasilCredit no pós-pagamento
           upsells: upsellsFinal.join(',') || 'nenhum', // upsells comprados (p/ liberar seções)
-          combo:   comboAtivo ? '1' : '0'
+          combo:   comboAtivo ? '1' : '0',
+          // E-mail que o CLIENTE digitou — chave do "Já paguei". Guardamos aqui porque
+          // no PIX o Mercado Pago sobrescreve payer.email com o e-mail de quem pagou.
+          email:   String(email || '').trim().toLowerCase()
         }
       },
       {
@@ -817,16 +826,17 @@ app.get('/api/pagamento/status/:id', async (req, res) => {
       // O relatório real (já blindado por upsell) é buscado depois via /completa.
       // Assim os dados não vazam pela rota de status. O objeto completo continua
       // guardado em memória (_consultasPorChave) para a /recuperar.
+      const emailCli = emailCliente(d);
       const premium = bgCache(_premiumCache, _premiumPending, id, () => montarConsultaPremium(placa, optsP));
-      if (premium && d.payer?.email) {
-        _consultasPorChave.set(chaveConsulta(placa, d.payer.email), premium); // indexa p/ /recuperar
+      if (premium && emailCli) {
+        _consultasPorChave.set(chaveConsulta(placa, emailCli), premium); // indexa p/ /recuperar
       }
       out.premium = premium ? true : null;   // flag de prontidão (não o conteúdo)
 
       // Upsell de Leilão (BrasilCredit) — também em background, só se foi comprado
       if (d.metadata?.leilao === '1') {
         const leilao = bgCache(_leilaoCache, _leilaoPending, id, () => consultarLeilao(placa));
-        if (leilao && d.payer?.email) _leilaoPorChave.set(chaveConsulta(placa, d.payer.email), leilao);
+        if (leilao && emailCli) _leilaoPorChave.set(chaveConsulta(placa, emailCli), leilao);
         out.leilao = leilao ? true : null;   // flag (conteúdo vem só na /completa)
       }
     }
@@ -860,7 +870,7 @@ app.post('/api/consulta/premium', async (req, res) => {
 
     const resultado = await montarConsultaPremium(placaU);
     _premiumCache.set(String(pagamento_id), resultado);
-    if (pag.payer?.email) _consultasPorChave.set(chaveConsulta(placaU, pag.payer.email), resultado);
+    { const ec = emailCliente(pag); if (ec) _consultasPorChave.set(chaveConsulta(placaU, ec), resultado); }
     res.json(resultado);
   } catch (err) {
     console.error('[premium]', err.message);
@@ -909,10 +919,11 @@ app.get('/api/consulta/completa/:placa/:pagamento_id', async (req, res) => {
 
     // 6. Persiste p/ o "Já paguei" (durável, sobrevive a deploys). Fire-and-forget.
     const placaU = placa.toUpperCase().replace(/[^A-Z0-9]/g, '');
-    if (pag.payer?.email) {
-      const chave = chaveConsulta(placaU, pag.payer.email);
-      _consultasPorChave.set(chave, resultado);              // cache em memória (mesma instância)
-      dbSalvar(chave, placaU, pag.payer.email, key, dados);  // persistência no banco
+    const emailCli = emailCliente(pag);
+    if (emailCli) {
+      const chave = chaveConsulta(placaU, emailCli);
+      _consultasPorChave.set(chave, resultado);        // cache em memória (mesma instância)
+      dbSalvar(chave, placaU, emailCli, key, dados);   // persistência no banco
     }
 
     res.json(dados);
