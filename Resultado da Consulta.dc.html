@@ -36,17 +36,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     .sos-cta-img{display:none !important;}
   }
   @media print{
-    @page{margin:12mm;}
-    html,body{background:#fff !important;color:#111 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    @page{margin:9mm;}
+    /* mantém cores/gradientes (medidores, selos, score) na impressão */
+    *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
+    html,body{background:#fff !important;color:#111 !important;font-size:10.5px;}
     /* Esconde navegação, rodapé, CTAs, botões de ação e o WhatsApp */
     header,footer,#liberar,.sos-noprint,.sos-steps{display:none !important;}
-    /* Remove os fundos escuros das seções (viravam retângulos pretos) */
-    section{background:#fff !important;padding:8px 0 !important;}
-    /* Hero: fundo claro e texto escuro (era branco sobre escuro) */
-    .sos-hero{background:#f4f1ee !important;border:1px solid #ddd !important;box-shadow:none !important;}
+    /* Remove fundos/paddings das seções */
+    section{background:#fff !important;padding:0 !important;margin:0 !important;}
+    /* Hero compacto (era uma página inteira) */
+    .sos-hero{background:#f4f1ee !important;border:1px solid #ddd !important;box-shadow:none !important;padding:14px 20px !important;gap:14px !important;border-radius:10px !important;margin-bottom:8px !important;align-items:center;}
     .sos-hero h1,.sos-hero p{color:#18120f !important;}
-    /* Não corta um card no meio da página */
-    section [style*="border-radius:18px"]{break-inside:avoid;page-break-inside:avoid;}
+    .sos-hero h1{font-size:19px !important;line-height:1.1 !important;}
+    /* Cards compactos, sem sombra, sem cortar no meio da página */
+    section [style*="border-radius:18px"]{break-inside:avoid;page-break-inside:avoid;padding:12px 16px !important;margin-bottom:8px !important;border-radius:9px !important;box-shadow:none !important;}
+    /* Grids de dados em 2 colunas (economiza muitas páginas) */
+    section .sos-stack{grid-template-columns:1fr 1fr !important;gap:8px 20px !important;}
+    /* Linhas de label/valor mais justas */
+    section [style*="padding:15px 0"],section [style*="padding:13px 0"]{padding:5px 0 !important;}
+    /* Blocos visuais e cards de risco não quebram entre páginas */
+    .sos-verdict,.sos-selos,.sos-score,.sos-meter,.sos-tl,.sos-tl-item{break-inside:avoid;page-break-inside:avoid;}
+    .sos-verdict{margin-bottom:8px !important;padding:12px 16px !important;box-shadow:none !important;}
+    h1,h2,h3{break-after:avoid;}
   }
   /* ============ BARRA DE PROGRESSO DO FUNIL ============ */
   .sos-steps{position:fixed;top:74px;left:0;right:0;z-index:49;height:56px;background:#150a09;border-bottom:1px solid rgba(255,255,255,.07);}
